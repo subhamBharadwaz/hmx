@@ -1,0 +1,44 @@
+{
+	"name": "hmx",
+	"version": "1.0.0",
+	"description": "API for an e-commerce jogger store",
+	"main": "src/index.ts",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/subhamBharadwaz/hmx.git"
+	},
+	"scripts": {
+		"dev": "ts-node-dev --respawn --transpile-once src/index.ts",
+		"start": "npm run dev",
+		"format": "prettier --write \"./**/*.ts\""
+	},
+	"keywords": [
+		"api",
+		"ecom-api",
+		"typescript api"
+	],
+	"author": {
+		"name": "Subham Bharadwaz",
+		"email": "subhamsbharadwaz@gmail.com",
+		"url": "https://twitter.com/subham_js"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@types/bcryptjs": "^2.4.2",
+		"@types/dotenv": "^8.2.0",
+		"@types/express": "^4.17.13",
+		"@types/jsonwebtoken": "^8.5.6",
+		"@types/mongoose": "^5.11.97",
+		"@types/node": "^16.11.12",
+		"prettier": "^2.5.1",
+		"ts-node-dev": "^1.1.8",
+		"typescript": "^4.5.3"
+	},
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"dotenv": "^10.0.0",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^6.1.1"
+	}
+}
