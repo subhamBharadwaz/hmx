@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
 
 dotenv.config();
 const app = express();
@@ -11,7 +13,24 @@ const app = express();
 const swaggerDocument = YAML.load(__dirname + '/swagger.yaml');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// morgan middleware
+// regular middleware
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+// cookies and file middleware
+app.use(cookieParser());
+app.use(
+	fileUpload({
+		useTempFiles: true,
+		tempFileDir: '/temp/'
+	})
+);
+
+// logger middleware
 app.use(morgan('tiny'));
+
+// import routes
+
+// router middleware
 
 export default app;

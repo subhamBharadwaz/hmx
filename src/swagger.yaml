@@ -1,10 +1,37 @@
-openapi: 3.0.0
+openapi: '3.0.0'
 info:
-    title: Sample API
-    description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
-    version: 0.1.9
+    title: hmx
+    description: An E-commerce API for jogger store
+    version: 1.1.0
+    contact:
+        email: 'subhamsbharadwaz@gmail.com'
+        url: 'https://www.github.com/subhamBharadwaz'
+
 servers:
-    - url: http://api.example.com/v1
-      description: Optional server description, e.g. Main (production) server
-    - url: http://staging-api.example.com
-      description: Optional server description, e.g. Internal staging server for testing
+    - url: '{protocol}://{url}/api/{version}'
+      description: for local host
+      variables:
+          version:
+              enum:
+                  - v1
+                  - v2
+              default: v1
+          url:
+              enum:
+                  - localhost:4000
+              default: localhost:4000
+          protocol:
+              enum:
+                  - http
+                  - https
+              default: http
+
+components:
+    securitySchemes:
+        cookieAuth:
+            type: apiKey
+            in: cookie
+            name: token
+        BearerAuth:
+            type: http
+            scheme: bearer
