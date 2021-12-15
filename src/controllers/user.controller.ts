@@ -1,9 +1,10 @@
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
-import User, {IUser} from '../models/user.model';
+import User from '../models/user.model';
 import CustomError from '../utils/customError';
 import BigPromise from '../middlewares/bigPromise';
 import cookieToken from '../utils/cookieToken';
+import {IUser} from '../types/types.user';
 
 /** 
 @desc    Signup User

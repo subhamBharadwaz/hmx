@@ -1,4 +1,4 @@
-import {IUserDocument} from '../models/user.model';
+import {IUserDocument} from '../types/types.user';
 import {Response} from 'express';
 
 const cookieToken = (user: IUserDocument, res: Response) => {
