@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 
 interface ICallback {
-	(req: Request, res: Response, next: NextFunction): Promise<ICallback | void>;
+	(req: Request, res: Response, next: NextFunction): Promise<void>;
 }
 
 /**
