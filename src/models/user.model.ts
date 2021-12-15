@@ -11,13 +11,13 @@ export interface IUser {
 	password: string;
 	photo: {
 		id: string;
-		secureUrl: string;
+		secure_url: string;
 	};
-	role: string;
-	forgotPasswordToken: string;
-	forgotPasswordExpiry: number;
-	createdAt: Date;
-	updatedAt: Date;
+	role?: string;
+	forgotPasswordToken?: string;
+	forgotPasswordExpiry?: number;
+	createdAt?: Date;
+	updatedAt?: Date;
 }
 
 export interface IUserDocument extends IUser, Document {
@@ -56,7 +56,7 @@ const UserSchema = new Schema<IUserDocument>(
 				type: String,
 				required: true
 			},
-			secureUrl: {
+			secure_url: {
 				type: String,
 				required: true
 			}
