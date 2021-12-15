@@ -30,7 +30,9 @@ app.use(
 app.use(morgan('tiny'));
 
 // import routes
+import user from './routes/user.route';
 
 // router middleware
+app.use('/api/v1', user);
 
 export default app;

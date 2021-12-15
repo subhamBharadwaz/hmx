@@ -35,3 +35,56 @@ components:
         BearerAuth:
             type: http
             scheme: bearer
+
+paths:
+    /signup:
+        post:
+            tags:
+                - User
+            summary: signup a new user, required fields - firstName, lastName, email, password(must be minimum 8 characters long and contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol) and photo
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required:
+                                - firstName
+                                - lastName
+                                - email
+                                - password
+                                - photo
+                            properties:
+                                firstName:
+                                    type: string
+                                    required: true
+                                lastName:
+                                    type: string,
+                                    required: true
+                                email:
+                                    type: string,
+                                    required: true
+                                password:
+                                    type: string,
+                                    required: true
+                                photo:
+                                    in: formData
+                                    description: The uploaded file data
+                                    type: file
+                                    format: binary
+                                    required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
