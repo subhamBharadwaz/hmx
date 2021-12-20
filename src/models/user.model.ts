@@ -27,8 +27,7 @@ const UserSchema = new Schema<IUserDocument>(
 			validate: [
 				validator.isStrongPassword,
 				'Password must be minimum 8 characters long and contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol'
-			],
-			select: false
+			]
 		},
 		photo: {
 			id: {

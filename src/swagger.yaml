@@ -37,11 +37,11 @@ components:
             scheme: bearer
 
 paths:
-    /signup:
+    /register:
         post:
             tags:
                 - User
-            summary: signup a new user, required fields - firstName, lastName, email, password(must be minimum 8 characters long and contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol) and photo
+            summary: register a new user, required fields - firstName, lastName, email, password(must be minimum 8 characters long and contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol) and photo
             requestBody:
                 content:
                     multipart/form-data:
@@ -72,6 +72,100 @@ paths:
                                     type: file
                                     format: binary
                                     required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /login:
+        post:
+            tags:
+                - User
+            summary: login user, required fields -  email, password
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                                - password
+                            properties:
+                                email:
+                                    type: string,
+                                    default: 'one@gmail.com'
+                                    required: true
+                                password:
+                                    type: string,
+                                    default: 'Subham12@'
+                                    required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /logout:
+        get:
+            tags:
+                - User
+            summary: get request to logout the user. Also removes httpOnly cookies
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /forgotpassword:
+        get:
+            tags:
+                - User
+            summary: sends an email with link to forgot password. Contains the token for user validation. Public hosted version will not send email to your account. Use your own SMTP details to access this feature on local project
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - email
+                            properties:
+                                email:
+                                    type: string
+                                    default: 'example.com'
             responses:
                 200:
                     description: All good success
