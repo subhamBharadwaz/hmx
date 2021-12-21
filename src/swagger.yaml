@@ -151,7 +151,7 @@ paths:
                     description: Internal server error
 
     /forgotpassword:
-        get:
+        post:
             tags:
                 - User
             summary: sends an email with link to forgot password. Contains the token for user validation. Public hosted version will not send email to your account. Use your own SMTP details to access this feature on local project
@@ -178,6 +178,95 @@ paths:
                                         type: boolean
                                     token:
                                         type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /password/reset/:token:
+        post:
+            tags:
+                - User
+            summary: Allows user to reset password, validated based on token, send password and confirm password fields
+            parameters:
+                - name: token
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - password
+                                - confirmPassword
+                            properties:
+                                password:
+                                    type: string
+                                confirmPassword:
+                                    type: string
+
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                                    message:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /userdashboard:
+        get:
+            tags:
+                - User
+            summary: Gets all details about logged in user, send token in cookies as named token or send Bearer Auth
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                                    user:
+                                        type: object
+                                        properties:
+                                            name:
+                                                type: string
+                                            email:
+                                                type: string
+                                            role:
+                                                type: string
+                                            photo:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: string
+                                                    secure_url:
+                                                        type: string
+                                            _id:
+                                                type: string
+                                            createdAt:
+                                                type: string
+                                            updatedAt:
+                                                type: string
                 400:
                     description: Bad request
                 500:

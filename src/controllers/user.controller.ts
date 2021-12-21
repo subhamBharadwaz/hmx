@@ -1,11 +1,12 @@
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
+import crypto from 'crypto';
 import User from '../models/user.model';
 import CustomError from '../utils/customError';
 import BigPromise from '../middlewares/bigPromise';
 import cookieToken from '../utils/cookieToken';
 import mailHelper from '../utils/mailHelper';
-import {IUser} from '../types/types.user';
+import {IUser, IGetUserAuthInfoRequest} from '../types/types.user';
 
 /** 
 @desc    Register User
@@ -106,7 +107,7 @@ export const logout = BigPromise(async (req: Request, res: Response, next: NextF
 
 /** 
 @desc    Forgot Password
-@route   GET /api/v1/forgotpassword
+@route   POST /api/v1/forgotpassword
 @access  Public
 */
 export const forgotPassword = BigPromise(
@@ -119,7 +120,7 @@ export const forgotPassword = BigPromise(
 			return next(new CustomError('User does not exist', 400));
 		}
 
-		// get token from user model methods
+		// get token from user model method
 		const forgotToken = user.getForgotPasswordToken();
 
 		// save user fields in db
@@ -133,7 +134,7 @@ export const forgotPassword = BigPromise(
 		// craft a URL
 		const forgotPasswordUrl = `${req.protocol}://${req.get(
 			'host'
-		)}/api/v1/password/${forgotToken}`;
+		)}/api/v1/password/reset/${forgotToken}`;
 
 		// craft a message
 		const message = `Copy paste this link in your url and hit enter \n\n ${forgotPasswordUrl}`;
@@ -162,5 +163,79 @@ export const forgotPassword = BigPromise(
 			}
 			return next(new CustomError(errorMessage, 500));
 		}
+	}
+);
+
+/** 
+@desc    Reset Password
+@route   POST /api/v1/password/reset/:token
+@access  Public
+*/
+export const passwordReset = BigPromise(async (req: Request, res: Response, next: NextFunction) => {
+	const token = req.params.token;
+
+	// hash the token as db also stores the hashed version
+	const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+	// find user based on hashed token and time in future
+	const user = await User.findOne({
+		encryptedToken,
+		forgotPasswordExpiry: {$gt: Date.now()} // only want to find the user whose forgotPasswordExpiry is in the future
+	});
+
+	if (!user) {
+		return next(new CustomError('Token is invalid or expired', 400));
+	}
+
+	// check if password and confirm password matched
+	if (req.body.password !== req.body.confirmPassword) {
+		return next(new CustomError('Password and confirm password do not matched', 400));
+	}
+
+	// update password field in DB
+	user.password = req.body.password;
+
+	// reset token fields
+	user.forgotPasswordToken = undefined;
+	user.forgotPasswordExpiry = undefined;
+
+	// save the user
+	await user.save();
+
+	// craft a message
+	const message = `Hello ${user.firstName}! Your password has been reset successfully.`;
+
+	// attempt to send email
+	try {
+		await mailHelper({
+			email: user.email,
+			subject: 'HMX - Password reset successful',
+			message
+		});
+
+		// json response if email is success
+		res.status(200).json({success: true, message: 'Email sent successfully'});
+	} catch (err) {
+		let errorMessage = 'Failed to send email';
+		if (err instanceof Error) {
+			errorMessage = err.message;
+			return next(new CustomError(errorMessage, 500));
+		}
+		return next(new CustomError(errorMessage, 500));
+	}
+
+	cookieToken(user, res);
+});
+
+/** 
+@desc    Get Logged-in User Details
+@route   POST /api/v1/user
+@access  Private
+*/
+export const getUser = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const user = await User.findById(req.user.id).select('-password');
+
+		res.status(200).json({success: true, user});
 	}
 );

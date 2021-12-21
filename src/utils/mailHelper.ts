@@ -16,6 +16,18 @@ const mailHelper = async (option: IMailOptions) => {
 		}
 	} as TransportOptions);
 
+	/**
+	 * //? For Gmail
+	 * 
+	 *  var transporter = nodemailer.createTransport({
+	 	service: 'gmail',
+		auth: {
+	 		user: '',
+ 		    pass: ''
+ 	    }
+	  });
+	 */
+
 	const message = {
 		from: 'Subham from <hmx.com>', // sender address
 		to: option.email, // list of receivers
