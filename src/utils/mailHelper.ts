@@ -1,5 +1,5 @@
 import nodemailer, {TransportOptions} from 'nodemailer';
-
+import config from 'config';
 interface IMailOptions {
 	email: string;
 	subject: string;
@@ -8,11 +8,11 @@ interface IMailOptions {
 
 const mailHelper = async (option: IMailOptions) => {
 	const transporter = nodemailer.createTransport({
-		host: `${process.env.SMTP_HOST}`,
-		port: `${process.env.SMTP_PORT}`,
+		host: config.get<string>('smtpHost'),
+		port: config.get<number>('smtpPort'),
 		auth: {
-			user: `${process.env.SMTP_USER}`, // generated ethereal user
-			pass: `${process.env.SMTP_PASS}` // generated ethereal password
+			user: config.get<string>('smtpUser'),
+			pass: config.get<string>('smtpPass')
 		}
 	} as TransportOptions);
 

@@ -107,7 +107,7 @@ export const logout = BigPromise(async (req: Request, res: Response, next: NextF
 /** 
 @desc    Forgot Password
 @route   GET /api/v1/forgotpassword
-@access  Private
+@access  Public
 */
 export const forgotPassword = BigPromise(
 	async (req: Request, res: Response, next: NextFunction) => {
