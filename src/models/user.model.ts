@@ -3,6 +3,7 @@ import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import config from 'config';
 import {IUserDocument} from '../types/types.user';
 
 const UserSchema = new Schema<IUserDocument>(
@@ -69,8 +70,8 @@ UserSchema.methods.comparePassword = async function (userPassword: string): Prom
 
 // create and return jwt token
 UserSchema.methods.getJwtToken = function (): string {
-	const jwt_secret = `${process.env.JWT_SECRET}`;
-	const jwt_expiry = `${process.env.JWT_EXPIRY}`;
+	const jwt_secret = config.get<string>('jwtSecret');
+	const jwt_expiry = config.get<string>('jwtExpiry');
 
 	return jwt.sign({id: this._id}, jwt_secret, {
 		expiresIn: jwt_expiry
