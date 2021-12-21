@@ -18,7 +18,7 @@ const mailHelper = async (option: IMailOptions) => {
 
 	/**
 	 * //? For Gmail
-	 * 
+	 *
 	 *  var transporter = nodemailer.createTransport({
 	 	service: 'gmail',
 		auth: {
