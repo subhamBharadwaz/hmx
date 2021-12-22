@@ -4,7 +4,11 @@ import config from 'config';
 import User from '../models/user.model';
 import CustomError from '../utils/customError';
 import BigPromise from '../middlewares/bigPromise';
+import logger from '../utils/logger';
 import {IGetUserAuthInfoRequest, IJwtPayload} from '../types/types.user';
+
+// log error
+let logErr;
 
 export const isLoggedIn = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
@@ -12,7 +16,8 @@ export const isLoggedIn = BigPromise(
 			req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
 
 		if (!token) {
-			return next(new CustomError('Login first to access this page', 401));
+			logErr = new CustomError('Login first to access this page', 401);
+			return next(logger.error(logErr));
 		}
 
 		const decoded = jwt.verify(token, config.get<string>('jwtSecret')) as IJwtPayload;
