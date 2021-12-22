@@ -62,6 +62,7 @@
 		"stripe": "^8.193.0",
 		"swagger-ui-express": "^4.2.0",
 		"validator": "^13.7.0",
-		"yamljs": "^0.3.0"
+		"yamljs": "^0.3.0",
+		"zod": "^3.11.6"
 	}
 }

@@ -21,7 +21,8 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 	// check for images
 	if (!req.files) {
 		logErr = new CustomError('Photo is required for register', 400);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	const {firstName, lastName, email, password}: IUser = req.body;
@@ -32,7 +33,8 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 			'First Name, Last Name, Email, Password and Photo are required',
 			400
 		);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	// upload photo to cloudinary
@@ -49,7 +51,8 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 
 	if (existingUser) {
 		logErr = new CustomError('User already exists!', 401);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	// create user
@@ -78,14 +81,16 @@ export const login = BigPromise(async (req: Request, res: Response, next: NextFu
 	// check for presence of email and password
 	if (!(email && password)) {
 		logErr = new CustomError('Email, Password are required', 400);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	const user = await User.findOne({email}).select('+password');
 
 	if (!user) {
 		logErr = new CustomError('Email or password does not match or exist', 400);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	// match the password
@@ -94,7 +99,8 @@ export const login = BigPromise(async (req: Request, res: Response, next: NextFu
 	// if password do not match
 	if (!isPasswordCorrect) {
 		logErr = new CustomError('Email or password does not match or exist', 400);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	cookieToken(user, res);
@@ -131,7 +137,8 @@ export const forgotPassword = BigPromise(
 
 		if (!user) {
 			logErr = new CustomError('User does not exist', 400);
-			return next(logger.error(logErr));
+			logger.error(logErr);
+			return next(logErr);
 		}
 
 		// get token from user model method
@@ -174,10 +181,12 @@ export const forgotPassword = BigPromise(
 			if (err instanceof Error) {
 				errorMessage = err.message;
 				logErr = new CustomError(errorMessage, 500);
-				return next(logger.error(logErr));
+				logger.error(logErr);
+				return next(logErr);
 			}
 			logErr = new CustomError(errorMessage, 500);
-			return next(logger.error(logErr));
+			logger.error(logErr);
+			return next(logErr);
 		}
 	}
 );
@@ -201,13 +210,15 @@ export const passwordReset = BigPromise(async (req: Request, res: Response, next
 
 	if (!user) {
 		logErr = new CustomError('Token is invalid or expired', 400);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	// check if password and confirm password matched
 	if (req.body.password !== req.body.confirmPassword) {
 		logErr = new CustomError('Password and confirm password do not matched', 400);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	// update password field in DB
@@ -238,10 +249,12 @@ export const passwordReset = BigPromise(async (req: Request, res: Response, next
 		if (err instanceof Error) {
 			errorMessage = err.message;
 			logErr = new CustomError(errorMessage, 500);
-			return next(logger.error(logErr));
+			logger.error(logErr);
+			return next(logErr);
 		}
 		logErr = new CustomError(errorMessage, 500);
-		return next(logger.error(logErr));
+		logger.error(logErr);
+		return next(logErr);
 	}
 
 	cookieToken(user, res);
