@@ -1,5 +1,4 @@
 import {Schema, model} from 'mongoose';
-import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -10,25 +9,20 @@ const UserSchema = new Schema<IUserDocument>(
 	{
 		firstName: {
 			type: String,
-			required: [true, 'Please provide your First Name']
+			required: true
 		},
 		lastName: {
 			type: String,
-			required: [true, 'Please provide your Last Name']
+			required: true
 		},
 		email: {
 			type: String,
-			required: [true, 'Please provide an email'],
-			validate: [validator.isEmail, 'Please enter email in correct format'],
+			required: true,
 			unique: true
 		},
 		password: {
 			type: String,
-			required: [true, 'Please provide a password'],
-			validate: [
-				validator.isStrongPassword,
-				'Password must be minimum 8 characters long and contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol'
-			]
+			required: true
 		},
 		photo: {
 			id: {

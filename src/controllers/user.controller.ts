@@ -21,6 +21,7 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 	// check for images
 	if (!req.files) {
 		logErr = new CustomError('Photo is required for register', 400);
+
 		logger.error(logErr);
 		return next(logErr);
 	}
