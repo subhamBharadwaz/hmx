@@ -45,7 +45,6 @@ const UserSchema = new Schema<IUserDocument>(
 		timestamps: true
 	}
 );
-
 // encrypt password before save - HOOK
 UserSchema.pre<IUserDocument>('save', async function (next) {
 	/**only runs when the user will be created and when the user wants to change the password

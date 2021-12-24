@@ -3,14 +3,13 @@ import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from '../models/user.model';
 import CustomError from '../utils/customError';
-import BigPromise from '../middlewares/bigPromise';
+import BigPromise from './bigPromise';
 import logger from '../utils/logger';
 import {IGetUserAuthInfoRequest, IJwtPayload} from '../types/types.user';
-
 // log error
 let logErr;
 
-export const isLoggedIn = BigPromise(
+const isLoggedIn = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const token: string =
 			req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
@@ -27,3 +26,4 @@ export const isLoggedIn = BigPromise(
 		next();
 	}
 );
+export default isLoggedIn;

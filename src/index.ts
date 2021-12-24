@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import config from 'config';
 import {v2 as cloudinary} from 'cloudinary';
 import app from './app';
-import {connectToDB} from './utils/db';
+import connectToDB from './utils/db';
 import logger from './utils/logger';
+
+dotenv.config();
 
 // connect to database
 connectToDB();

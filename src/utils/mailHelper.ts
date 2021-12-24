@@ -1,5 +1,6 @@
 import nodemailer, {TransportOptions} from 'nodemailer';
 import config from 'config';
+
 interface IMailOptions {
 	email: string;
 	subject: string;
@@ -33,7 +34,7 @@ const mailHelper = async (option: IMailOptions) => {
 		to: option.email, // list of receivers
 		subject: option.subject, // Subject line
 		text: option.message // plain text body
-		//TODO html: option.link
+		// TODO html: option.link
 	};
 	// send mail with defined transport object
 	await transporter.sendMail(message);

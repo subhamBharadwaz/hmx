@@ -4,14 +4,17 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
-import logger from './utils/logger';
 import expressPinoLogger from 'express-pino-logger';
+import logger from './utils/logger';
+
+// import routes
+import user from './routes/user.route';
 
 dotenv.config();
 const app = express();
 
 // swagger docs
-const swaggerDocument = YAML.load(__dirname + '/swagger.yaml');
+const swaggerDocument = YAML.load(`${__dirname}/swagger.yaml`);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // regular middleware
@@ -30,7 +33,7 @@ app.use(
 // logger middleware
 app.use(
 	expressPinoLogger({
-		logger: logger,
+		logger,
 		serializers: {
 			req: req => ({
 				method: req.method,
@@ -41,13 +44,11 @@ app.use(
 	})
 );
 
-// import routes
-import user from './routes/user.route';
-
 // router middleware
 app.use('/api/v1', user);
 
 // handle unhandled promise rejections
+// eslint-disable-next-line no-unused-vars
 process.on('unhandledRejection', (reason: string, p: Promise<any>) => {
 	throw reason;
 });

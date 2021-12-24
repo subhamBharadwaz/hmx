@@ -21,7 +21,6 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 	// check for images
 	if (!req.files) {
 		logErr = new CustomError('Photo is required for register', 400);
-
 		logger.error(logErr);
 		return next(logErr);
 	}
@@ -112,7 +111,7 @@ export const login = BigPromise(async (req: Request, res: Response, next: NextFu
 @route   GET /api/v1/logout
 @access  Private
 */
-export const logout = BigPromise(async (req: Request, res: Response, next: NextFunction) => {
+export const logout = BigPromise(async (req: Request, res: Response) => {
 	// delete the cookie
 	res.cookie('token', null, {
 		expires: new Date(Date.now()),
@@ -198,7 +197,7 @@ export const forgotPassword = BigPromise(
 @access  Public
 */
 export const passwordReset = BigPromise(async (req: Request, res: Response, next: NextFunction) => {
-	const token = req.params.token;
+	const {token} = req.params;
 
 	// hash the token as db also stores the hashed version
 	const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
@@ -266,10 +265,8 @@ export const passwordReset = BigPromise(async (req: Request, res: Response, next
 @route   POST /api/v1/user
 @access  Private
 */
-export const getUser = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-		const user = await User.findById(req.user.id).select('-password');
+export const getUser = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
+	const user = await User.findById(req.user.id).select('-password');
 
-		res.status(200).json({success: true, user});
-	}
-);
+	res.status(200).json({success: true, user});
+});

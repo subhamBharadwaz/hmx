@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 // import middleware
-import {isLoggedIn} from '../middlewares/user.middleware';
+import isLoggedIn from '../middlewares/user.middleware';
 import validateResource from '../middlewares/validateResource';
 
 // schema
