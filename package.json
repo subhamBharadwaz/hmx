@@ -2,16 +2,19 @@
 	"name": "hmx",
 	"version": "1.0.0",
 	"description": "API for an e-commerce jogger store",
-	"main": "src/index.ts",
+	"main": "index.js",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/subhamBharadwaz/hmx.git"
 	},
 	"scripts": {
-		"dev": "nodemon  ./src/index.ts",
-		"start": "node -r tsconfig-paths/register ./dist/index.js",
+		"dev": "nodemon -r tsconfig-paths/register ./src/index.ts",
+		"start": "node -r tsconfig-paths/register ./dist/src/index.js",
 		"build": "tsc",
-		"format": "prettier --write \"./**/*.ts\""
+		"format": "prettier --write \"./**/*.ts\"",
+		"prepare": "husky install",
+		"lint": "eslint src",
+		"lint:fix": "eslint --fix src"
 	},
 	"keywords": [
 		"api",
@@ -47,6 +50,8 @@
 		"eslint-import-resolver-typescript": "^2.5.0",
 		"eslint-plugin-import": "^2.25.3",
 		"eslint-plugin-prettier": "^4.0.0",
+		"husky": "^7.0.0",
+		"lint-staged": "^12.1.4",
 		"nodemon": "^2.0.15",
 		"prettier": "^2.5.1",
 		"tsconfig-paths": "^3.12.0",

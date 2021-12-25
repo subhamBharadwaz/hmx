@@ -1,16 +1,18 @@
-import express from 'express';
+/* eslint-disable import/first */
 import dotenv from 'dotenv';
+
+dotenv.config();
+import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import expressPinoLogger from 'express-pino-logger';
-import logger from './utils/logger';
+import logger from '@util/logger';
 
 // import routes
 import user from './routes/user.route';
 
-dotenv.config();
 const app = express();
 
 // swagger docs
@@ -48,8 +50,8 @@ app.use(
 app.use('/api/v1', user);
 
 // handle unhandled promise rejections
-// eslint-disable-next-line no-unused-vars
-process.on('unhandledRejection', (reason: string, p: Promise<any>) => {
+
+process.on('unhandledRejection', (reason: string) => {
 	throw reason;
 });
 

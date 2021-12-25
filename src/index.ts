@@ -1,11 +1,12 @@
-import dotenv from 'dotenv';
+/* eslint-disable import/first */
+import dotEnv from 'dotenv';
+
+dotEnv.config();
 import config from 'config';
 import {v2 as cloudinary} from 'cloudinary';
-import app from './app';
-import connectToDB from './utils/db';
-import logger from './utils/logger';
-
-dotenv.config();
+import app from '@src/app';
+import connectToDB from '@util/db';
+import logger from '@util/logger';
 
 // connect to database
 connectToDB();

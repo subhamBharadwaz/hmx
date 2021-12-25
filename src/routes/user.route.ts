@@ -1,11 +1,11 @@
 import {Router} from 'express';
 
 // import middleware
-import isLoggedIn from '../middlewares/user.middleware';
-import validateResource from '../middlewares/validateResource';
+import isLoggedIn from '@middleware/user.middleware';
+import validateResource from '@middleware/validateResource';
 
 // schema
-import {createUserSchema} from '../schema/user.schema';
+import {createUserSchema} from '@schema/user.schema';
 
 // import controllers
 import {

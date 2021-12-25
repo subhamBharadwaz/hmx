@@ -1,13 +1,13 @@
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
-import User from '../models/user.model';
-import BigPromise from '../middlewares/bigPromise';
-import CustomError from '../utils/customError';
-import cookieToken from '../utils/cookieToken';
-import mailHelper from '../utils/mailHelper';
-import logger from '../utils/logger';
-import {IUser, IGetUserAuthInfoRequest} from '../types/types.user';
+import User from '@model/user.model';
+import BigPromise from '@middleware/bigPromise';
+import CustomError from '@util/customError';
+import cookieToken from '@util/cookieToken';
+import mailHelper from '@util/mailHelper';
+import logger from '@util/logger';
+import {IUser, IGetUserAuthInfoRequest} from '@type/types.user';
 
 // log errors
 let logErr: CustomError;

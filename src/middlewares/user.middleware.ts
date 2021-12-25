@@ -1,11 +1,12 @@
 import {Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import User from '../models/user.model';
-import CustomError from '../utils/customError';
-import BigPromise from './bigPromise';
-import logger from '../utils/logger';
-import {IGetUserAuthInfoRequest, IJwtPayload} from '../types/types.user';
+import User from '@model/user.model';
+import CustomError from '@util/customError';
+import BigPromise from '@middleware/bigPromise';
+import logger from '@util/logger';
+import {IGetUserAuthInfoRequest, IJwtPayload} from '@type/types.user';
+
 // log error
 let logErr;
 
@@ -26,4 +27,5 @@ const isLoggedIn = BigPromise(
 		next();
 	}
 );
+
 export default isLoggedIn;
