@@ -1,10 +1,10 @@
+/* eslint-disable func-names */
 import {Schema, model} from 'mongoose';
-import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from 'config';
-import {IUserDocument} from '../types/types.user';
+import {IUserDocument} from '@type/types.user';
 
 const UserSchema = new Schema<IUserDocument>(
 	{
@@ -19,16 +19,11 @@ const UserSchema = new Schema<IUserDocument>(
 		email: {
 			type: String,
 			required: [true, 'Please provide an email'],
-			validate: [validator.isEmail, 'Please enter email in correct format'],
 			unique: true
 		},
 		password: {
 			type: String,
-			required: [true, 'Please provide a password'],
-			validate: [
-				validator.isStrongPassword,
-				'Password must be minimum 8 characters long and contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol'
-			]
+			required: [true, 'Please provide a password']
 		},
 		photo: {
 			id: {
@@ -54,7 +49,7 @@ const UserSchema = new Schema<IUserDocument>(
 
 // encrypt password before save - HOOK
 UserSchema.pre<IUserDocument>('save', async function (next) {
-	/**only runs when the user will be created and when the user wants to change the password
+	/** only runs when the user will be created and when the user wants to change the password
 	 * https://mongoosejs.com/docs/api.html#document_Document-isModified
 	 *
 	 * https://stackoverflow.com/questions/50581825/ismodified-and-pre-save-mongoose-nodejs
@@ -65,16 +60,18 @@ UserSchema.pre<IUserDocument>('save', async function (next) {
 
 // compare the password with passed on user password
 UserSchema.methods.comparePassword = async function (userPassword: string): Promise<boolean> {
-	return await bcrypt.compare(userPassword, this.password);
+	const comparedPassword = await bcrypt.compare(userPassword, this.password);
+	return comparedPassword;
 };
 
 // create and return jwt token
 UserSchema.methods.getJwtToken = function (): string {
-	const jwt_secret = config.get<string>('jwtSecret');
-	const jwt_expiry = config.get<string>('jwtExpiry');
+	const jwtSecret = config.get<string>('jwtSecret');
+	const jwtExpiry = config.get<string>('jwtExpiry');
 
-	return jwt.sign({id: this._id}, jwt_secret, {
-		expiresIn: jwt_expiry
+	// eslint-disable-next-line no-underscore-dangle
+	return jwt.sign({id: this._id}, jwtSecret, {
+		expiresIn: jwtExpiry
 	});
 };
 

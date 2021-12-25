@@ -9,6 +9,7 @@ const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: N
 			params: req.params
 		});
 		next();
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (e: any) {
 		return res.status(400).send(e.errors);
 	}

@@ -1,13 +1,13 @@
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
-import User from '../models/user.model';
-import BigPromise from '../middlewares/bigPromise';
-import CustomError from '../utils/customError';
-import cookieToken from '../utils/cookieToken';
-import mailHelper from '../utils/mailHelper';
-import logger from '../utils/logger';
-import {IUser, IGetUserAuthInfoRequest} from '../types/types.user';
+import User from '@model/user.model';
+import BigPromise from '@middleware/bigPromise';
+import CustomError from '@util/customError';
+import cookieToken from '@util/cookieToken';
+import mailHelper from '@util/mailHelper';
+import logger from '@util/logger';
+import {IUser, IGetUserAuthInfoRequest} from '@type/types.user';
 
 // log errors
 let logErr: CustomError;
@@ -111,7 +111,7 @@ export const login = BigPromise(async (req: Request, res: Response, next: NextFu
 @route   GET /api/v1/logout
 @access  Private
 */
-export const logout = BigPromise(async (req: Request, res: Response, next: NextFunction) => {
+export const logout = BigPromise(async (req: Request, res: Response) => {
 	// delete the cookie
 	res.cookie('token', null, {
 		expires: new Date(Date.now()),
@@ -197,7 +197,7 @@ export const forgotPassword = BigPromise(
 @access  Public
 */
 export const passwordReset = BigPromise(async (req: Request, res: Response, next: NextFunction) => {
-	const token = req.params.token;
+	const {token} = req.params;
 
 	// hash the token as db also stores the hashed version
 	const encryptedToken = crypto.createHash('sha256').update(token).digest('hex');
@@ -265,10 +265,8 @@ export const passwordReset = BigPromise(async (req: Request, res: Response, next
 @route   POST /api/v1/user
 @access  Private
 */
-export const getUser = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-		const user = await User.findById(req.user.id).select('-password');
+export const getUser = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
+	const user = await User.findById(req.user.id).select('-password');
 
-		res.status(200).json({success: true, user});
-	}
-);
+	res.status(200).json({success: true, user});
+});

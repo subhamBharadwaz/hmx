@@ -1,16 +1,22 @@
-import express from 'express';
+/* eslint-disable import/first */
 import dotenv from 'dotenv';
-import morgan from 'morgan';
+
+dotenv.config();
+import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
+import expressPinoLogger from 'express-pino-logger';
+import logger from '@util/logger';
 
-dotenv.config();
+// import routes
+import user from './routes/user.route';
+
 const app = express();
 
 // swagger docs
-const swaggerDocument = YAML.load(__dirname + '/swagger.yaml');
+const swaggerDocument = YAML.load(`${__dirname}/swagger.yaml`);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // regular middleware
@@ -27,13 +33,32 @@ app.use(
 );
 
 // logger middleware
-
-app.use(morgan('tiny'));
-
-// import routes
-import user from './routes/user.route';
+app.use(
+	expressPinoLogger({
+		logger,
+		serializers: {
+			req: req => ({
+				method: req.method,
+				url: req.url,
+				user: req.raw.user
+			})
+		}
+	})
+);
 
 // router middleware
 app.use('/api/v1', user);
+
+// handle unhandled promise rejections
+
+process.on('unhandledRejection', (reason: string) => {
+	throw reason;
+});
+
+// handle uncaught exceptions
+process.on('uncaughtException', err => {
+	logger.error('There was an uncaught error', err);
+	process.exit(1);
+});
 
 export default app;

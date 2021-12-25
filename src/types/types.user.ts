@@ -19,12 +19,14 @@ export interface IUser {
 }
 
 export interface IUserDocument extends IUser, Document {
+	// eslint-disable-next-line no-unused-vars
 	comparePassword: (userPassword: string) => Promise<boolean>;
 	getJwtToken: () => string;
 	getForgotPasswordToken: () => string;
 }
 
 export interface IGetUserAuthInfoRequest extends Request {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	user?: any;
 }
 
