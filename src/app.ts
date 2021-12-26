@@ -8,6 +8,7 @@ import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import expressPinoLogger from 'express-pino-logger';
+import helmet from 'helmet';
 import logger from '@util/logger';
 
 // import routes
@@ -45,6 +46,13 @@ app.use(
 		}
 	})
 );
+
+// set security headers
+app.use(helmet());
+
+// TODO rate limit
+// TODO Support blacklisting JWTs
+// TODO Modify the default session middleware settings
 
 // router middleware
 app.use('/api/v1', user);

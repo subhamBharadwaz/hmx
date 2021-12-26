@@ -2,7 +2,7 @@ import {object, string, TypeOf} from 'zod';
 
 const passwordRegex = /(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
-export const createUserSchema = object({
+const registerUserSchema = object({
 	body: object({
 		firstName: string({
 			required_error: 'First name is required'
@@ -29,4 +29,6 @@ export const createUserSchema = object({
 	})
 });
 
-export type CreateUserInput = Omit<TypeOf<typeof createUserSchema>, 'body'>;
+export type CreateUserInput = Omit<TypeOf<typeof registerUserSchema>, 'body'>;
+
+export default registerUserSchema;

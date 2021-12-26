@@ -9,14 +9,15 @@ module.exports = {
 		'airbnb-base',
 		'plugin:prettier/recommended',
 		'plugin:import/warnings',
-		'plugin:import/typescript'
+		'plugin:import/typescript',
+		'plugin:security/recommended'
 	],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		ecmaVersion: 13,
 		sourceType: 'module'
 	},
-	plugins: ['@typescript-eslint', 'prettier', 'import'],
+	plugins: ['@typescript-eslint', 'prettier', 'import', 'security'],
 	rules: {
 		'import/extensions': 'off',
 		'consistent-return': 'off',

@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
+import path from 'path';
 import User from '@model/user.model';
 import BigPromise from '@middleware/bigPromise';
 import CustomError from '@util/customError';
@@ -39,6 +40,16 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 
 	// upload photo to cloudinary
 	const file: UploadApiOptions = req.files.photo;
+
+	// check if the image is a valid image
+	const extensionName = path.extname(file.name);
+	const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+
+	if (!allowedExtensions.includes(extensionName)) {
+		logErr = new CustomError('Invalid Image', 422);
+		logger.error(logErr);
+		return next(logErr);
+	}
 
 	const result = await cloudinary.uploader.upload(file.tempFilePath, {
 		folder: 'users',
@@ -262,7 +273,7 @@ export const passwordReset = BigPromise(async (req: Request, res: Response, next
 
 /** 
 @desc    Get Logged-in User Details
-@route   POST /api/v1/user
+@route   POST /api/v1/userdashboard
 @access  Private
 */
 export const getUser = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
@@ -270,3 +281,105 @@ export const getUser = BigPromise(async (req: IGetUserAuthInfoRequest, res: Resp
 
 	res.status(200).json({success: true, user});
 });
+
+/** 
+@desc    Change password
+@route   POST /api/v1/password/update
+@access  Private
+*/
+export const changePassword = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const userId: string = req.user.id;
+
+		const user = await User.findById(userId).select('+password');
+
+		// if current password is incorrect
+		const isCorrectCurrentPassword = await user?.comparePassword(req.body.currentPassword);
+
+		if (!isCorrectCurrentPassword) {
+			logErr = new CustomError('Current password is incorrect', 400);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		// if new password and confirm new password are not equal
+		if (req.body.newPassword !== req.body.confirmNewPassword) {
+			logErr = new CustomError('New password and confirm password do not matched', 400);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		// for object possibly null ts error
+		if (user !== null) {
+			// set new password to the password field in d
+			user.password = req.body.newPassword;
+
+			// save the new password to db
+			await user.save();
+
+			cookieToken(user, res);
+		}
+	}
+);
+
+/** 
+@desc    Update user details
+@route   POST /api/v1/userdashboard/update
+@access  Private
+*/
+export const updateUserDetails = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const {firstName, lastName, email}: IUser = req.body;
+
+		const newData = {
+			firstName,
+			lastName,
+			email
+		} as IUser;
+
+		if (req.files) {
+			const user = await User.findById(req.user.id);
+
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const imageId: any = user?.photo.id;
+
+			// delete photo on cloudinary
+			await cloudinary.uploader.destroy(imageId);
+
+			// upload new photo
+			// upload photo to cloudinary
+			const file: UploadApiOptions = req.files.photo;
+
+			// check if the image is a valid image
+			const extensionName = path.extname(file.name);
+			const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+
+			if (!allowedExtensions.includes(extensionName)) {
+				logErr = new CustomError('Invalid Image', 422);
+				logger.error(logErr);
+				return next(logErr);
+			}
+
+			const result = await cloudinary.uploader.upload(file.tempFilePath, {
+				folder: 'users',
+				width: 150,
+				crop: 'scale'
+			});
+
+			// add photo data in newData object
+			newData.photo = {
+				id: result.public_id,
+				secure_url: result.secure_url
+			};
+		}
+
+		// update data in user
+		const user = await User.findByIdAndUpdate(req.user.id, newData, {
+			new: true,
+			runValidators: true,
+			useFindAndModify: false
+		}).select('-password');
+
+		res.status(201).json({success: true, user});
+	}
+);
