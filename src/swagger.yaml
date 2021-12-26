@@ -250,7 +250,9 @@ paths:
                                     user:
                                         type: object
                                         properties:
-                                            name:
+                                            firstName:
+                                                type: string
+                                            lastName:
                                                 type: string
                                             email:
                                                 type: string
@@ -269,6 +271,113 @@ paths:
                                                 type: string
                                             updatedAt:
                                                 type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /password/update:
+        post:
+            tags:
+                - User
+            summary: User can update their password if the user is logged in. Send currentPassword, newPassword, confirmNewPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - currentPassword
+                                - newPassword
+                                - confirmNewPassword
+                            properties:
+                                currentPassword:
+                                    type: string
+                                newPassword:
+                                    type: string
+                                confirmNewPassword:
+                                    type: string
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /userdashboard/update:
+        post:
+            tags:
+                - User
+            summary: User can update the name, emails and photo. Photo is optional
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required:
+                                - firstName
+                                - lastName
+                                - email
+                            properties:
+                                firstName:
+                                    type: string
+                                lastName:
+                                    type: string
+                                email:
+                                    type: string
+                                photo:
+                                    in: formData
+                                    description: The uploaded file data
+                                    type: file
+                                    format: binary
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    token:
+                                        type: string
+                                    user:
+                                        type: object
+                                        properties:
+                                            firstName:
+                                                type: string
+                                            lastName:
+                                                type: string
+                                            email:
+                                                type: string
+                                            role:
+                                                type: string
+                                            photo:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: string
+                                                    secure_url:
+                                                        type: string
+                                            _id:
+                                                type: string
+                                            createdAt:
+                                                type: string
+                                            updatedAt:
+                                                type: string
+
                 400:
                     description: Bad request
                 500:

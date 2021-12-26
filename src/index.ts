@@ -20,4 +20,7 @@ cloudinary.config({
 
 const PORT = config.get<number>('port');
 
-app.listen(4000, () => logger.info(`Server is running at http://localhost:${PORT}`));
+app.listen(4000, () => {
+	logger.info(`Server is running at http://localhost:${PORT}`);
+	logger.info(`Docs are at http://localhost:${PORT}/api-docs`);
+});
