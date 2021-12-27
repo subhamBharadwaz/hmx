@@ -382,3 +382,190 @@ paths:
                     description: Bad request
                 500:
                     description: Internal server error
+
+    /admin/users:
+        get:
+            tags:
+                - Admin
+            summary: If user is admin, response will get array of all users
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        firstName:
+                                            type: string
+                                        lastName:
+                                            type: string
+                                        email:
+                                            type: string
+                                        role:
+                                            type: string
+                                        photo:
+                                            type: object
+                                            properties:
+                                                id:
+                                                    type: string
+                                                secure_url:
+                                                    type: string
+                                        _id:
+                                            type: string
+                                        createdAt:
+                                            type: string
+                                        updatedAt:
+                                            type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /admin/user/{id}:
+        get:
+            tags:
+                - Admin
+            summary: If user is admin, response will get details of 1 user
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    firstName:
+                                        type: string
+                                    lastName:
+                                        type: string
+                                    email:
+                                        type: string
+                                    role:
+                                        type: string
+                                    photo:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                            secure_url:
+                                                type: string
+                                    _id:
+                                        type: string
+                                    createdAt:
+                                        type: string
+                                    updatedAt:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+        put:
+            tags:
+                - Admin
+            summary: If user is admin, he can update mentioned fields in user
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                - name: firstName
+                  in: formData
+                  required: true
+                  schema:
+                      type: string
+                - name: lastName
+                  in: formData
+                  required: true
+                  schema:
+                      type: string
+                - name: email
+                  in: formData
+                  required: true
+                  schema:
+                      type: string
+                - name: role
+                  in: formData
+                  required: true
+                  schema:
+                      type: string
+                      enum: [user, admin]
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    user:
+                                        type: object
+                                        properties:
+                                            firstName:
+                                                type: string
+                                            lastName:
+                                                type: string
+                                            email:
+                                                type: string
+                                            role:
+                                                type: string
+                                            photo:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: string
+                                                    secure_url:
+                                                        type: string
+                                            _id:
+                                                type: string
+                                            createdAt:
+                                                type: string
+                                            updatedAt:
+                                                type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+        delete:
+            tags:
+                - Admin
+            summary: If user is admin, delete the user with given id
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    message:
+                                        type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
