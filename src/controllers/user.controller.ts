@@ -10,7 +10,7 @@ import {IUser, IGetUserAuthInfoRequest} from '@type/types.user';
 // log errors
 let logErr: CustomError;
 
-/** 
+/**
 @desc    Register User
 @route   POST /api/v1/register
 @access  Public
@@ -78,7 +78,7 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 	cookieToken(user, res);
 });
 
-/** 
+/**
 @desc    Login User
 @route   POST /api/v1/login
 @access  Public
@@ -114,7 +114,7 @@ export const login = BigPromise(async (req: Request, res: Response, next: NextFu
 	cookieToken(user, res);
 });
 
-/** 
+/**
 @desc    Logout User
 @route   GET /api/v1/logout
 @access  Private
@@ -132,7 +132,7 @@ export const logout = BigPromise(async (req: Request, res: Response) => {
 	});
 });
 
-/** 
+/**
 @desc    Forgot Password
 @route   POST /api/v1/forgotpassword
 @access  Public
@@ -199,7 +199,7 @@ export const forgotPassword = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Reset Password
 @route   POST /api/v1/password/reset/:token
 @access  Public
@@ -268,7 +268,7 @@ export const passwordReset = BigPromise(async (req: Request, res: Response, next
 	cookieToken(user, res);
 });
 
-/** 
+/**
 @desc    Get Logged-in User Details
 @route   POST /api/v1/userdashboard
 @access  Private
@@ -279,7 +279,7 @@ export const getUser = BigPromise(async (req: IGetUserAuthInfoRequest, res: Resp
 	res.status(200).json({success: true, user});
 });
 
-/** 
+/**
 @desc    Change password
 @route   PUT /api/v1/password/update
 @access  Private
@@ -319,7 +319,7 @@ export const changePassword = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Update user details
 @route   PUT /api/v1/userdashboard/update
 @access  Private
@@ -381,7 +381,7 @@ export const updateUserDetails = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get all users - Admin only
 @route   GET /api/v1/admin/users
 @access  Private
@@ -392,7 +392,7 @@ export const adminAllUsers = BigPromise(async (req: IGetUserAuthInfoRequest, res
 	res.status(200).json({success: true, users});
 });
 
-/** 
+/**
 @desc    Get a single user - Admin only
 @route   GET /api/v1/admin/user/:id
 @access  Private
@@ -415,7 +415,7 @@ export const adminSingleUser = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Update a single user details - Admin only
 @route   PUT /api/v1/admin/user/:id
 @access  Private
@@ -452,7 +452,7 @@ export const adminUpdateUserDetails = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete a single user - Admin only
 @route   DELETE /api/v1/admin/user/:id
 @access  Private
