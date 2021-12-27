@@ -3,11 +3,8 @@ import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
 import path from 'path';
 import User from '@model/user.model';
-import BigPromise from '@middleware/bigPromise';
-import CustomError from '@util/customError';
-import cookieToken from '@util/cookieToken';
-import mailHelper from '@util/mailHelper';
-import logger from '@util/logger';
+import {BigPromise} from '@middleware/index';
+import {CustomError, cookieToken, mailHelper, logger, isValidMongooseObjectId} from '@util/index';
 import {IUser, IGetUserAuthInfoRequest} from '@type/types.user';
 
 // log errors
@@ -284,7 +281,7 @@ export const getUser = BigPromise(async (req: IGetUserAuthInfoRequest, res: Resp
 
 /** 
 @desc    Change password
-@route   POST /api/v1/password/update
+@route   PUT /api/v1/password/update
 @access  Private
 */
 export const changePassword = BigPromise(
@@ -324,7 +321,7 @@ export const changePassword = BigPromise(
 
 /** 
 @desc    Update user details
-@route   POST /api/v1/userdashboard/update
+@route   PUT /api/v1/userdashboard/update
 @access  Private
 */
 export const updateUserDetails = BigPromise(
@@ -381,5 +378,110 @@ export const updateUserDetails = BigPromise(
 		}).select('-password');
 
 		res.status(201).json({success: true, user});
+	}
+);
+
+/** 
+@desc    Get all users - Admin only
+@route   GET /api/v1/admin/users
+@access  Private
+*/
+export const adminAllUsers = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
+	const users = await User.find().select('-password');
+
+	res.status(200).json({success: true, users});
+});
+
+/** 
+@desc    Get a single user - Admin only
+@route   GET /api/v1/admin/user/:id
+@access  Private
+*/
+export const adminSingleUser = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const {id} = req.params;
+
+		// check for if the given id is an valid objectId or not
+		isValidMongooseObjectId(id, next);
+		const user = await User.findById(id).select('-password');
+
+		if (!user) {
+			logErr = new CustomError(`No user found with the id of ${id}`, 400);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		res.status(200).json({success: true, user});
+	}
+);
+
+/** 
+@desc    Update a single user details - Admin only
+@route   PUT /api/v1/admin/user/:id
+@access  Private
+*/
+export const adminUpdateUserDetails = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const {id} = req.params;
+		const {firstName, lastName, email, role}: IUser = req.body;
+		const newData = {
+			firstName,
+			lastName,
+			email,
+			role
+		} as IUser;
+
+		// check for if the given id is an valid objectId or not
+		isValidMongooseObjectId(id, next);
+
+		const isUserExists = await User.findById(id);
+
+		if (!isUserExists) {
+			logErr = new CustomError(`No user found with the id of ${id}`, 401);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		const user = await User.findByIdAndUpdate(id, newData, {
+			new: true,
+			runValidators: true,
+			useFindAndModify: false
+		}).select('-password');
+
+		res.status(201).json({success: true, user});
+	}
+);
+
+/** 
+@desc    Delete a single user - Admin only
+@route   DELETE /api/v1/admin/user/:id
+@access  Private
+*/
+export const adminDeleteUser = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const {id} = req.params;
+
+		// check for if the given id is an valid objectId or not
+		isValidMongooseObjectId(id, next);
+
+		const user = await User.findById(id);
+
+		if (!user) {
+			logErr = new CustomError(`No user found with the id of ${id}`, 401);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		// get the image id
+		const imageId = user.photo.id;
+		// delete user's image from cloudinary
+		await cloudinary.uploader.destroy(imageId);
+
+		await user.remove();
+
+		res.status(200).json({
+			success: true,
+			message: `Successfully deleted the user with id ${id}`
+		});
 	}
 );

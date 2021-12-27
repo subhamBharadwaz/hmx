@@ -2,9 +2,8 @@ import {Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 import config from 'config';
 import User from '@model/user.model';
-import CustomError from '@util/customError';
-import BigPromise from '@middleware/bigPromise';
-import logger from '@util/logger';
+import {CustomError, logger} from '@util/index';
+import {BigPromise} from '@middleware/index';
 import {IGetUserAuthInfoRequest, IJwtPayload} from '@type/types.user';
 
 // log error
