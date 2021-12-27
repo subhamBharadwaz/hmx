@@ -1,10 +1,9 @@
 import {Router} from 'express';
 
 // import middleware
-import isLoggedIn from '@middleware/user.middleware';
-import validateResource from '@middleware/validateResource';
+import {isLoggedIn, validateResource, customRole} from '@middleware/index';
 
-// schema
+// import input schema validation
 import {
 	registerUserSchema,
 	loginUserSchema,
@@ -12,7 +11,7 @@ import {
 	passwordResetSchema,
 	changePasswordSchema,
 	updateUserSchema
-} from '@src/schema/user';
+} from '@schema/user';
 
 // import controllers
 import {
@@ -23,8 +22,12 @@ import {
 	passwordReset,
 	getUser,
 	changePassword,
-	updateUserDetails
-} from '../controllers/user.controller';
+	updateUserDetails,
+	adminAllUsers,
+	adminSingleUser,
+	adminUpdateUserDetails,
+	adminDeleteUser
+} from '@controller/user.controller';
 
 const router = Router();
 
@@ -36,9 +39,17 @@ router.route('/password/reset/:token').post(validateResource(passwordResetSchema
 router.route('/userdashboard').get(isLoggedIn, getUser);
 router
 	.route('/password/update')
-	.post(isLoggedIn, validateResource(changePasswordSchema), changePassword);
+	.put(isLoggedIn, validateResource(changePasswordSchema), changePassword);
 router
 	.route('/userdashboard/update')
-	.post(isLoggedIn, validateResource(updateUserSchema), updateUserDetails);
+	.put(isLoggedIn, validateResource(updateUserSchema), updateUserDetails);
+
+// Admin only routes
+router.route('/admin/users').get(isLoggedIn, customRole('admin'), adminAllUsers);
+router
+	.route('/admin/user/:id')
+	.get(isLoggedIn, customRole('admin'), adminSingleUser)
+	.put(isLoggedIn, customRole('admin'), adminUpdateUserDetails)
+	.delete(isLoggedIn, customRole('admin'), adminDeleteUser);
 
 export default router;

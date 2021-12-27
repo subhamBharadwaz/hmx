@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import expressPinoLogger from 'express-pino-logger';
 import helmet from 'helmet';
-import logger from '@util/logger';
+import {logger} from '@util/index';
 
 // import routes
 import user from './routes/user.route';
