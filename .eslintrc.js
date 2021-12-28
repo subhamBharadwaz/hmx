@@ -19,6 +19,8 @@ module.exports = {
 	},
 	plugins: ['@typescript-eslint', 'prettier', 'import', 'security'],
 	rules: {
+		'no-shadow': 'off',
+		'@typescript-eslint/no-shadow': ['error'],
 		'import/extensions': 'off',
 		'consistent-return': 'off',
 		'no-console': 'off',
