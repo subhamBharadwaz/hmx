@@ -2,32 +2,33 @@
 import {Document, Types} from 'mongoose';
 
 export enum CategoryType {
-	Men = 'Men',
-	Women = 'Women'
+	Men = 'men',
+	Women = 'women',
+	Unisex = 'unisex'
 }
 
 export enum ProductType {
-	Twill = 'Twill Jogger',
-	Shirred = 'Shirred Leg Jogger',
-	Moto = 'Moto Knit Jogger',
-	Drop = 'Drop Crotch Jogger',
-	HipHop = 'Hip Hop Jogger',
-	Shading = 'Shading Block Jogger',
-	Chino = 'Chino Jogger',
-	Handcuffed = 'Handcuffed Jogger',
-	Loose = 'Loose Pocket Jogger',
-	Splash = 'Splash-color Jogger',
-	Wool = 'Wool Jogger',
-	Tore = 'Distressed Jogger',
-	NonCuffed = 'Non Cuffed Jogger'
+	Twill = 'twilljogger',
+	Shirred = 'shirredlegjogger',
+	Moto = 'motoknitjogger',
+	Drop = 'dropcrotchjogger',
+	HipHop = 'hiphopjogger',
+	Shading = 'shadingblockjogger',
+	Chino = 'chinojogger',
+	Handcuffed = 'handcuffedjogger',
+	Loose = 'loosepocketjogger',
+	Splash = 'splashcolorjogger',
+	Wool = 'wooljogger',
+	Tore = 'distressedjogger',
+	NonCuffed = 'noncuffedjogger'
 }
 
 export enum SizeType {
-	Small = 'S',
-	Medium = 'M',
-	Large = 'L',
-	ExtraLarge = 'XL',
-	DoubleExtraLarge = 'XXL'
+	Small = 's',
+	Medium = 'm',
+	Large = 'l',
+	ExtraLarge = 'xl',
+	DoubleExtraLarge = 'xxl'
 }
 
 export enum RatingType {
@@ -40,7 +41,7 @@ export enum RatingType {
 
 export interface IProductDocument extends Document {
 	name: string;
-	price: number;
+	price: string;
 	description: string;
 	photos: [
 		{

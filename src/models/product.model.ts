@@ -14,12 +14,10 @@ const ProductSchema = new Schema<IProductDocument>(
 			type: String,
 			required: [true, 'Please provide a name of the product'],
 			trim: true
-			// TODO MAX length
 		},
 		price: {
-			type: Number,
+			type: String,
 			required: [true, 'Please provide price of the product']
-			// TODO MAX length
 		},
 		description: {
 			type: String,
@@ -50,7 +48,7 @@ const ProductSchema = new Schema<IProductDocument>(
 			required: [true, 'Please select type of the product'],
 			enum: {
 				values: Object.values(ProductType),
-				message: `Please select category only from - ${ProductType.Chino}, ${ProductType.Drop}, ${ProductType.Handcuffed}, ${ProductType.HipHop}, ${ProductType.Loose}, ${ProductType.Moto}, ${ProductType.NonCuffed}, ${ProductType.Shading}, ${ProductType.Shirred}, ${ProductType.Splash}, ${ProductType.Tore}, ${ProductType.Twill} or ${ProductType.Wool}`
+				message: `Please select the type of the product only from the given types`
 			}
 		},
 		brand: {
@@ -66,7 +64,7 @@ const ProductSchema = new Schema<IProductDocument>(
 			required: [true, 'Please select the available sizes for the product'],
 			enum: {
 				values: Object.values(SizeType),
-				message: `Please select sized only from - ${SizeType.Small}, ${SizeType.Medium},  ${SizeType.Large},  ${SizeType.ExtraLarge} or  ${SizeType.DoubleExtraLarge},`
+				message: `Please select sized only from the given sizes,`
 			}
 		},
 		ratings: {
@@ -93,7 +91,7 @@ const ProductSchema = new Schema<IProductDocument>(
 					required: true,
 					enum: {
 						values: Object.values(RatingType),
-						message: `Please select rating only from - ${RatingType.One}-${RatingType.Five}`
+						message: `Please select rating only from 0-5`
 					}
 				},
 				comment: {

@@ -9,5 +9,7 @@ export default {
 	smtpHost: '',
 	smtpPort: '',
 	smtpUser: '',
-	smtpPass: ''
+	smtpPass: '',
+	userImageDir: 'users',
+	productImageDir: 'products'
 };

@@ -6,3 +6,4 @@ export {default as connectToDB} from './db';
 export {default as logger} from './logger';
 export {default as mailHelper} from './mailHelper';
 export {default as isValidMongooseObjectId} from './isValidObjectId';
+export {default as WhereClause} from './whereClause';
