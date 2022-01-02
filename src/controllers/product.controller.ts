@@ -11,7 +11,7 @@ import {IGetUserAuthInfoRequest} from '@type/types.user';
 
 let logErr: CustomError;
 
-/** 
+/**
 @desc    Get Products
 @route   GET /api/v1/products
 @access  Public
@@ -41,7 +41,7 @@ export const getAllProducts = BigPromise(async (req: Request, res: Response) => 
 	});
 });
 
-/** 
+/**
 @desc    Get Products
 @route   GET /api/v1/product/:id
 @access  Public
@@ -67,7 +67,7 @@ export const getSingleProduct = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Admin Get All Products
 @route   GET /api/v1/admin/products
 @access  Private
@@ -78,7 +78,7 @@ export const adminGetAllProducts = BigPromise(async (req: Request, res: Response
 	res.status(200).json({success: true, products});
 });
 
-/** 
+/**
 @desc    Admin Add Product
 @route   POST /api/v1/product
 @access  Private
@@ -137,7 +137,7 @@ export const adminAddProduct = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Admin Update Single Product
 @route   PUT /api/v1/admin/product/:id
 @access  Private
@@ -208,7 +208,7 @@ export const adminUpdateSingleProduct = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Admin Delete Single Product
 @route   DELETE /api/v1/admin/product/:id
 @access  Private
