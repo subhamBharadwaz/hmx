@@ -569,3 +569,456 @@ paths:
                     description: Bad request
                 500:
                     description: Internal server error
+
+    /products:
+        get:
+            tags:
+                - Product
+            summary: A simple get request will give you all available products
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    products:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                _id:
+                                                    type: string
+                                                name:
+                                                    type: string
+                                                price:
+                                                    type: number
+                                                description:
+                                                    type: string
+                                                photos:
+                                                    type: array
+                                                    items:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: string
+                                                            secure_url:
+                                                                type: string
+                                                category:
+                                                    type: string
+                                                productType:
+                                                    type: string
+                                                brand:
+                                                    type: string
+                                                stock:
+                                                    type: number
+                                                size:
+                                                    type: string
+                                                ratings:
+                                                    type: number
+                                                numberOfReviews:
+                                                    type: number
+                                                reviews:
+                                                    type: array
+                                                    items:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: string
+                                                            user:
+                                                                type: string
+                                                            name:
+                                                                type: string
+                                                            rating:
+                                                                type: number
+                                                            comment:
+                                                                type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /admin/products:
+        get:
+            tags:
+                - Admin
+            summary: If admin, will give you all available products
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    products:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                _id:
+                                                    type: string
+                                                name:
+                                                    type: string
+                                                price:
+                                                    type: number
+                                                description:
+                                                    type: string
+                                                photos:
+                                                    type: array
+                                                    items:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: string
+                                                            secure_url:
+                                                                type: string
+                                                category:
+                                                    type: string
+                                                productType:
+                                                    type: string
+                                                brand:
+                                                    type: string
+                                                stock:
+                                                    type: number
+                                                size:
+                                                    type: string
+                                                ratings:
+                                                    type: number
+                                                numberOfReviews:
+                                                    type: number
+                                                reviews:
+                                                    type: array
+                                                    items:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: string
+                                                            user:
+                                                                type: string
+                                                            name:
+                                                                type: string
+                                                            rating:
+                                                                type: number
+                                                            comment:
+                                                                type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /admin/product/add:
+        post:
+            tags:
+                - Admin
+            summary: If admin, Add a product
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required:
+                                - name
+                                - price
+                                - description
+                                - category
+                                - productType
+                                - brand
+                                - size
+                                - photos
+                            properties:
+                                name:
+                                    type: string
+                                    required: true
+                                price:
+                                    type: number
+                                    required: true
+                                description:
+                                    type: string
+                                    required: true
+                                photos:
+                                    in: formData
+                                    description: The uploaded photos
+                                    type: file
+                                    format: binary
+                                category:
+                                    type: string
+                                    enum: [men, women, unisex]
+                                    required: true
+                                productType:
+                                    type: string
+                                    enum:
+                                        - twilljogger
+                                        - shirredlegjogger
+                                        - motoknitjogger
+                                        - dropcrotchjogger
+                                        - hiphopjogger
+                                        - shadingblockjogger
+                                        - chinojogger
+                                        - handcuffedjogger
+                                        - loosepocketjogger
+                                        - splashcolorjogger
+                                        - wooljogger,
+                                        - distressedjogger
+                                        - noncuffedjogger
+                                    required: true
+                                brand:
+                                    type: string
+                                    required: true
+                                stock:
+                                    type: number
+                                    default: 0
+                                size:
+                                    type: string
+                                    enum: [s, m, l, xl, xxl]
+                                    required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    product:
+                                        type: object
+                                        properties:
+                                            _id:
+                                                type: string
+                                            name:
+                                                type: string
+                                            price:
+                                                type: number
+                                            description:
+                                                type: string
+                                            photos:
+                                                type: array
+                                                items:
+                                                    type: object
+                                                    properties:
+                                                        id:
+                                                            type: string
+                                                        secure_url:
+                                                            type: string
+                                            category:
+                                                type: string
+                                            productType:
+                                                type: string
+                                            brand:
+                                                type: string
+                                            stock:
+                                                type: number
+                                            size:
+                                                type: string
+                                            ratings:
+                                                type: number
+                                            numberOfReviews:
+                                                type: number
+                                            user:
+                                                type: string
+                                            reviews:
+                                                type: array
+                                                items:
+                                                    type: object
+                                                    properties:
+                                                        id:
+                                                            type: string
+                                                        comment:
+                                                            type: string
+                                                        user:
+                                                            type: string
+                                                        name:
+                                                            type: string
+                                                        rating:
+                                                            type: number
+                                            createdAt:
+                                                type: date
+                                            updatedAt:
+                                                type: date
+                                            __v:
+                                                type: number
+
+            400:
+                description: Bad request
+            500:
+                description: Internal server error
+
+    /admin/product/{id}:
+        put:
+            tags:
+                - Admin
+            summary: If admin, update the product. photos are optional to pass. Rest all body is set to be updated to what you pass here.
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required:
+                                - name
+                                - price
+                                - description
+                                - category
+                                - productType
+                                - brand
+                                - size
+                                - photos
+                            properties:
+                                name:
+                                    type: string
+                                    required: true
+                                price:
+                                    type: number
+                                    required: true
+                                description:
+                                    type: string
+                                    required: true
+                                photos:
+                                    in: formData
+                                    description: The uploaded photos
+                                    type: file
+                                    format: binary
+                                category:
+                                    type: string
+                                    enum: [men, women, unisex]
+                                    required: true
+                                productType:
+                                    type: string
+                                    enum:
+                                        - twilljogger
+                                        - shirredlegjogger
+                                        - motoknitjogger
+                                        - dropcrotchjogger
+                                        - hiphopjogger
+                                        - shadingblockjogger
+                                        - chinojogger
+                                        - handcuffedjogger
+                                        - loosepocketjogger
+                                        - splashcolorjogger
+                                        - wooljogger,
+                                        - distressedjogger
+                                        - noncuffedjogger
+                                    required: true
+                                brand:
+                                    type: string
+                                    required: true
+                                stock:
+                                    type: number
+                                    default: 0
+                                size:
+                                    type: string
+                                    enum: [s, m, l, xl, xxl]
+                                    required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    product:
+                                        type: object
+                                        properties:
+                                            _id:
+                                                type: string
+                                            name:
+                                                type: string
+                                            price:
+                                                type: number
+                                            description:
+                                                type: string
+                                            photos:
+                                                type: array
+                                                items:
+                                                    type: object
+                                                    properties:
+                                                        id:
+                                                            type: string
+                                                        secure_url:
+                                                            type: string
+                                            category:
+                                                type: string
+                                            productType:
+                                                type: string
+                                            brand:
+                                                type: string
+                                            stock:
+                                                type: number
+                                            size:
+                                                type: string
+                                            ratings:
+                                                type: number
+                                            numberOfReviews:
+                                                type: number
+                                            user:
+                                                type: string
+                                            reviews:
+                                                type: array
+                                                items:
+                                                    type: object
+                                                    properties:
+                                                        id:
+                                                            type: string
+                                                        comment:
+                                                            type: string
+                                                        user:
+                                                            type: string
+                                                        name:
+                                                            type: string
+                                                        rating:
+                                                            type: number
+                                            createdAt:
+                                                type: date
+                                            updatedAt:
+                                                type: date
+                                            __v:
+                                                type: number
+
+            400:
+                description: Bad request
+            500:
+                description: Internal server error
+        delete:
+            tags:
+                - Admin
+            summary: If admin, pass the id of product and product will be removed
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    message:
+                                        type: string
+            400:
+                description: Bad request
+            500:
+                description: Internal server error

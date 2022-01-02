@@ -235,6 +235,6 @@ export const adminDeleteSingleProduct = BigPromise(
 
 		await product.remove();
 
-		res.status(202).json({success: true});
+		res.status(202).json({success: true, message: 'Product deleted successfully'});
 	}
 );
