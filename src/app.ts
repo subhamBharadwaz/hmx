@@ -13,6 +13,7 @@ import {logger} from '@util/index';
 
 // import routes
 import user from './routes/user.route';
+import product from './routes/product.route';
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use(helmet());
 
 // router middleware
 app.use('/api/v1', user);
+app.use('/api/v1', product);
 
 // handle unhandled promise rejections
 

@@ -44,7 +44,7 @@ router
 	.route('/userdashboard/update')
 	.put(isLoggedIn, validateResource(updateUserSchema), updateUserDetails);
 
-// Admin only routes
+// admin only routes
 router.route('/admin/users').get(isLoggedIn, customRole('admin'), adminAllUsers);
 router
 	.route('/admin/user/:id')

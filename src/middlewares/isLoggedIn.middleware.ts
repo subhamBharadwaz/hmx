@@ -13,7 +13,6 @@ const isLoggedIn = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const token: string =
 			req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
-
 		if (!token) {
 			logErr = new CustomError('Login first to access this page', 401);
 			return next(logger.error(logErr));

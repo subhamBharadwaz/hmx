@@ -2,6 +2,7 @@ import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
 import path from 'path';
+import config from 'config';
 import User from '@model/user.model';
 import {BigPromise} from '@middleware/index';
 import {CustomError, cookieToken, mailHelper, logger, isValidMongooseObjectId} from '@util/index';
@@ -49,7 +50,7 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 	}
 
 	const result = await cloudinary.uploader.upload(file.tempFilePath, {
-		folder: 'users',
+		folder: config.get<string>('userImageDir'),
 		width: 150,
 		crop: 'scale'
 	});
@@ -358,7 +359,7 @@ export const updateUserDetails = BigPromise(
 			}
 
 			const result = await cloudinary.uploader.upload(file.tempFilePath, {
-				folder: 'users',
+				folder: config.get<string>('userImageDir'),
 				width: 150,
 				crop: 'scale'
 			});
