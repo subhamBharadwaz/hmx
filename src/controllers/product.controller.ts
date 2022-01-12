@@ -68,6 +68,104 @@ export const getSingleProduct = BigPromise(
 );
 
 /** 
+@desc    Add Review
+@route   PUT /api/v1/review
+@access  Private
+*/
+export const addReview = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
+	const {rating, comment, productId} = req.body;
+
+	const review = {
+		user: req.user._id,
+		name: req.user.name,
+		rating: Number(rating),
+		comment
+	};
+
+	const product = await Product.findById(productId);
+
+	const AlreadyReviewed = product?.reviews.find(
+		// _id is a BSON field so convert it to a string
+		rev => rev.user.toString() === req.user._id.toString()
+	);
+
+	if (AlreadyReviewed) {
+		product?.reviews.forEach(rev => {
+			if (rev.user.toString() === req.user._id.toString()) {
+				rev.comment = comment;
+				rev.rating = rating;
+			}
+		});
+	} else {
+		product?.reviews.push(review);
+		if (product) product.numberOfReviews = product.reviews.length;
+	}
+
+	// adjust ratings
+	if (product) {
+		product.ratings =
+			product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+	}
+
+	await product?.save({validateBeforeSave: false});
+
+	res.status(200).json({success: true});
+});
+
+/** 
+@desc    Delete Review
+@route   DELETE /api/v1/review
+@access  Private
+*/
+export const deleteReview = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
+	const {productId} = req.query;
+
+	const product = await Product.findById(productId);
+
+	const reviews = product?.reviews.filter(rev => rev.user.toString() === req.user._id.toString());
+
+	// update total number of reviews
+	const numberOfReviews = reviews?.length;
+
+	// adjust ratings
+	let ratings = product?.ratings;
+	if (product) {
+		ratings =
+			product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+	}
+
+	// update the product
+	await Product.findByIdAndUpdate(
+		productId,
+		{
+			reviews,
+			ratings,
+			numberOfReviews
+		},
+		{
+			new: true,
+			runValidators: true,
+			useFindAndModify: false
+		}
+	);
+
+	res.status(200).json({success: true});
+});
+
+/** 
+@desc    Get reviews for one product
+@route   GET /api/v1/reviews
+@access  Public
+*/
+export const getSingleProductReviews = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response) => {
+		const product = await Product.findById(req.query.id);
+
+		res.status(200).json({success: true, reviews: product?.reviews});
+	}
+);
+
+/** 
 @desc    Admin Get All Products
 @route   GET /api/v1/admin/products
 @access  Private

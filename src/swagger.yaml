@@ -1022,3 +1022,159 @@ paths:
                 description: Bad request
             500:
                 description: Internal server error
+
+    /reviews:
+        get:
+            tags:
+                - Product
+            summary: A simple get request, will give you all reviews for given product
+            parameters:
+                - name: id
+                  in: query
+                  description: id of the product
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    reviews:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                user:
+                                                    type: string
+                                                name:
+                                                    type: string
+                                                rating:
+                                                    type: number
+                                                comment:
+                                                    type: string
+                                                _id:
+                                                    type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
+    /review:
+        put:
+            tags:
+                - Product
+            summary: A logged in user can post a review on any product. If review is already posted, it will just update the existing review
+            parameters:
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - rating
+                                - comment
+                                - productId
+                            properties:
+                                rating:
+                                    type: number
+                                    required: true
+                                comment:
+                                    type: string
+                                    required: true
+                                productId:
+                                    type: string
+                                    required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    reviews:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                user:
+                                                    type: string
+                                                name:
+                                                    type: string
+                                                rating:
+                                                    type: number
+                                                comment:
+                                                    type: string
+                                                _id:
+                                                    type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+        delete:
+            tags:
+                - Product
+            summary: Delete the review of logged in user on given product id.
+            parameters:
+                - name: productId
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - rating
+                                - comment
+                                - productId
+                            properties:
+                                rating:
+                                    type: number
+                                    required: true
+                                comment:
+                                    type: string
+                                    required: true
+                                productId:
+                                    type: string
+                                    required: true
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    reviews:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                user:
+                                                    type: string
+                                                name:
+                                                    type: string
+                                                rating:
+                                                    type: number
+                                                comment:
+                                                    type: string
+                                                _id:
+                                                    type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error

@@ -24,6 +24,8 @@ module.exports = {
 		'import/extensions': 'off',
 		'consistent-return': 'off',
 		'no-console': 'off',
+		'no-underscore-dangle': 'off',
+		'no-param-reassign': 'off',
 		'no-use-before-define': [
 			'error',
 			{
