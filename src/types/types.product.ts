@@ -43,12 +43,10 @@ export interface IProductDocument extends Document {
 	name: string;
 	price: string;
 	description: string;
-	photos: [
-		{
-			id: string;
-			secure_url: string;
-		}
-	];
+	photos: {
+		id: string;
+		secure_url: string;
+	}[];
 	category: CategoryType;
 	productType: ProductType;
 	brand: string;
@@ -56,14 +54,12 @@ export interface IProductDocument extends Document {
 	size: SizeType;
 	ratings: RatingType;
 	numberOfReviews: number;
-	reviews: [
-		{
-			user: Types.ObjectId;
-			name: string;
-			rating: number;
-			comment: string;
-		}
-	];
+	reviews: {
+		user: Types.ObjectId;
+		name: string;
+		rating: number;
+		comment: string;
+	}[];
 	user: Types.ObjectId;
 	createdAt: Date;
 	updatedAt: Date;

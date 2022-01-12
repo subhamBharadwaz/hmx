@@ -10,6 +10,9 @@ import {addProductSchema} from '@schema/product';
 import {
 	getAllProducts,
 	getSingleProduct,
+	addReview,
+	deleteReview,
+	getSingleProductReviews,
 	adminGetAllProducts,
 	adminAddProduct,
 	adminUpdateSingleProduct,
@@ -20,6 +23,9 @@ const router = Router();
 
 router.route('/products').get(getAllProducts);
 router.route('/product/:id').get(getSingleProduct);
+
+router.route('/review').put(isLoggedIn, addReview).delete(isLoggedIn, deleteReview);
+router.route('/reviews').get(getSingleProductReviews);
 
 // admin only routes
 router.route('/admin/products').get(isLoggedIn, customRole('admin'), adminGetAllProducts);
