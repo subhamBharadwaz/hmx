@@ -83,8 +83,7 @@ const ProductSchema = new Schema<IProductDocument>(
 					required: true
 				},
 				name: {
-					type: String,
-					required: true
+					type: String
 				},
 				rating: {
 					type: Number,

@@ -72,45 +72,49 @@ export const getSingleProduct = BigPromise(
 @route   PUT /api/v1/review
 @access  Private
 */
-export const addReview = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
-	const {rating, comment, productId} = req.body;
+export const addReview = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const {rating, comment, productId} = req.body;
 
-	const review = {
-		user: req.user._id,
-		name: req.user.name,
-		rating: Number(rating),
-		comment
-	};
+		const review = {
+			user: req.user._id,
+			name: req.user.name,
+			rating: Number(rating),
+			comment
+		};
+		// check for if the given id is an valid objectId or not
+		isValidMongooseObjectId(productId, next);
+		const product = await Product.findById(productId);
 
-	const product = await Product.findById(productId);
+		const AlreadyReviewed = product?.reviews.find(
+			// _id is a BSON field so convert it to a string
+			rev => rev.user.toString() === req.user._id.toString()
+		);
 
-	const AlreadyReviewed = product?.reviews.find(
-		// _id is a BSON field so convert it to a string
-		rev => rev.user.toString() === req.user._id.toString()
-	);
+		if (AlreadyReviewed) {
+			product?.reviews.forEach(rev => {
+				if (rev.user.toString() === req.user._id.toString()) {
+					rev.comment = comment;
+					rev.rating = rating;
+				}
+			});
+		} else {
+			product?.reviews.push(review);
+			if (product) product.numberOfReviews = product.reviews.length;
+		}
 
-	if (AlreadyReviewed) {
-		product?.reviews.forEach(rev => {
-			if (rev.user.toString() === req.user._id.toString()) {
-				rev.comment = comment;
-				rev.rating = rating;
-			}
-		});
-	} else {
-		product?.reviews.push(review);
-		if (product) product.numberOfReviews = product.reviews.length;
+		// adjust ratings
+		if (product) {
+			product.ratings =
+				product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+				product.reviews.length;
+		}
+
+		await product?.save({validateBeforeSave: false});
+
+		res.status(200).json({success: true});
 	}
-
-	// adjust ratings
-	if (product) {
-		product.ratings =
-			product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
-	}
-
-	await product?.save({validateBeforeSave: false});
-
-	res.status(200).json({success: true});
-});
+);
 
 /** 
 @desc    Delete Review
@@ -122,16 +126,16 @@ export const deleteReview = BigPromise(async (req: IGetUserAuthInfoRequest, res:
 
 	const product = await Product.findById(productId);
 
-	const reviews = product?.reviews.filter(rev => rev.user.toString() === req.user._id.toString());
+	const reviews = product?.reviews.filter(rev => rev.user.toString() !== req.user._id.toString());
 
 	// update total number of reviews
 	const numberOfReviews = reviews?.length;
 
 	// adjust ratings
 	let ratings = product?.ratings;
-	if (product) {
-		ratings =
-			product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+	if (reviews) {
+		ratings = reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length;
 	}
 
 	// update the product
@@ -140,6 +144,7 @@ export const deleteReview = BigPromise(async (req: IGetUserAuthInfoRequest, res:
 		{
 			reviews,
 			ratings,
+			name: req.user.name,
 			numberOfReviews
 		},
 		{

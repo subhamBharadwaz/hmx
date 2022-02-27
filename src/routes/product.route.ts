@@ -4,7 +4,7 @@ import {Router} from 'express';
 import {isLoggedIn, customRole, validateResource} from '@middleware/index';
 
 // import input schema validation
-import {addProductSchema} from '@schema/product';
+import {addProductSchema, addProductReview} from '@schema/product';
 
 // import controllers
 import {
@@ -24,7 +24,10 @@ const router = Router();
 router.route('/products').get(getAllProducts);
 router.route('/product/:id').get(getSingleProduct);
 
-router.route('/review').put(isLoggedIn, addReview).delete(isLoggedIn, deleteReview);
+router
+	.route('/review')
+	.put(isLoggedIn, validateResource(addProductReview), addReview)
+	.delete(isLoggedIn, deleteReview);
 router.route('/reviews').get(getSingleProductReviews);
 
 // admin only routes
