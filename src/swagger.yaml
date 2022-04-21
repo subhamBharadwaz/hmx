@@ -642,6 +642,84 @@ paths:
                 500:
                     description: Internal server error
 
+    /product/{id}:
+        get:
+            tags:
+                - Product
+            summary: Get a single product
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+            responses:
+                200:
+                    description: All good success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                    products:
+                                        type: array
+                                        items:
+                                            type: object
+                                            properties:
+                                                _id:
+                                                    type: string
+                                                name:
+                                                    type: string
+                                                price:
+                                                    type: number
+                                                description:
+                                                    type: string
+                                                photos:
+                                                    type: array
+                                                    items:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: string
+                                                            secure_url:
+                                                                type: string
+                                                category:
+                                                    type: string
+                                                productType:
+                                                    type: string
+                                                brand:
+                                                    type: string
+                                                stock:
+                                                    type: number
+                                                size:
+                                                    type: string
+                                                ratings:
+                                                    type: number
+                                                numberOfReviews:
+                                                    type: number
+                                                reviews:
+                                                    type: array
+                                                    items:
+                                                        type: object
+                                                        properties:
+                                                            id:
+                                                                type: string
+                                                            user:
+                                                                type: string
+                                                            name:
+                                                                type: string
+                                                            rating:
+                                                                type: number
+                                                            comment:
+                                                                type: string
+                400:
+                    description: Bad request
+                500:
+                    description: Internal server error
+
     /admin/products:
         get:
             tags:
