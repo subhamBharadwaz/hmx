@@ -12,8 +12,9 @@ import helmet from 'helmet';
 import {logger} from '@util/index';
 
 // import routes
-import user from './routes/user.route';
-import product from './routes/product.route';
+import user from '@route/user.route';
+import product from '@route/product.route';
+import payment from '@route/payment.route';
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.use(helmet());
 // router middleware
 app.use('/api/v1', user);
 app.use('/api/v1', product);
+app.use('/api/v1', payment);
 
 // handle unhandled promise rejections
 

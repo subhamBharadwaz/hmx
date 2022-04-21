@@ -5,5 +5,9 @@ export default {
 	smtpHost: 'SMTP_HOST',
 	smtpPort: 'SMTP_PORT',
 	smtpUser: 'SMTP_USER',
-	smtpPass: 'SMTP_PASS'
+	smtpPass: 'SMTP_PASS',
+	stripeApiKey: 'STRIPE_API_KEY',
+	stripeApiSecret: 'STRIPE_API_SECRET',
+	razorpayApiKey: 'RAZORPAY_API_KEY',
+	razorpayApiSecret: 'RAZORPAY_API_SECRET'
 };

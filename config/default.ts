@@ -10,6 +10,10 @@ export default {
 	smtpPort: '',
 	smtpUser: '',
 	smtpPass: '',
+	stripeApiKey: '',
+	stripeApiSecret: '',
+	razorpayApiKey: '',
+	razorpayApiSecret: '',
 	userImageDir: 'users',
 	productImageDir: 'products'
 };
