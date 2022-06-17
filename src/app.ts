@@ -15,6 +15,7 @@ import {logger} from '@util/index';
 import user from '@route/user.route';
 import product from '@route/product.route';
 import payment from '@route/payment.route';
+import order from '@route/order.route';
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use(helmet());
 app.use('/api/v1', user);
 app.use('/api/v1', product);
 app.use('/api/v1', payment);
+app.use('/api/v1', order);
 
 // handle unhandled promise rejections
 
