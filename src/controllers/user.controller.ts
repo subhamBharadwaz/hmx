@@ -26,7 +26,7 @@ export const register = BigPromise(async (req: Request, res: Response, next: Nex
 
 	const {firstName, lastName, email, password}: IUser = req.body;
 
-	// check for presence of email and password
+	// check for presence of the required fields
 	if (!(firstName && lastName && email && password)) {
 		logErr = new CustomError(
 			'First Name, Last Name, Email, Password and Photo are required',
@@ -309,7 +309,7 @@ export const changePassword = BigPromise(
 
 		// for object possibly null ts error
 		if (user !== null) {
-			// set new password to the password field in d
+			// set new password to the password field in db
 			user.password = req.body.newPassword;
 
 			// save the new password to db
