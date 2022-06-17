@@ -9,7 +9,7 @@ import {isValidMongooseObjectId, CustomError, logger} from '@util/index';
 
 let logErr: CustomError;
 
-/** 
+/**
 @desc    Create Order
 @route   POST /api/v1/order
 @access  Private
@@ -60,7 +60,7 @@ export const createOrder = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get Single Order
 @route   GET /api/v1/order/id
 @access  Private
@@ -80,7 +80,7 @@ export const getSingleOrder = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get logged in user Orders
 @route   GET /api/v1/order/id
 @access  Private
@@ -101,7 +101,7 @@ export const getLoggedInUserOrders = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get all orders - Admin only
 @route   GET /api/v1/order/id
 @access  Private
@@ -112,7 +112,7 @@ export const adminGetAllOrders = BigPromise(async (req: IGetUserAuthInfoRequest,
 	res.status(200).json({success: true, orders});
 });
 
-/** 
+/**
 @desc    Update single order - Admin only
 @route   PUT /api/v1/order/id
 @access  Private
@@ -145,7 +145,7 @@ export const adminUpdateSingleOrder = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete single order - Admin only
 @route   DELETE /api/v1/order/id
 @access  Private
