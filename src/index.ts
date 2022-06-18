@@ -34,7 +34,7 @@ function gracefulShutdown(signal: string) {
 		// Disconnect from the database
 		await disconnectFromDatabase();
 
-		logger.info('My work here is done');
+		logger.info('Goodbye, got signal', signal);
 
 		process.exit(0);
 	});
