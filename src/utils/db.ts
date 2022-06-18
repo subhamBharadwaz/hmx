@@ -14,3 +14,10 @@ const connectToDB = () => {
 };
 
 export default connectToDB;
+
+export async function disconnectFromDatabase() {
+	await mongoose.connection.close();
+	logger.info('Disconnected from database');
+	// eslint-disable-next-line no-useless-return
+	return;
+}
