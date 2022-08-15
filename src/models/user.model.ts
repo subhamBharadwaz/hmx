@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from 'config';
-import {IUserDocument} from '@type/types.user';
+import {IUserDocument} from '../types/types.user';
 
 const UserSchema = new Schema<IUserDocument>(
 	{

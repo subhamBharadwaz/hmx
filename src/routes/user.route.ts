@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 // import middleware
-import {isLoggedIn, validateResource, customRole} from '@middleware/index';
+import {isLoggedIn, validateResource, customRole} from '../middlewares/index';
 
 // import input schema validation
 import {
@@ -11,7 +11,7 @@ import {
 	passwordResetSchema,
 	changePasswordSchema,
 	updateUserSchema
-} from '@schema/user';
+} from '../schema/user';
 
 // import controllers
 import {
@@ -27,7 +27,7 @@ import {
 	adminSingleUser,
 	adminUpdateUserDetails,
 	adminDeleteUser
-} from '@controller/user.controller';
+} from '../controllers/user.controller';
 
 const router = Router();
 

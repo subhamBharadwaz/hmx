@@ -3,10 +3,16 @@ import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
 import path from 'path';
 import config from 'config';
-import User from '@model/user.model';
-import {BigPromise} from '@middleware/index';
-import {CustomError, cookieToken, mailHelper, logger, isValidMongooseObjectId} from '@util/index';
-import {IUser, IGetUserAuthInfoRequest} from '@type/types.user';
+import User from '../models/user.model';
+import {BigPromise} from '../middlewares/index';
+import {
+	CustomError,
+	cookieToken,
+	mailHelper,
+	logger,
+	isValidMongooseObjectId
+} from '../utils/index';
+import {IUser, IGetUserAuthInfoRequest} from '../types/types.user';
 
 // log errors
 let logErr: CustomError;

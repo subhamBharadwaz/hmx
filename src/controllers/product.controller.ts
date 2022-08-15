@@ -4,10 +4,10 @@ import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import path from 'path';
 import config from 'config';
-import Product from '@model/product.model';
-import {BigPromise} from '@middleware/index';
-import {CustomError, logger, isValidMongooseObjectId, WhereClause} from '@util/index';
-import {IGetUserAuthInfoRequest} from '@type/types.user';
+import Product from '../models/product.model';
+import {BigPromise} from '../middlewares/index';
+import {CustomError, logger, isValidMongooseObjectId, WhereClause} from '../utils/index';
+import {IGetUserAuthInfoRequest} from '../types/types.user';
 
 let logErr: CustomError;
 

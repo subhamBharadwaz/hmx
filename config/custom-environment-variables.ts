@@ -1,4 +1,5 @@
 export default {
+	dbUrl: 'DBURL',
 	cloudinaryName: 'CLOUDINARY_NAME',
 	cloudinaryApiKey: 'CLOUDINARY_API_KEY',
 	cloudinaryApiSecret: 'CLOUDINARY_API_SECRET',

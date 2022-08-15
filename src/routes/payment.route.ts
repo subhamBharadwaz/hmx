@@ -1,11 +1,11 @@
 import {Router} from 'express';
-import {isLoggedIn} from '@middleware/index';
+import {isLoggedIn} from '../middlewares/index';
 import {
 	sendRazorpayKey,
 	sendStripeKey,
 	captureRazorpayPayment,
 	captureStripePayment
-} from '@controller/payment.controller';
+} from '../controllers/payment.controller';
 
 const router = Router();
 

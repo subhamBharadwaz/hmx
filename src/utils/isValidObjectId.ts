@@ -1,6 +1,6 @@
 import {isValidObjectId} from 'mongoose';
 import {NextFunction} from 'express';
-import {CustomError, logger} from '@util/index';
+import {CustomError, logger} from './index';
 
 const isValidMongooseObjectId = (id: string, next: NextFunction) => {
 	if (!isValidObjectId(id)) {

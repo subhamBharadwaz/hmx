@@ -6,7 +6,7 @@ import {
 	ProductType,
 	SizeType,
 	RatingType
-} from '@type/types.product';
+} from '../types/types.product';
 
 const ProductSchema = new Schema<IProductDocument>(
 	{

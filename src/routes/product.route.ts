@@ -1,10 +1,10 @@
 import {Router} from 'express';
 
 // import middleware
-import {isLoggedIn, customRole, validateResource} from '@middleware/index';
+import {isLoggedIn, customRole, validateResource} from '../middlewares/index';
 
 // import input schema validation
-import {addProductSchema, addProductReview} from '@schema/product';
+import {addProductSchema, addProductReview} from '../schema/product';
 
 // import controllers
 import {
@@ -17,7 +17,7 @@ import {
 	adminAddProduct,
 	adminUpdateSingleProduct,
 	adminDeleteSingleProduct
-} from '@controller/product.controller';
+} from '../controllers/product.controller';
 
 const router = Router();
 

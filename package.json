@@ -9,8 +9,11 @@
 	},
 	"scripts": {
 		"dev": "nodemon -r tsconfig-paths/register ./src/index.ts",
-		"start": "node -r tsconfig-paths/register ./dist/src/index.js",
-		"build": "tsc",
+		"start": "node -r tsconfig-paths/register ./build/src/index.js",
+		"build": "yarn clean && tsc",
+		"postbuild": "yarn run copy-files",
+		"clean": "rm -rf build/*.js build/*.map build/*",
+		"copy-files": "copyfiles src/swagger.yaml build/",
 		"format": "prettier --write \"./**/*.ts\"",
 		"prepare": "husky install",
 		"lint": "eslint src",
@@ -44,6 +47,7 @@
 		"@types/yamljs": "^0.2.31",
 		"@typescript-eslint/eslint-plugin": "^5.8.0",
 		"@typescript-eslint/parser": "^5.8.0",
+		"copyfiles": "^2.4.1",
 		"eslint": "^8.5.0",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -56,7 +60,6 @@
 		"nodemon": "^2.0.15",
 		"prettier": "^2.5.1",
 		"ts-node-dev": "^2.0.0",
-		"tsconfig-paths": "^3.12.0",
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {

@@ -1,10 +1,10 @@
 import {Router} from 'express';
 
 // import middleware
-import {isLoggedIn, customRole, validateResource} from '@middleware/index';
+import {isLoggedIn, customRole, validateResource} from '../middlewares/index';
 
 // import input schema validation
-import {createOrderSchema} from '@schema/order/index';
+import {createOrderSchema} from '../schema/order/index';
 
 // import controllers
 import {
@@ -14,7 +14,7 @@ import {
 	adminGetAllOrders,
 	adminUpdateSingleOrder,
 	adminDeleteSingleOrder
-} from '@controller/order.controller';
+} from '../controllers/order.controller';
 
 const router = Router();
 

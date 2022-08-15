@@ -1,11 +1,11 @@
 /* eslint-disable import/prefer-default-export */
 import {Request, Response, NextFunction} from 'express';
-import Order from '@model/order.model';
-import Product from '@model/product.model';
-import {BigPromise} from '@middleware/index';
-import {IOrderDocument} from '@type/types.order';
-import {IGetUserAuthInfoRequest} from '@type/types.user';
-import {isValidMongooseObjectId, CustomError, logger} from '@util/index';
+import Order from '../models/order.model';
+import Product from '../models/product.model';
+import {BigPromise} from '../middlewares/index';
+import {IOrderDocument} from '../types/types.order';
+import {IGetUserAuthInfoRequest} from '../types/types.user';
+import {isValidMongooseObjectId, CustomError, logger} from '../utils/index';
 
 let logErr: CustomError;
 

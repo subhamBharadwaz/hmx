@@ -1,5 +1,5 @@
 import {Response} from 'express';
-import {IUserDocument} from '@type/types.user';
+import {IUserDocument} from '../types/types.user';
 
 const cookieToken = (user: IUserDocument, res: Response) => {
 	const token = user.getJwtToken();

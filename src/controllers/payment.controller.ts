@@ -1,10 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import {Request, Response} from 'express';
 import config from 'config';
-import {BigPromise} from '@src/middlewares';
 import Stripe from 'stripe';
 import Razorpay from 'razorpay';
 import {nanoid} from 'nanoid';
+import {BigPromise} from '../middlewares/index';
 
 const stripe = new Stripe(config.get<string>('stripeApiSecret'), {apiVersion: '2020-08-27'});
 

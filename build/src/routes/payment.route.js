@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const index_1 = require("../middlewares/index");
+const payment_controller_1 = require("../controllers/payment.controller");
+const router = (0, express_1.Router)();
+router.route('/stripekey').get(index_1.isLoggedIn, payment_controller_1.sendStripeKey);
+router.route('/razorpaykey').get(index_1.isLoggedIn, payment_controller_1.sendRazorpayKey);
+router.route('/capturestripepayment').get(index_1.isLoggedIn, payment_controller_1.captureStripePayment);
+router.route('/capturerazorpaypayment').get(index_1.isLoggedIn, payment_controller_1.captureRazorpayPayment);
+exports.default = router;
