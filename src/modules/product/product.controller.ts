@@ -129,8 +129,11 @@ export const addReviewHandler = BigPromise(
 @access  Private
 */
 export const deleteReviewHandler = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response) => {
+	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const {productId} = req.query;
+		if (typeof productId !== 'string') return;
+
+		isValidMongooseObjectId(productId, next);
 
 		const product = await findProductById(productId);
 
@@ -305,11 +308,7 @@ export const adminUpdateSingleProductHandler = BigPromise(
 		}
 		console.log(req.body);
 
-		product = await updateProductById(req.params.id, req.body, {
-			new: true,
-			runValidators: true,
-			useFindAndModify: false
-		});
+		product = await updateProductById(req.params.id, req.body);
 
 		res.status(201).json({success: true, product});
 	}

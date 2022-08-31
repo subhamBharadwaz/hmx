@@ -21,7 +21,7 @@ export async function findProduct() {
 }
 
 // eslint-disable-next-line no-undef
-export async function findProductById(id: any) {
+export async function findProductById(id: unknown) {
 	try {
 		return Product.findById(id);
 	} catch (error: any) {
@@ -33,10 +33,10 @@ export async function findProductById(id: any) {
 export async function updateProductById(
 	// eslint-disable-next-line no-undef
 	id: any,
-	...options: any
+	data: any
 ) {
 	try {
-		return Product.findByIdAndUpdate(id, options, {
+		return Product.findByIdAndUpdate(id, data, {
 			new: true,
 			runValidators: true,
 			useFindAndModify: false
