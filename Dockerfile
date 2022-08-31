@@ -25,7 +25,7 @@ WORKDIR /src
 RUN npm run-script build
 
 ## TODO rm before deployment
-EXPOSE 4000
+EXPOSE 5000
 
 CMD ["node", "build/src/index.js"]
 

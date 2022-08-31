@@ -10,7 +10,7 @@
 
 		"experimentalDecorators": true /* Enable experimental support for TC39 stage 2 draft decorators. */,
 		"emitDecoratorMetadata": true /* Emit design-type metadata for decorated declarations in source files. */,
-
+		"types": ["jest", "node"],
 		/* Modules */
 		"module": "commonjs" /* Specify what module code is generated. */,
 		"rootDir": "." /* Specify the root folder within your source files. */,

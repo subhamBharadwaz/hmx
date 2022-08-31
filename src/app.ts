@@ -12,10 +12,10 @@ import helmet from 'helmet';
 import {logger} from './utils/index';
 
 // import routes
-import user from './routes/user.route';
-import product from './routes/product.route';
-import payment from './routes/payment.route';
-import order from './routes/order.route';
+import user from './modules/user/user.route';
+import product from './modules/product/product.route';
+// import payment from './routes/payment.route';
+// import order from './routes/order.route';
 
 const app = express();
 
@@ -60,8 +60,8 @@ app.use(helmet());
 // router middleware
 app.use('/api/v1', user);
 app.use('/api/v1', product);
-app.use('/api/v1', payment);
-app.use('/api/v1', order);
+// app.use('/api/v1', payment);
+// app.use('/api/v1', order);
 
 // handle unhandled promise rejections
 

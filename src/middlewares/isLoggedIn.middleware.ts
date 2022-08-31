@@ -1,10 +1,10 @@
 import {Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import User from '../models/user.model';
+import User from '../modules/user/user.model';
 import {CustomError, logger} from '../utils/index';
 import {BigPromise} from './index';
-import {IGetUserAuthInfoRequest, IJwtPayload} from '../types/types.user';
+import {IGetUserAuthInfoRequest, IJwtPayload} from '../modules/user/user.types';
 
 // log error
 let logErr;
