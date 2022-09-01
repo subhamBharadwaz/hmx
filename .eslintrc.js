@@ -26,6 +26,8 @@ module.exports = {
 		'no-console': 'off',
 		'no-underscore-dangle': 'off',
 		'no-param-reassign': 'off',
+		'no-return-await': 'off',
+		'@typescript-eslint/ban-types': 'off',
 		'no-use-before-define': [
 			'error',
 			{

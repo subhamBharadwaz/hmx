@@ -1,6 +1,6 @@
 import config from 'config';
 import mongoose from 'mongoose';
-import {logger} from '@util/index';
+import {logger} from './index';
 
 const connectToDB = () => {
 	const dbUrl = config.get<string>('dbUrl');

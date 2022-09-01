@@ -4,9 +4,9 @@ import dotEnv from 'dotenv';
 dotEnv.config();
 import config from 'config';
 import {v2 as cloudinary} from 'cloudinary';
-import app from '@src/app';
-import {connectToDB, logger} from '@util/index';
-import {disconnectFromDatabase} from '@util/db';
+import app from './app';
+import {connectToDB, logger} from './utils/index';
+import {disconnectFromDatabase} from './utils/db';
 
 // connect to database
 connectToDB();

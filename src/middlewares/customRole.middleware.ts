@@ -1,6 +1,6 @@
 import {Response, NextFunction} from 'express';
-import {CustomError, logger} from '@util/index';
-import {IGetUserAuthInfoRequest} from '@type/types.user';
+import {CustomError, logger} from '../utils/index';
+import {IGetUserAuthInfoRequest} from '../modules/user/user.types';
 
 const customRole = (...roles: string[]) => {
 	return (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {

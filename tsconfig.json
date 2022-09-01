@@ -10,27 +10,27 @@
 
 		"experimentalDecorators": true /* Enable experimental support for TC39 stage 2 draft decorators. */,
 		"emitDecoratorMetadata": true /* Emit design-type metadata for decorated declarations in source files. */,
-
+		"types": ["jest", "node"],
 		/* Modules */
 		"module": "commonjs" /* Specify what module code is generated. */,
 		"rootDir": "." /* Specify the root folder within your source files. */,
 		"moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
 		"baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
-		"paths": {
-			"@src/*": ["src/*"],
-			"@controller/*": ["src/controllers/*"],
-			"@middleware/*": ["src/middlewares/*"],
-			"@model/*": ["src/models/*"],
-			"@route/*": ["src/routes/*"],
-			"@schema/*": ["src/schema/*"],
-			"@type/*": ["src/types/*"],
-			"@util/*": ["src/utils/*"]
-		} /* Specify a set of entries that re-map imports to additional lookup locations. */,
+		// "paths": {
+		// 	"@src/*": ["src/*"],
+		// 	"@controller/*": ["src/controllers/*"],
+		// 	"@middleware/*": ["src/middlewares/*"],
+		// 	"@model/*": ["src/models/*"],
+		// 	"@route/*": ["src/routes/*"],
+		// 	"@schema/*": ["src/schema/*"],
+		// 	"@type/*": ["src/types/*"],
+		// 	"@util/*": ["src/utils/*"]
+		// } /* Specify a set of entries that re-map imports to additional lookup locations. */,
 
 		/* JavaScript Support */
 		"allowJs": true /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */,
 
-		"outDir": "dist" /* Specify an output folder for all emitted files. */,
+		"outDir": "build" /* Specify an output folder for all emitted files. */,
 		"removeComments": true /* Disable emitting comments. */,
 
 		"esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 

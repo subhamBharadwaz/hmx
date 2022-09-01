@@ -9,13 +9,13 @@ import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import expressPinoLogger from 'express-pino-logger';
 import helmet from 'helmet';
-import {logger} from '@util/index';
+import {logger} from './utils/index';
 
 // import routes
-import user from '@route/user.route';
-import product from '@route/product.route';
-import payment from '@route/payment.route';
-import order from '@route/order.route';
+import user from './modules/user/user.route';
+import product from './modules/product/product.route';
+import payment from './modules/payment/payment.route';
+import order from './modules/order/order.route';
 
 const app = express();
 
