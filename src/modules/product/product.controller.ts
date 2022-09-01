@@ -1,5 +1,4 @@
 /* eslint-disable security/detect-object-injection */
-/* eslint-disable import/prefer-default-export */
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import path from 'path';
@@ -145,11 +144,11 @@ export const deleteReviewHandler = BigPromise(
 		const numberOfReviews = reviews?.length;
 
 		// adjust ratings
-		let ratings = product?.ratings;
-
-		if (reviews) {
-			ratings = reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length;
-		}
+		const ratings =
+			numberOfReviews === 0
+				? 0
+				: // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				  reviews!.reduce((acc, item) => item.rating + acc, 0) / numberOfReviews!;
 
 		// update the product
 		await updateProductById(productId, {
