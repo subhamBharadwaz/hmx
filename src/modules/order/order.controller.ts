@@ -12,7 +12,7 @@ import {
 	findOrderById
 } from './order.service';
 
-/** 
+/**
 @desc    Create Order
 @route   POST /api/v1/order
 @access  Private
@@ -63,7 +63,7 @@ export const createOrderHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get Single Order
 @route   GET /api/v1/order/id
 @access  Private
@@ -83,7 +83,7 @@ export const getSingleOrderHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get logged in user Orders
 @route   GET /api/v1/order/id
 @access  Private
@@ -104,7 +104,7 @@ export const getLoggedInUserOrdersHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get all orders - Admin only
 @route   GET /api/v1/order/id
 @access  Private
@@ -117,7 +117,7 @@ export const adminGetAllOrdersHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Update single order - Admin only
 @route   PUT /api/v1/order/id
 @access  Private
@@ -153,7 +153,7 @@ export const adminUpdateSingleOrderHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete single order - Admin only
 @route   DELETE /api/v1/order/id
 @access  Private

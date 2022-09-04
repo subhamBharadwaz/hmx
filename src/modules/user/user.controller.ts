@@ -16,7 +16,7 @@ import {
 	updateUser
 } from './user.service';
 
-/** 
+/**
 @desc    Register User
 @route   POST /api/v1/register
 @access  Public
@@ -81,7 +81,7 @@ export const registerHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Login User
 @route   POST /api/v1/login
 @access  Public
@@ -125,7 +125,7 @@ export const loginHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Logout User
 @route   GET /api/v1/logout
 @access  Private
@@ -143,7 +143,7 @@ export const logoutHandler = BigPromise(async (req: Request, res: Response) => {
 	});
 });
 
-/** 
+/**
 @desc    Forgot Password
 @route   POST /api/v1/forgotpassword
 @access  Public
@@ -210,7 +210,7 @@ export const forgotPasswordHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Reset Password
 @route   POST /api/v1/password/reset/:token
 @access  Public
@@ -281,7 +281,7 @@ export const passwordResetHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get Logged-in User Details
 @route   POST /api/v1/userdashboard
 @access  Private
@@ -292,7 +292,7 @@ export const getUserHandler = BigPromise(async (req: IGetUserAuthInfoRequest, re
 	res.status(200).json({success: true, user});
 });
 
-/** 
+/**
 @desc    Change password
 @route   PUT /api/v1/password/update
 @access  Private
@@ -333,7 +333,7 @@ export const changePasswordHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Update user details
 @route   PUT /api/v1/userdashboard/update
 @access  Private
@@ -391,7 +391,7 @@ export const updateUserDetailsHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get all users - Admin only
 @route   GET /api/v1/admin/users
 @access  Private
@@ -404,7 +404,7 @@ export const adminAllUsersHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get a single user - Admin only
 @route   GET /api/v1/admin/user/:id
 @access  Private
@@ -427,7 +427,7 @@ export const adminSingleUserHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Update a single user details - Admin only
 @route   PUT /api/v1/admin/user/:id
 @access  Private
@@ -460,7 +460,7 @@ export const adminUpdateUserDetailsHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete a single user - Admin only
 @route   DELETE /api/v1/admin/user/:id
 @access  Private

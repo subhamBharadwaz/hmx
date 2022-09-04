@@ -15,7 +15,7 @@ import {
 } from './product.service';
 import Product from './product.model';
 
-/** 
+/**
 @desc    Get Products
 @route   GET /api/v1/products
 @access  Public
@@ -45,7 +45,7 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 	});
 });
 
-/** 
+/**
 @desc    Get Products
 @route   GET /api/v1/product/:id
 @access  Public
@@ -71,7 +71,7 @@ export const getSingleProductHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Add Review
 @route   PUT /api/v1/review
 @access  Private
@@ -120,7 +120,7 @@ export const addReviewHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete Review
 @route   DELETE /api/v1/review
 @access  Private
@@ -160,7 +160,7 @@ export const deleteReviewHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get reviews for one product
 @route   GET /api/v1/reviews
 @access  Public
@@ -173,7 +173,7 @@ export const getSingleProductReviewsHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Admin Get All Products
 @route   GET /api/v1/admin/products
 @access  Private
@@ -184,7 +184,7 @@ export const adminGetAllProductsHandler = BigPromise(async (req: Request, res: R
 	res.status(200).json({success: true, products});
 });
 
-/** 
+/**
 @desc    Admin Add Product
 @route   POST /api/v1/product
 @access  Private
@@ -243,7 +243,7 @@ export const adminAddProductHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Admin Update Single Product
 @route   PUT /api/v1/admin/product/:id
 @access  Private
@@ -314,7 +314,7 @@ export const adminUpdateSingleProductHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Admin Delete Single Product
 @route   DELETE /api/v1/admin/product/:id
 @access  Private
