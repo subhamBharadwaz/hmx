@@ -1,9 +1,10 @@
 /* eslint-disable */
 import mongoose from 'mongoose';
 import supertest from 'supertest';
-import * as UserService from '../user.service';
+// import * as UserService from '../user.service';
 import app from '../../../app';
-import {IUserDocument} from '../user.types';
+import {cookieToken} from '../../../utils';
+import * as UserService from '../user.controller';
 
 const registerUserInput = {
 	firstName: 'Subham',
@@ -16,16 +17,13 @@ describe('User', () => {
 	describe('User Service', () => {
 		describe('Register new user ', () => {
 			it('Should return the a valid JWT token', async () => {
-				const registerUserServiceMock = jest.spyOn(UserService, 'registerUser');
+				const registerUserServiceMock = jest.spyOn(UserService, 'registerHandler');
 
 				//@ts-ignore
-				const {body} = await supertest(app)
+				const {body, statusCode} = await supertest(app)
 					.post('/api/v1/register')
 					.send(registerUserInput);
-				//@ts-ignore
-				// const jwt = user.getJwtToken()
-				// expect(statusCode).toBe(200);
-				expect(body).toEqual({success: true, token: expect.any(String)});
+				expect(body).toMatchObject({success: true});
 				expect(registerUserServiceMock).toHaveBeenCalledWith(registerUserInput);
 			});
 		});

@@ -12,8 +12,6 @@ import {
 	findOrderById
 } from './order.service';
 
-let logErr: CustomError;
-
 /** 
 @desc    Create Order
 @route   POST /api/v1/order
@@ -39,7 +37,7 @@ export const createOrderHandler = BigPromise(
 			!shippingAmount ||
 			!totalAmount
 		) {
-			logErr = new CustomError(`All required fields must be filled`, 401);
+			const logErr: CustomError = new CustomError(`All required fields must be filled`, 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -77,7 +75,7 @@ export const getSingleOrderHandler = BigPromise(
 		const order = await findOrderByIdAndPopulate(orderId, 'user', 'name email');
 
 		if (!order) {
-			logErr = new CustomError(`Please check order id`, 401);
+			const logErr: CustomError = new CustomError(`Please check order id`, 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -98,7 +96,7 @@ export const getLoggedInUserOrdersHandler = BigPromise(
 		const order = await findLoggedInUserOrders(userId);
 
 		if (!order) {
-			logErr = new CustomError(`Please check order id`, 401);
+			const logErr: CustomError = new CustomError(`Please check order id`, 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -132,7 +130,10 @@ export const adminUpdateSingleOrderHandler = BigPromise(
 		const order = await findOrderById(orderId);
 
 		if (order?.orderStatus === 'Delivered') {
-			logErr = new CustomError(`Order is already marked for delivered`, 401);
+			const logErr: CustomError = new CustomError(
+				`Order is already marked for delivered`,
+				401
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -165,7 +166,10 @@ export const adminDeleteSingleOrderHandler = BigPromise(
 		const order = await findOrderById(orderId);
 
 		if (!order) {
-			logErr = new CustomError(`Order is not found with the id ${orderId}`, 400);
+			const logErr: CustomError = new CustomError(
+				`Order is not found with the id ${orderId}`,
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}

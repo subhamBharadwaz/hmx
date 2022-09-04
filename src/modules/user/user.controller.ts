@@ -16,9 +16,6 @@ import {
 	updateUser
 } from './user.service';
 
-// log errors
-let logErr: CustomError;
-
 /** 
 @desc    Register User
 @route   POST /api/v1/register
@@ -30,7 +27,7 @@ export const registerHandler = BigPromise(
 
 		// check for presence of the required fields
 		if (!(firstName && lastName && email && password)) {
-			logErr = new CustomError(
+			const logErr: CustomError = new CustomError(
 				'First Name, Last Name, Email, Password and Photo are required',
 				400
 			);
@@ -48,7 +45,7 @@ export const registerHandler = BigPromise(
 		const allowedExtensions = ['.png', '.jpg', '.jpeg'];
 
 		if (!allowedExtensions.includes(extensionName)) {
-			logErr = new CustomError('Invalid Image', 422);
+			const logErr: CustomError = new CustomError('Invalid Image', 422);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -63,7 +60,7 @@ export const registerHandler = BigPromise(
 		const existingUser = await findUser(email);
 
 		if (existingUser) {
-			logErr = new CustomError('User already exists!', 401);
+			const logErr: CustomError = new CustomError('User already exists!', 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -95,7 +92,7 @@ export const loginHandler = BigPromise(
 
 		// check for presence of email and password
 		if (!(email && password)) {
-			logErr = new CustomError('Email, Password are required', 400);
+			const logErr: CustomError = new CustomError('Email, Password are required', 400);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -103,7 +100,10 @@ export const loginHandler = BigPromise(
 		const user = await findUser(email, '+password');
 
 		if (!user) {
-			logErr = new CustomError('Email or password does not match or exist', 400);
+			const logErr: CustomError = new CustomError(
+				'Email or password does not match or exist',
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -113,7 +113,10 @@ export const loginHandler = BigPromise(
 
 		// if password do not match
 		if (!isPasswordCorrect) {
-			logErr = new CustomError('Email or password does not match or exist', 400);
+			const logErr: CustomError = new CustomError(
+				'Email or password does not match or exist',
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -152,7 +155,7 @@ export const forgotPasswordHandler = BigPromise(
 		const user = await findUser(email);
 
 		if (!user) {
-			logErr = new CustomError('User does not exist', 400);
+			const logErr: CustomError = new CustomError('User does not exist', 400);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -196,11 +199,11 @@ export const forgotPasswordHandler = BigPromise(
 			let errorMessage = 'Failed to send email';
 			if (err instanceof Error) {
 				errorMessage = err.message;
-				logErr = new CustomError(errorMessage, 500);
+				const logErr: CustomError = new CustomError(errorMessage, 500);
 				logger.error(logErr);
 				return next(logErr);
 			}
-			logErr = new CustomError(errorMessage, 500);
+			const logErr: CustomError = new CustomError(errorMessage, 500);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -223,14 +226,17 @@ export const passwordResetHandler = BigPromise(
 		const user = await resetPassword(encryptedToken);
 
 		if (!user) {
-			logErr = new CustomError('Token is invalid or expired', 400);
+			const logErr: CustomError = new CustomError('Token is invalid or expired', 400);
 			logger.error(logErr);
 			return next(logErr);
 		}
 
 		// check if password and confirm password matched
 		if (req.body.password !== req.body.confirmPassword) {
-			logErr = new CustomError('Password and confirm password do not matched', 400);
+			const logErr: CustomError = new CustomError(
+				'Password and confirm password do not matched',
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -262,11 +268,11 @@ export const passwordResetHandler = BigPromise(
 			let errorMessage = 'Failed to send email';
 			if (err instanceof Error) {
 				errorMessage = err.message;
-				logErr = new CustomError(errorMessage, 500);
+				const logErr: CustomError = new CustomError(errorMessage, 500);
 				logger.error(logErr);
 				return next(logErr);
 			}
-			logErr = new CustomError(errorMessage, 500);
+			const logErr: CustomError = new CustomError(errorMessage, 500);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -299,14 +305,17 @@ export const changePasswordHandler = BigPromise(
 		const isCorrectCurrentPassword = await user?.comparePassword(req.body.currentPassword);
 
 		if (!isCorrectCurrentPassword) {
-			logErr = new CustomError('Current password is incorrect', 400);
+			const logErr: CustomError = new CustomError('Current password is incorrect', 400);
 			logger.error(logErr);
 			return next(logErr);
 		}
 
 		// if new password and confirm new password are not equal
 		if (req.body.newPassword !== req.body.confirmNewPassword) {
-			logErr = new CustomError('New password and confirm password do not matched', 400);
+			const logErr: CustomError = new CustomError(
+				'New password and confirm password do not matched',
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -357,7 +366,7 @@ export const updateUserDetailsHandler = BigPromise(
 			const allowedExtensions = ['.png', '.jpg', '.jpeg'];
 
 			if (!allowedExtensions.includes(extensionName)) {
-				logErr = new CustomError('Invalid Image', 422);
+				const logErr: CustomError = new CustomError('Invalid Image', 422);
 				logger.error(logErr);
 				return next(logErr);
 			}
@@ -409,7 +418,7 @@ export const adminSingleUserHandler = BigPromise(
 		const user = await findUserById(id, '-password');
 
 		if (!user) {
-			logErr = new CustomError(`No user found with the id of ${id}`, 400);
+			const logErr: CustomError = new CustomError(`No user found with the id of ${id}`, 400);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -440,7 +449,7 @@ export const adminUpdateUserDetailsHandler = BigPromise(
 		const isUserExists = await findUserById(id);
 
 		if (!isUserExists) {
-			logErr = new CustomError(`No user found with the id of ${id}`, 401);
+			const logErr: CustomError = new CustomError(`No user found with the id of ${id}`, 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -466,7 +475,7 @@ export const adminDeleteUserHandler = BigPromise(
 		const user = await findUserById(id);
 
 		if (!user) {
-			logErr = new CustomError(`No user found with the id of ${id}`, 401);
+			const logErr: CustomError = new CustomError(`No user found with the id of ${id}`, 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
