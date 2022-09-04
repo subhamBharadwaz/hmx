@@ -15,7 +15,8 @@ const isLoggedIn = BigPromise(
 			req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
 		if (!token) {
 			logErr = new CustomError('Login first to access this page', 401);
-			return next(logger.error(logErr));
+			logger.error(logErr);
+			return next(logErr);
 		}
 
 		const decoded = jwt.verify(token, config.get<string>('jwtSecret')) as IJwtPayload;

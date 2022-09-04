@@ -7,9 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
-import expressPinoLogger from 'express-pino-logger';
 import helmet from 'helmet';
-import {logger} from './utils/index';
 
 // import routes
 import user from './modules/user/user.route';
@@ -36,20 +34,6 @@ app.use(
 	})
 );
 
-// logger middleware
-app.use(
-	expressPinoLogger({
-		logger,
-		serializers: {
-			req: req => ({
-				method: req.method,
-				url: req.url,
-				user: req.raw.user
-			})
-		}
-	})
-);
-
 // set security headers
 app.use(helmet());
 
@@ -63,16 +47,6 @@ app.use('/api/v1', product);
 app.use('/api/v1', payment);
 app.use('/api/v1', order);
 
-// handle unhandled promise rejections
-
-process.on('unhandledRejection', (reason: string) => {
-	throw reason;
-});
-
-// handle uncaught exceptions
-process.on('uncaughtException', err => {
-	logger.error('There was an uncaught error', err);
-	process.exit(1);
-});
+// Handling errors
 
 export default app;

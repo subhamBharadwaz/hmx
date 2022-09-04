@@ -15,8 +15,6 @@ import {
 } from './product.service';
 import Product from './product.model';
 
-let logErr: CustomError;
-
 /** 
 @desc    Get Products
 @route   GET /api/v1/products
@@ -61,7 +59,7 @@ export const getSingleProductHandler = BigPromise(
 		const product = await findProductById(id);
 
 		if (!product) {
-			logErr = new CustomError(
+			const logErr: CustomError = new CustomError(
 				`No product found, please correct the data and try again`,
 				400
 			);
@@ -198,7 +196,7 @@ export const adminAddProductHandler = BigPromise(
 
 		// check whether the images are exists or not
 		if (!req.files) {
-			logErr = new CustomError('Images are required', 401);
+			const logErr: CustomError = new CustomError('Images are required', 401);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -216,7 +214,7 @@ export const adminAddProductHandler = BigPromise(
 				const extensionName = path.extname(images[i].name);
 
 				if (!allowedExtensions.includes(extensionName)) {
-					logErr = new CustomError('Invalid Image', 422);
+					const logErr: CustomError = new CustomError('Invalid Image', 422);
 					logger.error(logErr);
 					return next(logErr);
 				}
@@ -259,7 +257,10 @@ export const adminUpdateSingleProductHandler = BigPromise(
 		let product = await findProductById(id);
 
 		if (!product) {
-			logErr = new CustomError(`No product found with the id of ${id}`, 400);
+			const logErr: CustomError = new CustomError(
+				`No product found with the id of ${id}`,
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
@@ -285,7 +286,7 @@ export const adminUpdateSingleProductHandler = BigPromise(
 				const extensionName = path.extname(images[i].name);
 
 				if (!allowedExtensions.includes(extensionName)) {
-					logErr = new CustomError('Invalid Image', 422);
+					const logErr: CustomError = new CustomError('Invalid Image', 422);
 					logger.error(logErr);
 					return next(logErr);
 				}
@@ -327,7 +328,10 @@ export const adminDeleteSingleProductHandler = BigPromise(
 		const product = await findProductById(id);
 
 		if (!product) {
-			logErr = new CustomError(`No product found with the id of ${id}`, 400);
+			const logErr: CustomError = new CustomError(
+				`No product found with the id of ${id}`,
+				400
+			);
 			logger.error(logErr);
 			return next(logErr);
 		}
