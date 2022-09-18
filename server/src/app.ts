@@ -8,6 +8,8 @@ import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 import helmet from 'helmet';
+import cors from 'cors';
+import config from 'config';
 
 // import routes
 import user from './modules/user/user.route';
@@ -21,6 +23,14 @@ const app = express();
 const swaggerDocument = YAML.load(`${__dirname}/swagger.yaml`);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+// cors
+app.use(
+	cors({
+		origin: config.get<string>('origin'),
+		credentials: true
+	})
+);
+
 // regular middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -30,7 +40,7 @@ app.use(cookieParser());
 app.use(
 	fileUpload({
 		useTempFiles: true,
-		tempFileDir: '/temp/'
+		tempFileDir: '/tmp/'
 	})
 );
 

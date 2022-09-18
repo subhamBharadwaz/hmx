@@ -3,6 +3,7 @@ export default {
 	dbUrl: '',
 	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
 	jwtExpiry: '3d',
+	origin: 'http://localhost:3000',
 	cloudinaryName: '',
 	cloudinaryApiKey: '',
 	cloudinaryApiSecret: '',
