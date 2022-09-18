@@ -34,6 +34,10 @@ const UserSchema = new Schema<IUserDocument>(
 				type: String
 			}
 		},
+		phoneNumber: {
+			type: String,
+			required: [true, 'Please provide a phone number']
+		},
 		role: {
 			type: String,
 			default: 'user'

@@ -23,7 +23,7 @@ import {
 */
 export const registerHandler = BigPromise(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const {firstName, lastName, email, password}: IUser = req.body;
+		const {firstName, lastName, email, password, phoneNumber}: IUser = req.body;
 
 		// check for presence of the required fields
 		if (!(firstName && lastName && email && password)) {
@@ -35,8 +35,16 @@ export const registerHandler = BigPromise(
 			return next(logErr);
 		}
 
-		// upload photo to cloudinary
+		// if the user already signed up with the same email
+		const existingUser = await findUser(email);
 
+		if (existingUser) {
+			const logErr: CustomError = new CustomError('User already exists!', 401);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		// upload photo to cloudinary
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const file: UploadApiOptions = req.files!.photo;
 
@@ -56,21 +64,13 @@ export const registerHandler = BigPromise(
 			crop: 'scale'
 		});
 
-		// if the user already signed up with the same email
-		const existingUser = await findUser(email);
-
-		if (existingUser) {
-			const logErr: CustomError = new CustomError('User already exists!', 401);
-			logger.error(logErr);
-			return next(logErr);
-		}
-
 		// create user
 		const user = await registerUser({
 			firstName,
 			lastName,
 			email,
 			password,
+			phoneNumber,
 			photo: {
 				id: result.public_id,
 				secure_url: result.secure_url

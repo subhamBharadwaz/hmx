@@ -11,6 +11,7 @@ export interface IUser {
 		id: string;
 		secure_url: string;
 	};
+	phoneNumber: string;
 	role?: string;
 	forgotPasswordToken?: string;
 	forgotPasswordExpiry?: number;
