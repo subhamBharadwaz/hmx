@@ -2,10 +2,11 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
-import axios from "axios";
-import { object, string, number, TypeOf, any } from "zod";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { registerUser } from "../../store/auth/auth-slice";
 import {
   Box,
   Flex,
@@ -24,68 +25,35 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 
-const passwordRegex =
-  /(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
-
-const registerUserSchema = object({
-  firstName: string().nonempty({ message: "First Name is required" }),
-
-  lastName: string().nonempty({ message: "Last name is required" }),
-
-  email: string()
-    .email("Not a valid email")
-    .nonempty({ message: "Email is required" }),
-
-  password: string()
-    .nonempty({ message: "Password is required" })
-    .regex(
-      passwordRegex,
-      "Password must contain one uppercase and one lowercase letter, number, special character and minimum 8 characters long"
-    ),
-  confirmPassword: string().nonempty({
-    message: "Password confirmation is required",
-  }),
-  phoneNumber: string()
-    .nonempty({ message: "Phone number is required" })
-    .min(10)
-    .max(10),
-  photo: any(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
-
-type CreateUserInput = TypeOf<typeof registerUserSchema>;
+import { registerUserSchema } from "../../schema/userSchema";
+import { CreateRegisterUserInput } from "../../types/user";
+import { AppDispatch, RootState } from "../../store";
 
 export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
+
+  const { isAuthenticated, loading } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<CreateUserInput>({
+  } = useForm<CreateRegisterUserInput>({
     resolver: zodResolver(registerUserSchema),
   });
 
-  async function onSubmit(values: CreateUserInput) {
-    try {
-      const formData = { ...values, photo: values.photo[0] };
-      await axios.post(
-        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/register`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      router.push("/");
-    } catch (error) {
-      setRegisterError(error.message);
-    }
+  async function onSubmit(values: CreateRegisterUserInput) {
+    const formData = { ...values, photo: values.photo[0] };
+    dispatch(registerUser(formData));
     console.log("submitted");
   }
+
+  // Redirect if logged in
+  if (isAuthenticated) router.push("/auth");
 
   return (
     <Box p="2em">
@@ -226,7 +194,7 @@ export default function RegisterPage() {
                     w="auto"
                   />
 
-                  {/* <Spinner /> */}
+                  {loading && <Spinner />}
                 </HStack>
               </FormControl>
 
