@@ -7,3 +7,11 @@
 form {
   min-width: 100%;
 }
+
+.title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #999;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
