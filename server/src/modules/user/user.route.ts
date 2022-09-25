@@ -38,7 +38,7 @@ router.route('/forgotpassword').post(validateResource(forgotPasswordSchema), for
 router
 	.route('/password/reset/:token')
 	.post(validateResource(passwordResetSchema), passwordResetHandler);
-router.route('/userdashboard').get(isLoggedIn, getUserHandler);
+router.route('/userdetails').get(isLoggedIn, getUserHandler);
 router
 	.route('/password/update')
 	.put(isLoggedIn, validateResource(changePasswordSchema), changePasswordHandler);

@@ -283,7 +283,7 @@ export const passwordResetHandler = BigPromise(
 
 /** 
 @desc    Get Logged-in User Details
-@route   POST /api/v1/userdashboard
+@route   POST /api/v1/userdetails
 @access  Private
 */
 export const getUserHandler = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
