@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "../../store/auth/auth-slice";
+import { logoutUser } from "../../store/services/auth/auth-slice";
 import { AppDispatch } from "../../store";
 import { useEffect } from "react";
 

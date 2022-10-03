@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { registerUser } from "../../store/auth/auth-slice";
+import { registerUser } from "../../store/services/auth/auth-slice";
 import {
   Box,
   Flex,
@@ -23,6 +23,7 @@ import {
   Heading,
   Text,
   Spinner,
+  InputRightElement,
 } from "@chakra-ui/react";
 
 import { registerUserSchema } from "../../schema/userSchema";
@@ -31,6 +32,8 @@ import { AppDispatch, RootState } from "../../store";
 
 export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { isAuthenticated, loading } = useSelector(
     (state: RootState) => state.auth
@@ -49,11 +52,14 @@ export default function RegisterPage() {
   async function onSubmit(values: CreateRegisterUserInput) {
     const formData = { ...values, photo: values.photo[0] };
     dispatch(registerUser(formData));
-    console.log("submitted");
   }
 
   // Redirect if logged in
   if (isAuthenticated) router.push("/auth");
+
+  const handleShowPassword = () => setShowPassword(!showPassword);
+  const handleShowConfirmPassword = () =>
+    setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <Box p="2em">
@@ -96,7 +102,6 @@ export default function RegisterPage() {
                 <Input
                   id="firstName"
                   rounded={5}
-                  variant="filled"
                   placeholder="First Name *"
                   {...register("firstName")}
                 />
@@ -110,7 +115,6 @@ export default function RegisterPage() {
                   id="lastName"
                   placeholder="Last Name *"
                   rounded={5}
-                  variant="filled"
                   {...register("lastName")}
                 />
                 <FormErrorMessage>
@@ -124,7 +128,6 @@ export default function RegisterPage() {
                   type="email"
                   rounded={5}
                   placeholder="Email *"
-                  variant="filled"
                   {...register("email")}
                 />
                 <FormErrorMessage>
@@ -133,28 +136,44 @@ export default function RegisterPage() {
               </FormControl>
 
               <FormControl mt={7} isInvalid={Boolean(errors.password)}>
-                <Input
-                  id="password"
-                  type="password"
-                  rounded={5}
-                  placeholder="Password *"
-                  variant="filled"
-                  {...register("password")}
-                />
+                <InputGroup>
+                  <Input
+                    pr="4.5rem"
+                    rounded={5}
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter password"
+                    {...register("password")}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button h="1.75rem" size="sm" onClick={handleShowPassword}>
+                      {showPassword ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage>
                   {errors.password && errors.password.message}
                 </FormErrorMessage>
               </FormControl>
 
               <FormControl mt={7} isInvalid={Boolean(errors.confirmPassword)}>
-                <Input
-                  id="password"
-                  type="password"
-                  rounded={5}
-                  placeholder="Confirm Password *"
-                  variant="filled"
-                  {...register("confirmPassword")}
-                />
+                <InputGroup>
+                  <Input
+                    pr="4.5rem"
+                    rounded={5}
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    {...register("confirmPassword")}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      onClick={handleShowConfirmPassword}
+                    >
+                      {showConfirmPassword ? "Hide" : "Show"}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage>
                   {errors.confirmPassword && errors.confirmPassword.message}
                 </FormErrorMessage>
@@ -168,7 +187,6 @@ export default function RegisterPage() {
                     type="tel"
                     rounded={5}
                     placeholder="Phone Number *"
-                    variant="filled"
                     {...register("phoneNumber")}
                   />
                 </InputGroup>
@@ -186,7 +204,6 @@ export default function RegisterPage() {
                   <FormLabel htmlFor="photo"> Profile Picture *</FormLabel>
 
                   <Input
-                    variant="filled"
                     colorScheme="linkedin"
                     name="photo"
                     type="file"

@@ -1,7 +1,14 @@
 import { TypeOf } from "zod";
 import { registerUserSchema, loginUserSchema } from "../schema/userSchema";
+import { adminUpdateUserSchema } from "../schema/adminSchema";
+
+export enum ROLE {
+  ADMIN = "admin",
+  USER = "user",
+}
 
 export interface IUser {
+  _id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -11,7 +18,7 @@ export interface IUser {
     secure_url: string;
   };
   phoneNumber: string;
-  role?: string;
+  role?: ROLE;
   forgotPasswordToken?: string;
   forgotPasswordExpiry?: number;
   createdAt?: Date;
@@ -19,5 +26,10 @@ export interface IUser {
   token?: string;
 }
 
+export type UpdateUser = Omit<
+  IUser,
+  "firstName" | "lastName" | "email" | "password" | "photo" | "phoneNumber"
+>;
 export type CreateRegisterUserInput = TypeOf<typeof registerUserSchema>;
+export type CreateAdminUpdateUserInput = TypeOf<typeof adminUpdateUserSchema>;
 export type CreateLoginUserInput = TypeOf<typeof loginUserSchema>;
