@@ -435,12 +435,13 @@ export const adminSingleUserHandler = BigPromise(
 export const adminUpdateUserDetailsHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const {id} = req.params;
-		const {firstName, lastName, email, role}: IUser = req.body;
+		const {firstName, lastName, email, role, phoneNumber}: IUser = req.body;
 		const newData = {
 			firstName,
 			lastName,
 			email,
-			role
+			role,
+			phoneNumber
 		} as IUser;
 
 		// check for if the given id is an valid objectId or not
