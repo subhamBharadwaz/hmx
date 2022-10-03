@@ -1,6 +1,12 @@
+/* eslint-disable no-unused-vars */
 import {Document} from 'mongoose';
 import {Request} from 'express';
 import {JwtPayload} from 'jsonwebtoken';
+
+export enum ROLE {
+	ADMIN = 'admin',
+	USER = 'user'
+}
 
 export interface IUser {
 	firstName: string;
@@ -12,7 +18,7 @@ export interface IUser {
 		secure_url: string;
 	};
 	phoneNumber: string;
-	role?: string;
+	role?: ROLE;
 	forgotPasswordToken?: string;
 	forgotPasswordExpiry?: number;
 	createdAt?: Date;

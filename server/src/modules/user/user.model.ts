@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from 'config';
-import {IUserDocument} from './user.types';
+import {IUserDocument, ROLE} from './user.types';
 
 const UserSchema = new Schema<IUserDocument>(
 	{
@@ -40,7 +40,7 @@ const UserSchema = new Schema<IUserDocument>(
 		},
 		role: {
 			type: String,
-			default: 'user'
+			default: ROLE.USER
 		},
 		forgotPasswordToken: String,
 		forgotPasswordExpiry: Date
