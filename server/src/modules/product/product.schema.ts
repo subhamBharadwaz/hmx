@@ -1,5 +1,8 @@
 import * as z from 'zod';
 
+const MAX_FILE_SIZE = 1000000;
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
 export const addProductSchema = z.object({
 	body: z.object({
 		name: z
@@ -8,25 +11,30 @@ export const addProductSchema = z.object({
 		price: z
 			.string({required_error: 'Product price is required'})
 			.max(6, 'Product price should not be more than 6 digits'),
-		description: z.string({required_error: 'Product description is required'}),
-		category: z.enum(['men', 'women', 'unisex']),
-		productType: z.enum([
-			'twilljogger',
-			'shirredlegjogger',
-			'motoknitjogger',
-			'dropcrotchjogger',
-			'hiphopjogger',
-			'shadingblockjogger',
-			'chinojogger',
-			'handcuffedjogger',
-			'loosepocketjogger',
-			'splashcolorjogger',
-			'wooljogger',
-			'distressedjogger',
-			'noncuffedjogger'
+
+		description: z
+			.string({required_error: 'Product description is required'})
+			.max(1000, {message: 'Do not exceed 1000 characters'}),
+		gender: z.enum(['Men', 'Women', 'Unisex']),
+		category: z.enum([
+			'Twill Jogger',
+			'Shirred Jogger',
+			'Motoknit Jogger',
+			'Dropcrotch Jogger',
+			'Hiphop Jogger',
+			'Shadingblock Jogger',
+			'Chino Jogger',
+			'Handcuffed Jogger',
+			'Loosepocket Jogger',
+			'Splashcolor Jogger',
+			'Wool Jogger',
+			'Distressed Jogger',
+			'Noncuffed Jogger'
 		]),
+		stock: z.string(),
 		brand: z.string({required_error: 'Product brand is required'}),
-		size: z.enum(['s', 'm', 'l', 'xl', 'xxl'])
+		size: z.array(z.string({required_error: 'Size is required'})),
+		photos: z.any()
 	})
 });
 
