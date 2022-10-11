@@ -4,17 +4,25 @@ import crypto from 'crypto';
 import path from 'path';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
-import {CustomError, cookieToken, mailHelper, logger, isValidMongooseObjectId} from '../../utils';
+import {
+	CustomError,
+	cookieToken,
+	mailHelper,
+	logger,
+	isValidMongooseObjectId,
+	WhereClause
+} from '../../utils';
 import {IUser, IGetUserAuthInfoRequest} from './user.types';
 import {CreateLoginUserInput} from './user.schema';
 import {
 	findUser,
-	findAllUsers,
 	findUserById,
 	registerUser,
 	resetPassword,
-	updateUser
+	updateUser,
+	totalUsers
 } from './user.service';
+import User from './user.model';
 
 /** 
 @desc    Register User
@@ -50,7 +58,7 @@ export const registerHandler = BigPromise(
 
 		// check if the image is a valid image
 		const extensionName = path.extname(file.name);
-		const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+		const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 		if (!allowedExtensions.includes(extensionName)) {
 			const logErr: CustomError = new CustomError('Invalid Image', 422);
@@ -363,7 +371,7 @@ export const updateUserDetailsHandler = BigPromise(
 
 			// check if the image is a valid image
 			const extensionName = path.extname(file.name);
-			const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 			if (!allowedExtensions.includes(extensionName)) {
 				const logErr: CustomError = new CustomError('Invalid Image', 422);
@@ -396,13 +404,22 @@ export const updateUserDetailsHandler = BigPromise(
 @route   GET /api/v1/admin/users
 @access  Private
 */
-export const adminAllUsersHandler = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response) => {
-		const users = await findAllUsers('-password');
+export const adminAllUsersHandler = BigPromise(async (req: Request, res: Response) => {
+	const resultPerPage = 12;
 
-		res.status(200).json({success: true, users});
-	}
-);
+	const userCount = await totalUsers();
+	const usersObj = new WhereClause(User.find({}, {password: 0}), req.query).search().filter();
+
+	let users = await usersObj.base;
+
+	const filteredUserNumber = users.length;
+	usersObj.pager(resultPerPage);
+
+	users = await usersObj.base.clone();
+	const pageCount = Math.ceil(userCount / resultPerPage);
+
+	res.status(200).json({success: true, users, filteredUserNumber, userCount, pageCount});
+});
 
 /** 
 @desc    Get a single user - Admin only
