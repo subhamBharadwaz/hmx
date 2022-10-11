@@ -28,7 +28,6 @@ import { loginUser } from "../../store/services/auth/auth-slice";
 export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { isAuthenticated, loading } = useSelector(
     (state: RootState) => state.auth
@@ -53,8 +52,6 @@ export default function RegisterPage() {
   if (isAuthenticated) router.push("/auth");
 
   const handleShowPassword = () => setShowPassword(!showPassword);
-  const handleShowConfirmPassword = () =>
-    setShowConfirmPassword(!showConfirmPassword);
 
   return (
     <Box p="2em">
@@ -96,7 +93,7 @@ export default function RegisterPage() {
                   id="email"
                   type="email"
                   rounded={5}
-                  placeholder="Email *"
+                  placeholder="Email"
                   {...register("email")}
                 />
                 <FormErrorMessage>
@@ -133,7 +130,9 @@ export default function RegisterPage() {
                 Login
               </Button>
             </form>
-            {loading && <Spinner />}
+            <Flex justifyContent="center" alignItems="center" w="100%">
+              {!loading && <Spinner />}
+            </Flex>
           </VStack>
           <Text mt={7}>
             Not a Registered Customer? <Button variant="link">Register</Button>

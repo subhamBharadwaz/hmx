@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   Box,
   Flex,
@@ -7,17 +7,27 @@ import {
   Link,
   FlexProps,
   Icon,
+  IconButton,
   BoxProps,
+  useDisclosure,
+  Drawer,
   CloseButton,
-  useMediaQuery,
-  Show,
-  Hide,
+  DrawerContent,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  Button,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { If, Then, Else } from "react-if";
 
 // Icons
+import { FiMenu } from "react-icons/fi";
 import {
   MdOutlineDashboard,
   MdStoreMallDirectory,
@@ -33,8 +43,8 @@ import {
   AiOutlineLogout,
 } from "react-icons/ai";
 import { BiUserCircle } from "react-icons/bi";
-import { FiMenu, FiChevronDown, FiBell } from "react-icons/fi";
 import { IconType } from "react-icons";
+import { BsChevronDown } from "react-icons/bs";
 
 interface LinkItemProps {
   name: string;
@@ -100,33 +110,70 @@ const LinkItems: Array<LinkItemProps> = [
   { name: "Logout", icon: AiOutlineLogout, path: "/" },
 ];
 
-export const Sidebar = () => {
-  const [mobileView] = useMediaQuery("(min-width:769px)");
+export const Sidebar = ({ children }: { children: ReactNode }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <Box minH="100vh">
+      <SidebarContent
+        onClose={() => onClose}
+        display={{ base: "none", md: "block" }}
+      />
+      <Drawer
+        autoFocus={false}
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        returnFocusOnClose={false}
+        onOverlayClick={onClose}
+        size="full"
+      >
+        <DrawerContent>
+          <SidebarContent onClose={onClose} />
+        </DrawerContent>
+      </Drawer>
+      <Box ml={{ base: 0, md: 300 }} p="4">
+        {children}
+      </Box>
+    </Box>
+  );
+};
+
+interface SidebarProps extends BoxProps {
+  onClose: () => void;
+}
+
+const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
     <Box
       flex={1}
-      minH="100vh"
+      h="full"
       boxShadow="0 4px 12px rgba(0,0,0,0.05)"
       py={4}
-      pos="sticky"
-      top="0"
-      minW="350px"
+      pos="fixed"
+      w={{ base: "full", md: 300 }}
+      {...rest}
     >
-      <Box h={50}>
-        <Flex alignItems="center" justifyContent="center">
-          <Text as="span" fontSize={30} fontWeight="bold" color="green.500">
-            HMX Admin
-          </Text>
-        </Flex>
-      </Box>
-      <Divider />
-      <Box className="center" pl={10}>
-        {LinkItems.map((link) => (
-          <NavItem key={link.name} path={link.path} icon={link.icon}>
-            {link.name}
-          </NavItem>
-        ))}
-      </Box>
+      <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
+        <Text as="span" fontSize={30} fontWeight="bold" color="green.500">
+          HMX Admin
+        </Text>
+        <CloseButton
+          size="lg"
+          display={{ base: "flex", md: "none" }}
+          onClick={onClose}
+        />
+      </Flex>
+
+      {LinkItems.map((link) => (
+        <NavItem
+          key={link.name}
+          path={link.path}
+          icon={link.icon}
+          onClick={onClose}
+        >
+          {link.name}
+        </NavItem>
+      ))}
     </Box>
   );
 };
@@ -136,7 +183,6 @@ export default Sidebar;
 interface NavItemProps extends FlexProps {
   icon: IconType;
   path: string;
-
   children?;
 }
 const NavItem = ({ icon, path, children, ...rest }: NavItemProps) => {
@@ -179,5 +225,34 @@ const NavItem = ({ icon, path, children, ...rest }: NavItemProps) => {
         </Flex>
       </Link>
     </NextLink>
+  );
+};
+
+interface MobileProps extends FlexProps {
+  onOpen: () => void;
+}
+
+const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  return (
+    <Flex
+      ml={{ base: 0, md: 60 }}
+      px={{ base: 4, md: 24 }}
+      height="20"
+      alignItems="center"
+      borderBottomWidth="1px"
+      justifyContent="flex-start"
+      {...rest}
+    >
+      <IconButton
+        variant="outline"
+        onClick={onOpen}
+        aria-label="open menu"
+        icon={<FiMenu />}
+      />
+
+      <Text fontSize="2xl" ml="8" fontWeight="bold">
+        HMX Admin
+      </Text>
+    </Flex>
   );
 };

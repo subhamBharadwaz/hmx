@@ -21,7 +21,7 @@ export interface IAuthState {
 const initialState = {
   token: tokenFromLocalStorage || null,
   isAuthenticated: false,
-  loading: false,
+  loading: null,
   user: null,
 } as IAuthState;
 
@@ -58,7 +58,7 @@ export const registerUser = createAsyncThunk(
         values,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "Multipart/Form-Data",
           },
           withCredentials: true,
         }

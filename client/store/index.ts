@@ -6,12 +6,14 @@ import {
   AnyAction,
 } from "@reduxjs/toolkit";
 import auth from "./services/auth/auth-slice";
-import adminUserActions from "./services/admin/adminUserSlice";
+import adminUserSlice from "./services/admin/adminUserSlice";
+import adminProductSlice from "./services/admin/adminProductSlice";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const combinedReducer = combineReducers({
   auth,
-  adminUserActions,
+  adminUserSlice,
+  adminProductSlice,
 });
 
 const reducer = (
@@ -26,15 +28,30 @@ const reducer = (
         isAuthenticated: state.auth.isAuthenticated,
         loading: state.auth.loading,
       },
-      adminUserActions: {
-        loading: state.adminUserActions.loading,
-        users: [
-          ...action.payload.adminUserActions.users,
-          ...state.adminUserActions.users,
-        ],
+      adminUserSlice: {
+        loading: state.adminUserSlice.loading,
+        success: state.adminUserSlice.success,
+        users: {
+          ...action.payload.adminUserSlice.users,
+          ...state.adminUserSlice.users,
+        },
         user: {
-          ...action.payload.adminUserActions.user,
-          ...state.adminUserActions.user,
+          ...action.payload.adminUserSlice.user,
+          ...state.adminUserSlice.user,
+        },
+      },
+      adminProductSlice: {
+        loading: state.adminProductSlice.loading,
+        createSuccess: state.adminProductSlice.createSuccess,
+        updateSuccess: state.adminProductSlice.updateSuccess,
+        deleteSuccess: state.adminProductSlice.deleteSuccess,
+        products: {
+          ...action.payload.adminProductSlice.products,
+          ...state.adminProductSlice.products,
+        },
+        product: {
+          ...action.payload.adminProductSlice.product,
+          ...state.adminProductSlice.product,
         },
       },
     };
