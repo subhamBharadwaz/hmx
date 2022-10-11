@@ -6,28 +6,34 @@ import { CookieValueTypes } from "cookies-next";
 
 interface IUsers {
   loading: boolean;
-  users: IUser[];
+  users: {
+    users: IUser[];
+  };
   user: IUser;
+  success: boolean;
 }
 
 const initialState = {
   loading: false,
-  users: [],
+  users: {
+    users: [],
+  },
   user: {},
+  success: false,
 } as IUsers;
 
 // get all users
 export const getAllUsers = createAsyncThunk(
   "admin/users",
-  async (_, { rejectWithValue }) => {
+  async (page: number, { rejectWithValue }) => {
     try {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/users`,
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/users?page=${page}`,
         {
           withCredentials: true,
         }
       );
-      return await res.data.users;
+      return await res.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -53,7 +59,7 @@ export const getSingleUser = createAsyncThunk(
           },
         }
       );
-      return await res.data;
+      return await res.data.user;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -76,11 +82,11 @@ export const updateUserDetails = createAsyncThunk(
         {
           withCredentials: true,
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-      return res.data;
+      return res.data.user;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -106,7 +112,7 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
-const adminUserActionsSlice = createSlice({
+const adminUserSlice = createSlice({
   name: "adminUserActions",
   initialState,
   reducers: {},
@@ -119,7 +125,7 @@ const adminUserActionsSlice = createSlice({
     });
     builder.addCase(getAllUsers.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.users = [...payload];
+      state.users = { ...payload };
       state.user = null;
     });
     builder.addCase(getAllUsers.rejected, (state) => {
@@ -150,34 +156,42 @@ const adminUserActionsSlice = createSlice({
       state.loading = true;
       state.users = state.users;
       state.user = state.user;
+      state.success = false;
     });
     builder.addCase(updateUserDetails.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.users = state.users.map((user) =>
+      state.users.users = state.users.users.map((user) =>
         user._id === payload.id ? payload : user
       );
       state.user = payload;
+      state.success = true;
     });
     builder.addCase(updateUserDetails.rejected, (state) => {
       state.loading = true;
       state.users = state.users;
       state.user = state.user;
+      state.success = false;
     });
 
     // delete user details
     builder.addCase(deleteUser.pending, (state) => {
       state.loading = true;
       state.users = state.users;
+      state.success = false;
     });
     builder.addCase(deleteUser.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.users = state.users.filter((user) => user._id !== payload);
+      state.users.users = state.users.users.filter(
+        (user) => user._id !== payload
+      );
+      state.success = true;
     });
     builder.addCase(deleteUser.rejected, (state) => {
       state.loading = true;
       state.users = state.users;
+      state.success = false;
     });
   },
 });
 
-export default adminUserActionsSlice.reducer;
+export default adminUserSlice.reducer;
