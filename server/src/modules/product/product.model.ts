@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 import {Schema, model} from 'mongoose';
-import {IProductDocument, CategoryType, ProductType, SizeType, RatingType} from './product.types';
+import {IProductDocument, Gender, Category, RatingType} from './product.types';
 
 const ProductSchema = new Schema<IProductDocument>(
 	{
@@ -29,19 +29,19 @@ const ProductSchema = new Schema<IProductDocument>(
 				}
 			}
 		],
-		category: {
+		gender: {
 			type: String,
 			required: [true, 'Please select a category for the product'],
 			enum: {
-				values: Object.values(CategoryType),
-				message: `Please select category only from - ${CategoryType.Men} or ${CategoryType.Women}`
+				values: Object.values(Gender),
+				message: `Please select category only from - ${Gender.Men}, ${Gender.Women} or ${Gender.Unisex}`
 			}
 		},
-		productType: {
+		category: {
 			type: String,
 			required: [true, 'Please select type of the product'],
 			enum: {
-				values: Object.values(ProductType),
+				values: Object.values(Category),
 				message: `Please select the type of the product only from the given types`
 			}
 		},
@@ -53,14 +53,7 @@ const ProductSchema = new Schema<IProductDocument>(
 			type: Number,
 			default: 0
 		},
-		size: {
-			type: String,
-			required: [true, 'Please select the available sizes for the product'],
-			enum: {
-				values: Object.values(SizeType),
-				message: `Please select sized only from the given sizes,`
-			}
-		},
+		size: [{type: String, required: [true, 'Please add the product size/sizes']}],
 		ratings: {
 			type: Number,
 			default: 0

@@ -16,7 +16,7 @@ export const registerUserSchema = object({
 		email: string({
 			required_error: 'Email is required'
 		}).email('Not a valid email'),
-
+		phoneNumber: string({required_error: 'Phone number is required'}).min(10).max(10),
 		password: string({required_error: 'Password is required'}).regex(
 			passwordRegex,
 			'Password is required\n, The password length must be greater than or equal to 8,\n The password must contain one or more uppercase characters,\n The password must contain one or more lowercase characters,\n The password must contain one or more numeric values,\n The password must contain one or more special characters\n'

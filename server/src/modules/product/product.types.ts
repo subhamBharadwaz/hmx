@@ -1,34 +1,26 @@
 /* eslint-disable no-unused-vars */
 import {Document, Types} from 'mongoose';
 
-export enum CategoryType {
-	Men = 'men',
-	Women = 'women',
-	Unisex = 'unisex'
+export enum Gender {
+	Men = 'Men',
+	Women = 'Women',
+	Unisex = 'Unisex'
 }
 
-export enum ProductType {
-	Twill = 'twilljogger',
-	Shirred = 'shirredlegjogger',
-	Moto = 'motoknitjogger',
-	Drop = 'dropcrotchjogger',
-	HipHop = 'hiphopjogger',
-	Shading = 'shadingblockjogger',
-	Chino = 'chinojogger',
-	Handcuffed = 'handcuffedjogger',
-	Loose = 'loosepocketjogger',
-	Splash = 'splashcolorjogger',
-	Wool = 'wooljogger',
-	Tore = 'distressedjogger',
-	NonCuffed = 'noncuffedjogger'
-}
-
-export enum SizeType {
-	Small = 's',
-	Medium = 'm',
-	Large = 'l',
-	ExtraLarge = 'xl',
-	DoubleExtraLarge = 'xxl'
+export enum Category {
+	Twill = 'Twill Jogger',
+	Shirred = 'Shirred Jogger',
+	Moto = 'Motoknit Jogger',
+	Drop = 'Dropcrotch Jogger',
+	HipHop = 'Hiphop Jogger',
+	Shading = 'Shadingblock Jogger',
+	Chino = 'Chino Jogger',
+	Handcuffed = 'Handcuffed Jogger',
+	Loose = 'Loosepocket Jogger',
+	Splash = 'Splashcolor Jogger',
+	Wool = 'Wool Jogger',
+	Tore = 'Distressed Jogger',
+	NonCuffed = 'Noncuffed Jogger'
 }
 
 export enum RatingType {
@@ -47,11 +39,11 @@ export interface IProductDocument extends Document {
 		id: string;
 		secure_url: string;
 	}[];
-	category: CategoryType;
-	productType: ProductType;
+	gender: Gender;
+	category: Category;
 	brand: string;
 	stock: number;
-	size: SizeType;
+	size: string[];
 	ratings: RatingType;
 	numberOfReviews: number;
 	reviews: {

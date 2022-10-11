@@ -4,17 +4,25 @@ import crypto from 'crypto';
 import path from 'path';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
-import {CustomError, cookieToken, mailHelper, logger, isValidMongooseObjectId} from '../../utils';
+import {
+	CustomError,
+	cookieToken,
+	mailHelper,
+	logger,
+	isValidMongooseObjectId,
+	WhereClause
+} from '../../utils';
 import {IUser, IGetUserAuthInfoRequest} from './user.types';
 import {CreateLoginUserInput} from './user.schema';
 import {
 	findUser,
-	findAllUsers,
 	findUserById,
 	registerUser,
 	resetPassword,
-	updateUser
+	updateUser,
+	totalUsers
 } from './user.service';
+import User from './user.model';
 
 /** 
 @desc    Register User
@@ -23,7 +31,7 @@ import {
 */
 export const registerHandler = BigPromise(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const {firstName, lastName, email, password}: IUser = req.body;
+		const {firstName, lastName, email, password, phoneNumber}: IUser = req.body;
 
 		// check for presence of the required fields
 		if (!(firstName && lastName && email && password)) {
@@ -35,14 +43,22 @@ export const registerHandler = BigPromise(
 			return next(logErr);
 		}
 
-		// upload photo to cloudinary
+		// if the user already signed up with the same email
+		const existingUser = await findUser(email);
 
+		if (existingUser) {
+			const logErr: CustomError = new CustomError('User already exists!', 401);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		// upload photo to cloudinary
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const file: UploadApiOptions = req.files!.photo;
 
 		// check if the image is a valid image
 		const extensionName = path.extname(file.name);
-		const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+		const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 		if (!allowedExtensions.includes(extensionName)) {
 			const logErr: CustomError = new CustomError('Invalid Image', 422);
@@ -56,21 +72,13 @@ export const registerHandler = BigPromise(
 			crop: 'scale'
 		});
 
-		// if the user already signed up with the same email
-		const existingUser = await findUser(email);
-
-		if (existingUser) {
-			const logErr: CustomError = new CustomError('User already exists!', 401);
-			logger.error(logErr);
-			return next(logErr);
-		}
-
 		// create user
 		const user = await registerUser({
 			firstName,
 			lastName,
 			email,
 			password,
+			phoneNumber,
 			photo: {
 				id: result.public_id,
 				secure_url: result.secure_url
@@ -283,7 +291,7 @@ export const passwordResetHandler = BigPromise(
 
 /** 
 @desc    Get Logged-in User Details
-@route   POST /api/v1/userdashboard
+@route   POST /api/v1/userdetails
 @access  Private
 */
 export const getUserHandler = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
@@ -363,7 +371,7 @@ export const updateUserDetailsHandler = BigPromise(
 
 			// check if the image is a valid image
 			const extensionName = path.extname(file.name);
-			const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 			if (!allowedExtensions.includes(extensionName)) {
 				const logErr: CustomError = new CustomError('Invalid Image', 422);
@@ -396,13 +404,22 @@ export const updateUserDetailsHandler = BigPromise(
 @route   GET /api/v1/admin/users
 @access  Private
 */
-export const adminAllUsersHandler = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response) => {
-		const users = await findAllUsers('-password');
+export const adminAllUsersHandler = BigPromise(async (req: Request, res: Response) => {
+	const resultPerPage = 12;
 
-		res.status(200).json({success: true, users});
-	}
-);
+	const userCount = await totalUsers();
+	const usersObj = new WhereClause(User.find({}, {password: 0}), req.query).search().filter();
+
+	let users = await usersObj.base;
+
+	const filteredUserNumber = users.length;
+	usersObj.pager(resultPerPage);
+
+	users = await usersObj.base.clone();
+	const pageCount = Math.ceil(userCount / resultPerPage);
+
+	res.status(200).json({success: true, users, filteredUserNumber, userCount, pageCount});
+});
 
 /** 
 @desc    Get a single user - Admin only
@@ -435,12 +452,13 @@ export const adminSingleUserHandler = BigPromise(
 export const adminUpdateUserDetailsHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const {id} = req.params;
-		const {firstName, lastName, email, role}: IUser = req.body;
+		const {firstName, lastName, email, role, phoneNumber}: IUser = req.body;
 		const newData = {
 			firstName,
 			lastName,
 			email,
-			role
+			role,
+			phoneNumber
 		} as IUser;
 
 		// check for if the given id is an valid objectId or not

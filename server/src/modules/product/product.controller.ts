@@ -6,13 +6,7 @@ import config from 'config';
 import {BigPromise} from '../../middlewares';
 import {CustomError, logger, isValidMongooseObjectId, WhereClause} from '../../utils';
 import {IGetUserAuthInfoRequest} from '../user/user.types';
-import {
-	totalProducts,
-	findProduct,
-	findProductById,
-	updateProductById,
-	addProduct
-} from './product.service';
+import {totalProducts, findProductById, updateProductById, addProduct} from './product.service';
 import Product from './product.model';
 
 /** 
@@ -179,10 +173,57 @@ export const getSingleProductReviewsHandler = BigPromise(
 @access  Private
 */
 export const adminGetAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
-	const products = await findProduct();
+	const resultPerPage = 12;
 
-	res.status(200).json({success: true, products});
+	// count the total products (all products)
+	const productCount = await totalProducts();
+
+	const productsObj = new WhereClause(Product.find(), req.query).search().filter();
+
+	let products = await productsObj.base;
+
+	const filteredProductNumber = products.length;
+
+	productsObj.pager(resultPerPage);
+
+	// if we have some chained query going on, like .find(), .somethingFind() on top of that, mongoose doesn't allow all of that, all we gotta do, chain a .clone()
+	products = await productsObj.base.clone();
+	const pageCount = Math.ceil(productCount / resultPerPage);
+
+	res.status(200).json({
+		success: true,
+		products,
+		filteredProductNumber,
+		productCount,
+		pageCount
+	});
 });
+
+/** 
+@desc    Get Products
+@route   GET /api/v1/product/:id
+@access  Public
+*/
+export const adminGetSingleProductsHandler = BigPromise(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const {id} = req.params;
+
+		isValidMongooseObjectId(id, next);
+
+		const product = await findProductById(id);
+
+		if (!product) {
+			const logErr: CustomError = new CustomError(
+				`No product found, please correct the data and try again`,
+				400
+			);
+			logger.error(logErr);
+			return next(logErr);
+		}
+
+		res.status(200).json({success: true, product});
+	}
+);
 
 /** 
 @desc    Admin Add Product
@@ -207,7 +248,7 @@ export const adminAddProductHandler = BigPromise(
 			const images: UploadApiOptions = req.files.photos;
 
 			// check if the image is a valid image
-			const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 			for (let i = 0; i < images.length; i += 1) {
 				// eslint-disable-next-line no-await-in-loop
@@ -279,7 +320,7 @@ export const adminUpdateSingleProductHandler = BigPromise(
 			const images: UploadApiOptions = req.files.photos;
 
 			// check if the image is a valid image
-			const allowedExtensions = ['.png', '.jpg', '.jpeg'];
+			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 			for (let i = 0; i < images.length; i += 1) {
 				// eslint-disable-next-line no-await-in-loop
@@ -306,7 +347,6 @@ export const adminUpdateSingleProductHandler = BigPromise(
 			}
 			req.body.photos = imageArr;
 		}
-		console.log(req.body);
 
 		product = await updateProductById(req.params.id, req.body);
 

@@ -3,6 +3,15 @@ import {IUser} from './user.types';
 import User from './user.model';
 import {logger} from '../../utils';
 
+export async function totalUsers() {
+	try {
+		return User.countDocuments();
+	} catch (error: any) {
+		logger.error(error);
+		throw new Error(error);
+	}
+}
+
 export async function registerUser(input: IUser) {
 	try {
 		return User.create(input);

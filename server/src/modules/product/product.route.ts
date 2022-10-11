@@ -13,6 +13,7 @@ import {
 	deleteReviewHandler,
 	getSingleProductReviewsHandler,
 	adminGetAllProductsHandler,
+	adminGetSingleProductsHandler,
 	adminAddProductHandler,
 	adminUpdateSingleProductHandler,
 	adminDeleteSingleProductHandler
@@ -42,6 +43,7 @@ router
 
 router
 	.route('/admin/product/:id')
+	.get(isLoggedIn, customRole('admin'), adminGetSingleProductsHandler)
 	.put(isLoggedIn, customRole('admin'), adminUpdateSingleProductHandler)
 	.delete(isLoggedIn, customRole('admin'), adminDeleteSingleProductHandler);
 
