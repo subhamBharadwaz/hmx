@@ -1,13 +1,16 @@
 import Product from './product.model';
-import {logger} from '../../utils';
+import {BaseError} from '../../utils';
 import {IProductDocument} from './product.types';
 
 export async function totalProducts() {
 	try {
 		return Product.countDocuments();
 	} catch (error: any) {
-		logger.error(error);
-		throw new Error(error);
+		throw new BaseError(
+			'Could not perform count total products operation',
+			error,
+			'totalProducts'
+		);
 	}
 }
 
@@ -15,8 +18,7 @@ export async function findProduct() {
 	try {
 		return Product.find();
 	} catch (error: any) {
-		logger.error(error);
-		throw new Error(error);
+		throw new BaseError('Could not perform find products operation', error, 'findProduct');
 	}
 }
 
@@ -25,8 +27,11 @@ export async function findProductById(id: unknown) {
 	try {
 		return Product.findById(id);
 	} catch (error: any) {
-		logger.error(error);
-		throw new Error(error);
+		throw new BaseError(
+			'Could not perform find product bt id operation',
+			error,
+			'findProductById'
+		);
 	}
 }
 
@@ -42,8 +47,11 @@ export async function updateProductById(
 			useFindAndModify: false
 		});
 	} catch (error: any) {
-		logger.error(error);
-		throw new Error(error);
+		throw new BaseError(
+			'Could not perform update product operation',
+			error,
+			'updateProductById'
+		);
 	}
 }
 
@@ -52,7 +60,6 @@ export async function addProduct(data: IProductDocument) {
 	try {
 		return Product.create(data);
 	} catch (error: any) {
-		logger.error(error);
-		throw new Error(error);
+		throw new BaseError('Could not perform add product operation', error, 'addProduct');
 	}
 }

@@ -4,14 +4,8 @@ import crypto from 'crypto';
 import path from 'path';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
-import {
-	CustomError,
-	cookieToken,
-	mailHelper,
-	logger,
-	isValidMongooseObjectId,
-	WhereClause
-} from '../../utils';
+import {cookieToken, mailHelper, isValidMongooseObjectId, WhereClause, APIError} from '../../utils';
+import {HttpStatusCode} from '../../types/http.model';
 import {IUser, IGetUserAuthInfoRequest} from './user.types';
 import {CreateLoginUserInput} from './user.schema';
 import {
@@ -35,21 +29,16 @@ export const registerHandler = BigPromise(
 
 		// check for presence of the required fields
 		if (!(firstName && lastName && email && password)) {
-			const logErr: CustomError = new CustomError(
-				'First Name, Last Name, Email, Password and Photo are required',
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'First Name, Last Name, Email, Password and Photo are required';
+			return next(new APIError(message, 'registerHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		// if the user already signed up with the same email
 		const existingUser = await findUser(email);
 
 		if (existingUser) {
-			const logErr: CustomError = new CustomError('User already exists!', 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'User already exists';
+			return next(new APIError(message, 'registerHandler', HttpStatusCode.ALREADY_EXISTS));
 		}
 
 		// upload photo to cloudinary
@@ -61,9 +50,10 @@ export const registerHandler = BigPromise(
 		const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 		if (!allowedExtensions.includes(extensionName)) {
-			const logErr: CustomError = new CustomError('Invalid Image', 422);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Image type is invalid';
+			return next(
+				new APIError(message, 'registerHandler', HttpStatusCode.UNPROCESSABLE_ENTITY)
+			);
 		}
 
 		const result = await cloudinary.uploader.upload(file.tempFilePath, {
@@ -100,20 +90,15 @@ export const loginHandler = BigPromise(
 
 		// check for presence of email and password
 		if (!(email && password)) {
-			const logErr: CustomError = new CustomError('Email, Password are required', 400);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Email and password are required';
+			return next(new APIError(message, 'loginHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		const user = await findUser(email, '+password');
 
 		if (!user) {
-			const logErr: CustomError = new CustomError(
-				'Email or password does not match or exist',
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Email or password do not match or exist';
+			return next(new APIError(message, 'loginHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		// match the password
@@ -121,12 +106,8 @@ export const loginHandler = BigPromise(
 
 		// if password do not match
 		if (!isPasswordCorrect) {
-			const logErr: CustomError = new CustomError(
-				'Email or password does not match or exist',
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Email or password do not match or exist';
+			return next(new APIError(message, 'loginHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		cookieToken(user, res);
@@ -163,9 +144,8 @@ export const forgotPasswordHandler = BigPromise(
 		const user = await findUser(email);
 
 		if (!user) {
-			const logErr: CustomError = new CustomError('User does not exist', 400);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'User does not exists.';
+			return next(new APIError(message, 'loginHandler', HttpStatusCode.NOT_FOUND));
 		}
 
 		// get token from user model method
@@ -207,13 +187,17 @@ export const forgotPasswordHandler = BigPromise(
 			let errorMessage = 'Failed to send email';
 			if (err instanceof Error) {
 				errorMessage = err.message;
-				const logErr: CustomError = new CustomError(errorMessage, 500);
-				logger.error(logErr);
-				return next(logErr);
+				return next(
+					new APIError(
+						errorMessage,
+						'forgotPasswordHandler',
+						HttpStatusCode.INTERNAL_SERVER
+					)
+				);
 			}
-			const logErr: CustomError = new CustomError(errorMessage, 500);
-			logger.error(logErr);
-			return next(logErr);
+			return next(
+				new APIError(errorMessage, 'forgotPasswordHandler', HttpStatusCode.INTERNAL_SERVER)
+			);
 		}
 	}
 );
@@ -234,19 +218,14 @@ export const passwordResetHandler = BigPromise(
 		const user = await resetPassword(encryptedToken);
 
 		if (!user) {
-			const logErr: CustomError = new CustomError('Token is invalid or expired', 400);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Token is invalid or expired';
+			return next(new APIError(message, 'passwordResetHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		// check if password and confirm password matched
 		if (req.body.password !== req.body.confirmPassword) {
-			const logErr: CustomError = new CustomError(
-				'Password and confirm password do not matched',
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Password and confirm password do not matched';
+			return next(new APIError(message, 'passwordResetHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		// update password field in DB
@@ -276,13 +255,17 @@ export const passwordResetHandler = BigPromise(
 			let errorMessage = 'Failed to send email';
 			if (err instanceof Error) {
 				errorMessage = err.message;
-				const logErr: CustomError = new CustomError(errorMessage, 500);
-				logger.error(logErr);
-				return next(logErr);
+				return next(
+					new APIError(
+						errorMessage,
+						'passwordResetHandler',
+						HttpStatusCode.INTERNAL_SERVER
+					)
+				);
 			}
-			const logErr: CustomError = new CustomError(errorMessage, 500);
-			logger.error(logErr);
-			return next(logErr);
+			return next(
+				new APIError(errorMessage, 'passwordResetHandler', HttpStatusCode.INTERNAL_SERVER)
+			);
 		}
 
 		cookieToken(user, res);
@@ -313,19 +296,14 @@ export const changePasswordHandler = BigPromise(
 		const isCorrectCurrentPassword = await user?.comparePassword(req.body.currentPassword);
 
 		if (!isCorrectCurrentPassword) {
-			const logErr: CustomError = new CustomError('Current password is incorrect', 400);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Current password is incorrect';
+			return next(new APIError(message, 'changePasswordHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		// if new password and confirm new password are not equal
 		if (req.body.newPassword !== req.body.confirmNewPassword) {
-			const logErr: CustomError = new CustomError(
-				'New password and confirm password do not matched',
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'New password and confirm password do not matched';
+			return next(new APIError(message, 'changePasswordHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		// for object possibly null ts error
@@ -374,9 +352,14 @@ export const updateUserDetailsHandler = BigPromise(
 			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 			if (!allowedExtensions.includes(extensionName)) {
-				const logErr: CustomError = new CustomError('Invalid Image', 422);
-				logger.error(logErr);
-				return next(logErr);
+				const message = 'Invalid image type';
+				return next(
+					new APIError(
+						message,
+						'updateUserDetailsHandler',
+						HttpStatusCode.UNPROCESSABLE_ENTITY
+					)
+				);
 			}
 
 			const result = await cloudinary.uploader.upload(file.tempFilePath, {
@@ -435,9 +418,8 @@ export const adminSingleUserHandler = BigPromise(
 		const user = await findUserById(id, '-password');
 
 		if (!user) {
-			const logErr: CustomError = new CustomError(`No user found with the id of ${id}`, 400);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'User not found';
+			return next(new APIError(message, 'adminSingleUserHandler', HttpStatusCode.NOT_FOUND));
 		}
 
 		res.status(200).json({success: true, user});
@@ -467,9 +449,10 @@ export const adminUpdateUserDetailsHandler = BigPromise(
 		const isUserExists = await findUserById(id);
 
 		if (!isUserExists) {
-			const logErr: CustomError = new CustomError(`No user found with the id of ${id}`, 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'User not found';
+			return next(
+				new APIError(message, 'adminUpdateUserDetailsHandler', HttpStatusCode.NOT_FOUND)
+			);
 		}
 
 		const user = await updateUser(id, newData, '-password');
@@ -493,9 +476,8 @@ export const adminDeleteUserHandler = BigPromise(
 		const user = await findUserById(id);
 
 		if (!user) {
-			const logErr: CustomError = new CustomError(`No user found with the id of ${id}`, 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'User not found';
+			return next(new APIError(message, 'adminDeleteUserHandler', HttpStatusCode.NOT_FOUND));
 		}
 
 		// get the image id

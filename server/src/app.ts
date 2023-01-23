@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
-import express from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import cookieParser from 'cookie-parser';
@@ -11,6 +11,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import config from 'config';
 
+import {BaseError, logger, ErrorHandler} from './utils/index';
+import {HttpStatusCode} from './types/http.model';
 // import routes
 import user from './modules/user/user.route';
 import product from './modules/product/product.route';
@@ -21,6 +23,8 @@ const app = express();
 
 // swagger docs
 const swaggerDocument = YAML.load(`${__dirname}/swagger.yaml`);
+const errorHandler = new ErrorHandler(logger);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // cors
@@ -58,5 +62,28 @@ app.use('/api/v1', payment);
 app.use('/api/v1', order);
 
 // Handling errors
+app.use(errorMiddleware);
+
+process.on('uncaughtException', async (error: Error) => {
+	await errorHandler.handleError(error);
+	if (!errorHandler.isTrustedError(error)) process.exit(1);
+});
+
+process.on('unhandledRejection', (reason: Error) => {
+	throw reason;
+});
+
+async function errorMiddleware(err: BaseError, req: Request, res: Response, next: NextFunction) {
+	if (!errorHandler.isTrustedError(err)) {
+		res.json({
+			error: 'Something went wrong, please try again later.',
+			code: HttpStatusCode.INTERNAL_SERVER
+		});
+		next(err);
+		return;
+	}
+	await errorHandler.handleError(err);
+	res.json({error: err.message, code: err.httpCode});
+}
 
 export default app;

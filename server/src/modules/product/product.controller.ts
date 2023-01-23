@@ -4,8 +4,9 @@ import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import path from 'path';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
-import {CustomError, logger, isValidMongooseObjectId, WhereClause} from '../../utils';
+import {isValidMongooseObjectId, WhereClause, APIError} from '../../utils';
 import {IGetUserAuthInfoRequest} from '../user/user.types';
+import {HttpStatusCode} from '../../types/http.model';
 import {totalProducts, findProductById, updateProductById, addProduct} from './product.service';
 import Product from './product.model';
 
@@ -53,12 +54,8 @@ export const getSingleProductHandler = BigPromise(
 		const product = await findProductById(id);
 
 		if (!product) {
-			const logErr: CustomError = new CustomError(
-				`No product found, please correct the data and try again`,
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'No product found, please correct the data and try again.';
+			return next(new APIError(message, 'getSingleProductHandler', HttpStatusCode.NOT_FOUND));
 		}
 
 		res.status(200).json({success: true, product});
@@ -213,12 +210,8 @@ export const adminGetSingleProductsHandler = BigPromise(
 		const product = await findProductById(id);
 
 		if (!product) {
-			const logErr: CustomError = new CustomError(
-				`No product found, please correct the data and try again`,
-				400
-			);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'No product found, please correct the data and try again.';
+			return next(new APIError(message, 'getSingleProductHandler', HttpStatusCode.NOT_FOUND));
 		}
 
 		res.status(200).json({success: true, product});
@@ -237,9 +230,10 @@ export const adminAddProductHandler = BigPromise(
 
 		// check whether the images are exists or not
 		if (!req.files) {
-			const logErr: CustomError = new CustomError('Images are required', 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Images are required.';
+			return next(
+				new APIError(message, 'adminAddProductHandler', HttpStatusCode.BAD_REQUEST)
+			);
 		}
 
 		if (req.files) {
@@ -255,9 +249,14 @@ export const adminAddProductHandler = BigPromise(
 				const extensionName = path.extname(images[i].name);
 
 				if (!allowedExtensions.includes(extensionName)) {
-					const logErr: CustomError = new CustomError('Invalid Image', 422);
-					logger.error(logErr);
-					return next(logErr);
+					const message = 'Invalid image type.';
+					return next(
+						new APIError(
+							message,
+							'adminAddProductHandler',
+							HttpStatusCode.UNPROCESSABLE_ENTITY
+						)
+					);
 				}
 			}
 
@@ -298,12 +297,11 @@ export const adminUpdateSingleProductHandler = BigPromise(
 		let product = await findProductById(id);
 
 		if (!product) {
-			const logErr: CustomError = new CustomError(
-				`No product found with the id of ${id}`,
-				400
+			const message = 'Product not found.';
+
+			return next(
+				new APIError(message, 'adminUpdateSingleProductHandler', HttpStatusCode.NOT_FOUND)
 			);
-			logger.error(logErr);
-			return next(logErr);
 		}
 
 		const imageArr = [];
@@ -327,9 +325,15 @@ export const adminUpdateSingleProductHandler = BigPromise(
 				const extensionName = path.extname(images[i].name);
 
 				if (!allowedExtensions.includes(extensionName)) {
-					const logErr: CustomError = new CustomError('Invalid Image', 422);
-					logger.error(logErr);
-					return next(logErr);
+					const message = 'Invalid image type.';
+
+					return next(
+						new APIError(
+							message,
+							'adminUpdateSingleProductHandler',
+							HttpStatusCode.UNPROCESSABLE_ENTITY
+						)
+					);
 				}
 			}
 
@@ -368,12 +372,11 @@ export const adminDeleteSingleProductHandler = BigPromise(
 		const product = await findProductById(id);
 
 		if (!product) {
-			const logErr: CustomError = new CustomError(
-				`No product found with the id of ${id}`,
-				400
+			const message = 'Product not found.';
+
+			return next(
+				new APIError(message, 'adminDeleteSingleProductHandler', HttpStatusCode.NOT_FOUND)
 			);
-			logger.error(logErr);
-			return next(logErr);
 		}
 
 		// destroy the existing images

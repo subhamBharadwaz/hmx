@@ -2,12 +2,11 @@
 import dotEnv from 'dotenv';
 
 dotEnv.config();
-import {Request, Response, NextFunction} from 'express';
 
 import config from 'config';
 import {v2 as cloudinary} from 'cloudinary';
 import app from './app';
-import {connectToDB, logger, ErrorHandler, BaseError} from './utils';
+import {connectToDB, logger} from './utils';
 import {disconnectFromDatabase} from './utils/db';
 
 // connect to database
@@ -21,8 +20,6 @@ cloudinary.config({
 });
 
 const PORT = config.get<number>('port');
-
-app.use(errorMiddleware);
 
 const server = app.listen(PORT, () => {
 	logger.info(`Server is running at http://localhost:${PORT}`);
@@ -48,23 +45,4 @@ function gracefulShutdown(signal: string) {
 for (let i = 0; i < signals.length; i++) {
 	// eslint-disable-next-line security/detect-object-injection
 	gracefulShutdown(signals[i]);
-}
-
-const errorHandler = new ErrorHandler(logger);
-
-process.on('uncaughtException', async (error: Error) => {
-	await errorHandler.handleError(error);
-	if (!errorHandler.isTrustedError(error)) process.exit(1);
-});
-
-process.on('unhandledRejection', (reason: Error) => {
-	throw reason;
-});
-
-async function errorMiddleware(err: BaseError, req: Request, res: Response, next: NextFunction) {
-	if (!errorHandler.isTrustedError(err)) {
-		next(err);
-		return;
-	}
-	await errorHandler.handleError(err);
 }

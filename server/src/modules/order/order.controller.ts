@@ -3,7 +3,8 @@ import Product from '../product/product.model';
 import {BigPromise} from '../../middlewares';
 import {IOrderDocument} from './order.types';
 import {IGetUserAuthInfoRequest} from '../user/user.types';
-import {isValidMongooseObjectId, CustomError, logger} from '../../utils';
+import {HttpStatusCode} from '../../types/http.model';
+import {isValidMongooseObjectId, APIError} from '../../utils';
 import {
 	createOrder,
 	findOrderByIdAndPopulate,
@@ -37,9 +38,8 @@ export const createOrderHandler = BigPromise(
 			!shippingAmount ||
 			!totalAmount
 		) {
-			const logErr: CustomError = new CustomError(`All required fields must be filled`, 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Required fields must be filled';
+			return next(new APIError(message, 'createOrderHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
 		const userId = req.user._id;
@@ -75,9 +75,8 @@ export const getSingleOrderHandler = BigPromise(
 		const order = await findOrderByIdAndPopulate(orderId, 'user', 'name email');
 
 		if (!order) {
-			const logErr: CustomError = new CustomError(`Please check order id`, 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Please check your order ID';
+			return next(new APIError(message, 'getSingleOrderHandler', HttpStatusCode.BAD_REQUEST));
 		}
 		res.status(200).json({success: true, order});
 	}
@@ -96,9 +95,10 @@ export const getLoggedInUserOrdersHandler = BigPromise(
 		const order = await findLoggedInUserOrders(userId);
 
 		if (!order) {
-			const logErr: CustomError = new CustomError(`Please check order id`, 401);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'Please check your order ID';
+			return next(
+				new APIError(message, 'getLoggedInUserOrdersHandler', HttpStatusCode.BAD_REQUEST)
+			);
 		}
 		res.status(200).json({success: true, order});
 	}
@@ -130,12 +130,14 @@ export const adminUpdateSingleOrderHandler = BigPromise(
 		const order = await findOrderById(orderId);
 
 		if (order?.orderStatus === 'Delivered') {
-			const logErr: CustomError = new CustomError(
-				`Order is already marked for delivered`,
-				401
+			const message = 'Order is already marked for delivered';
+			return next(
+				new APIError(
+					message,
+					'adminUpdateSingleOrderHandler',
+					HttpStatusCode.ALREADY_EXISTS
+				)
 			);
-			logger.error(logErr);
-			return next(logErr);
 		}
 
 		// update the order status
@@ -166,12 +168,10 @@ export const adminDeleteSingleOrderHandler = BigPromise(
 		const order = await findOrderById(orderId);
 
 		if (!order) {
-			const logErr: CustomError = new CustomError(
-				`Order is not found with the id ${orderId}`,
-				400
+			const message = 'Order not found';
+			return next(
+				new APIError(message, 'adminDeleteSingleOrderHandler', HttpStatusCode.NOT_FOUND)
 			);
-			logger.error(logErr);
-			return next(logErr);
 		}
 
 		await order.remove();

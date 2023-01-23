@@ -1,13 +1,13 @@
 import {Response, NextFunction} from 'express';
-import {CustomError, logger} from '../utils/index';
 import {IGetUserAuthInfoRequest} from '../modules/user/user.types';
+import {APIError} from '../utils';
+import {HttpStatusCode} from '../types/http.model';
 
 const customRole = (...roles: string[]) => {
 	return (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		if (!roles.includes(req.user.role)) {
-			const logErr = new CustomError('You are not allowed for this resource', 403);
-			logger.error(logErr);
-			return next(logErr);
+			const message = 'You are not allowed for this resource';
+			return next(new APIError(message, 'customRole', HttpStatusCode.FORBIDDEN));
 		}
 		next();
 	};
