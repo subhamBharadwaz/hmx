@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { userDetails } from "../store/services/auth/auth-slice";
+import Layout from "../layout/Layout";
 
 let tokenFromLocalStorage: string;
 if (typeof window !== "undefined") {
@@ -25,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(userDetails());
-  }, []);
+  }, [dispatch]);
   if (router.pathname.startsWith("/admin")) {
     return (
       <ChakraProvider>
@@ -37,7 +38,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
   return (
     <ChakraProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </ChakraProvider>
   );
 }

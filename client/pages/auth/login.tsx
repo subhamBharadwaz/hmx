@@ -49,7 +49,7 @@ export default function RegisterPage() {
   }
 
   // Redirect if logged in
-  if (isAuthenticated) router.push("/auth");
+  // if (isAuthenticated) router.push("/auth");
 
   const handleShowPassword = () => setShowPassword(!showPassword);
 
