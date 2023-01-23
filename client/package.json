@@ -10,7 +10,7 @@
     "prepare": "cd .. && husky install client/.husky"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.3.2",
+    "@chakra-ui/react": "2.4.9",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@hookform/resolvers": "^2.9.7",
