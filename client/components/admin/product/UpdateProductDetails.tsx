@@ -359,7 +359,7 @@ export default function UpdateProductDetails({ product }: Product) {
           </Stack>
 
           <Button rounded={5} colorScheme="blue" w="full" mt={7} type="submit">
-            Add Product
+            Update Product
           </Button>
           {loading && (
             <>
