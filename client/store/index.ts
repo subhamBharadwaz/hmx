@@ -8,12 +8,14 @@ import {
 import auth from "./services/auth/auth-slice";
 import adminUserSlice from "./services/admin/adminUserSlice";
 import adminProductSlice from "./services/admin/adminProductSlice";
+import userProductSlice from "./services/user/userProductSlice";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const combinedReducer = combineReducers({
   auth,
   adminUserSlice,
   adminProductSlice,
+  userProductSlice,
 });
 
 const reducer = (
@@ -52,6 +54,13 @@ const reducer = (
         product: {
           ...action.payload.adminProductSlice.product,
           ...state.adminProductSlice.product,
+        },
+      },
+      userProductSlice: {
+        loading: state.userProductSlice.loading,
+        products: {
+          ...action.payload.userProductSlice.products,
+          ...state.userProductSlice.products,
         },
       },
     };
