@@ -113,7 +113,7 @@ export default function Products() {
           boxShadow="0 4px 12px rgba(0,0,0,0.05)"
           position="relative"
         >
-          <SimpleGrid minChildWidth="250px" spacing={4}>
+          <SimpleGrid minChildWidth="250px" spacing={2}>
             {products.products &&
               products.products.map((product: IProduct) => (
                 <Box key={product._id} p={2}>
