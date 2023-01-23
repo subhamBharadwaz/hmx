@@ -1,12 +1,12 @@
 import {isValidObjectId} from 'mongoose';
 import {NextFunction} from 'express';
-import {CustomError, logger} from './index';
+import {APIError} from './index';
+import {HttpStatusCode} from '../types/http.model';
 
 const isValidMongooseObjectId = (id: string, next: NextFunction) => {
 	if (!isValidObjectId(id)) {
-		const logErr = new CustomError(`${id} is not a valid id`, 400);
-		logger.error(logErr);
-		return next(logErr);
+		const message = `${id} is not a valid id`;
+		return next(new APIError(message, 'iusValidMongooseObject', HttpStatusCode.NOT_FOUND));
 	}
 };
 
