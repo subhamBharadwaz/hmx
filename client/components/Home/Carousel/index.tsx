@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
 import { IProduct } from "../../../types/product";
 import {
   Box,
@@ -48,23 +48,29 @@ const Carousel = ({ products }) => {
         <Flex>
           {products &&
             products.products.map((product: IProduct) => (
-              <Box key={product._id} p={2} minW="20rem">
-                <Stack>
-                  <Image
-                    draggable={false}
-                    alt={product.name}
-                    src={product.photos[0].secure_url}
-                    height={500}
-                    width={400}
-                    objectFit="cover"
-                  />
+              <NextLink
+                key={product._id}
+                href="/product/[id]"
+                as={`/product/${product._id}`}
+              >
+                <Box p={2} minW="20rem">
+                  <Stack>
+                    <Image
+                      draggable={false}
+                      alt={product.name}
+                      src={product.photos[0].secure_url}
+                      height={500}
+                      width={400}
+                      objectFit="cover"
+                    />
 
-                  <Text fontWeight="semibold">{product.name}</Text>
-                  <Divider bg="gray.400" h=".8px" />
-                  <Text color="blackAlpha.600">{product.category}</Text>
-                  <Text>{`₹ ${product.price}`}</Text>
-                </Stack>
-              </Box>
+                    <Text fontWeight="semibold">{product.name}</Text>
+                    <Divider bg="gray.400" h=".8px" />
+                    <Text color="blackAlpha.600">{product.category}</Text>
+                    <Text>{`₹ ${product.price}`}</Text>
+                  </Stack>
+                </Box>
+              </NextLink>
             ))}
         </Flex>
       </ChakraBox>

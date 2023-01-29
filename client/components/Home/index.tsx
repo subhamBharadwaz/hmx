@@ -12,6 +12,7 @@ import {
   chakra,
   shouldForwardProp,
   Divider,
+  Skeleton,
 } from "@chakra-ui/react";
 
 import { motion, isValidMotionProp } from "framer-motion";
@@ -19,9 +20,20 @@ import Carousel from "./Carousel";
 
 const Home = () => {
   const { loading, products } = useSelector(
-    (state: RootState) => state.userProductSlice
+    (state: RootState) => state.productSlice
   );
 
-  return <>{loading ? <h1>Loading</h1> : <Carousel products={products} />}</>;
+  return (
+    <>
+      {loading ? (
+        <Stack>
+          <Skeleton height="50px" /> <Skeleton height="50px" />{" "}
+          <Skeleton height="50px" />
+        </Stack>
+      ) : (
+        <Carousel products={products} />
+      )}
+    </>
+  );
 };
 export default Home;
