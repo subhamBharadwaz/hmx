@@ -16,7 +16,9 @@ const Product = () => {
           <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
         </Box>
       ) : (
-        <SingleProduct product={product} />
+        <Box py="5%">
+          <SingleProduct product={product} />
+        </Box>
       )}
     </>
   );

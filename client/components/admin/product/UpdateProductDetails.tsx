@@ -37,7 +37,6 @@ import {
   getSingleProduct,
   updateProduct,
 } from "../../../store/services/admin/adminProductSlice";
-import Link from "next/link";
 
 interface Product {
   product: IProduct;

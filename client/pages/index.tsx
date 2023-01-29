@@ -12,7 +12,7 @@ export default function Index() {
     dispatch(getAllProducts());
   }, [dispatch]);
   return (
-    <Box mx="5%" my="10%">
+    <Box my="10%">
       <Home />
     </Box>
   );

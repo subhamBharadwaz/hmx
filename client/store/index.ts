@@ -29,6 +29,10 @@ const reducer = (
         token: state.auth.token,
         isAuthenticated: state.auth.isAuthenticated,
         loading: state.auth.loading,
+        user: {
+          ...action.payload.auth.user,
+          ...state.auth.user,
+        },
       },
       adminUserSlice: {
         loading: state.adminUserSlice.loading,

@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import UsersTable from "../../../components/admin/user/UsersTable";
 import { RootState } from "../../../store";
 import { getAllUsers } from "../../../store/services/admin/adminUserSlice";
-import Link from "next/link";
+import NextLink from "next/link";
 import Pagination from "../../../components/Pagination";
 
 export default function Users() {
@@ -28,7 +28,7 @@ export default function Users() {
         color="blackAlpha.600"
       >
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin">
+          <BreadcrumbLink as={NextLink} href="/admin">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
