@@ -3,7 +3,7 @@ import { RootState } from "../../store";
 import { IProduct } from "../../types/product";
 import { Stack, shouldForwardProp, Skeleton } from "@chakra-ui/react";
 
-import Carousel from "./Carousel";
+import Carousel from "../Product/Carousel";
 
 const Home = () => {
   const { loading, products } = useSelector(
