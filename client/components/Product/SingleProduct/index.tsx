@@ -4,7 +4,6 @@ import {
   Box,
   Flex,
   HStack,
-  VStack,
   Stack,
   Text,
   Accordion,
@@ -12,83 +11,118 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  Radio,
+  RadioGroup,
+  useRadioGroup,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
+import SizeRadioCard from "./SizeRadioCard";
 
 interface Product {
   product: IProduct;
 }
 
 const SingleProduct = ({ product }: Product) => {
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: "size",
+    defaultValue: "M",
+    onChange: console.log,
+  });
+
+  const group = getRootProps();
+
   return (
-    <Box>
-      <Flex justifyContent="space-between" wrap="wrap">
-        <Flex w="40%" gap={5}>
+    <Flex w="100%" justifyContent="space-between">
+      <Box w="45%">
+        <Flex align="center" wrap="wrap" gap={5}>
           {product?.photos?.map((photo) => (
-            <NextImage
-              key={photo?.id}
-              src={photo?.secure_url}
-              alt={product?.name}
-              width={500}
-              height={600}
-            />
+            <Box key={photo?.id}>
+              <NextImage
+                src={photo?.secure_url}
+                alt={product?.name}
+                width={250}
+                height={300}
+                objectFit="cover"
+              />
+            </Box>
           ))}
         </Flex>
-        <Stack w="50%">
-          <Stack>
-            <Text fontSize="2xl" as="b" color="blackAlpha.800">
-              {product?.name}
+      </Box>
+      <Stack w="50%" gap={5}>
+        <Stack>
+          <Text fontSize="3xl" as="b">
+            {product?.name}
+          </Text>
+          <Text fontSize="md" fontWeight="medium" color="blackAlpha.500">
+            {product?.category}
+          </Text>
+          <Text
+            fontSize="xl"
+            as="b"
+            letterSpacing={1.1}
+          >{`₹${product?.price}`}</Text>
+          <Stack gap={3}>
+            <Text as="b" fontSize="md">
+              Please select a size.
             </Text>
-            <Text fontSize="lg" color="blackAlpha.500">
-              {product?.category}
-            </Text>
-            <Text fontSize="xl" as="b">{`₹${product?.price}`}</Text>
+            <HStack {...group}>
+              {product?.size?.map((value) => {
+                const radio = getRadioProps({ value });
+                return (
+                  <SizeRadioCard key={value} {...radio}>
+                    {value}
+                  </SizeRadioCard>
+                );
+              })}
+            </HStack>
           </Stack>
-          <HStack>
-            {product?.size?.map((s, idx) => (
-              <Text key={idx}>{s}</Text>
-            ))}
-          </HStack>
-          <Accordion
-            defaultIndex={[0]}
-            allowMultiple
-            border="1px"
-            borderColor="gray.200"
-          >
-            <AccordionItem>
-              <h2>
-                <AccordionButton>
-                  <Box as="b" flex="1" textAlign="left" fontSize="lg">
-                    Product Details
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionPanel lineHeight={1.7} color="gray.600" pb={4}>
-                {product?.description}
-              </AccordionPanel>
-            </AccordionItem>
-
-            <AccordionItem>
-              <h2>
-                <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
-                    Section 2 title
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionPanel pb={4}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
         </Stack>
-      </Flex>
-    </Box>
+
+        <Accordion
+          defaultIndex={[0]}
+          allowMultiple
+          border="1px"
+          borderColor="blackAlpha.200"
+        >
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box
+                  as="b"
+                  flex="1"
+                  fontSize="lg"
+                  textAlign="left"
+                  color="blackAlpha.700"
+                >
+                  Product Description
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4} color="blackAlpha.700" lineHeight={1.7}>
+              {product?.description}
+            </AccordionPanel>
+          </AccordionItem>
+
+          <AccordionItem>
+            <h2>
+              <AccordionButton>
+                <Box as="span" flex="1" textAlign="left">
+                  Section 2 title
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Stack>
+    </Flex>
   );
 };
 
