@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 
 import { getSingleProduct } from "../../../store/services/admin/adminProductSlice";
-import Link from "next/link";
+import NextLink from "next/link";
 import UpdateProductDetails from "../../../components/admin/product/UpdateProductDetails";
 
 export default function SingleProductDetails() {
@@ -37,13 +37,13 @@ export default function SingleProductDetails() {
         color="blackAlpha.600"
       >
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin">
+          <BreadcrumbLink as={NextLink} href="/admin">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
 
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin/products">
+          <BreadcrumbLink as={NextLink} href="/admin/products">
             Products
           </BreadcrumbLink>
         </BreadcrumbItem>

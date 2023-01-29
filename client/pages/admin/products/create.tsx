@@ -42,7 +42,7 @@ import { CreateProductInput, Gender, Category } from "../../../types/product";
 import { AppDispatch, RootState } from "../../../store";
 import { createProduct } from "../../../store/services/admin/adminProductSlice";
 
-import Link from "next/link";
+import NextLink from "next/link";
 
 import { FiFile } from "react-icons/fi";
 
@@ -147,13 +147,13 @@ export default function CreateProduct() {
         color="blackAlpha.600"
       >
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin">
+          <BreadcrumbLink as={NextLink} href="/admin">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
 
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin/products">
+          <BreadcrumbLink as={NextLink} href="/admin/products">
             Products
           </BreadcrumbLink>
         </BreadcrumbItem>

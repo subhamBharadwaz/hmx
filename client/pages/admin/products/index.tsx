@@ -23,7 +23,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
-import Link from "next/link";
+import NextLink from "next/link";
 
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
@@ -68,7 +68,7 @@ export default function Products() {
         color="blackAlpha.600"
       >
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin">
+          <BreadcrumbLink as={NextLink} href="/admin">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -84,7 +84,7 @@ export default function Products() {
         </Text>
         <Flex gap={5}>
           {/* //TODO filter */}
-          <Link href="/admin/products/create">
+          <NextLink href="/admin/products/create">
             <Button
               fontSize={18}
               colorScheme="messenger"
@@ -92,7 +92,7 @@ export default function Products() {
             >
               Create new
             </Button>
-          </Link>
+          </NextLink>
         </Flex>
       </Flex>
 
@@ -130,7 +130,7 @@ export default function Products() {
                     <Text color="blackAlpha.600">{product.category}</Text>
                     <Text>{`₹ ${product.price}`}</Text>
                     <HStack justifyContent="space-between">
-                      <Link
+                      <NextLink
                         href="/admin/products/[id]"
                         as={`/admin/products/${product._id}`}
                       >
@@ -141,7 +141,7 @@ export default function Products() {
                         >
                           Edit
                         </Button>
-                      </Link>
+                      </NextLink>
                       <Button
                         leftIcon={<AiFillDelete />}
                         colorScheme="red"

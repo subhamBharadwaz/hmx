@@ -16,7 +16,7 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/react";
 
-import Link from "next/link";
+import NextLink from "next/link";
 
 export default function SingleUserDetails() {
   const { loading, user } = useSelector(
@@ -32,13 +32,13 @@ export default function SingleUserDetails() {
         color="blackAlpha.600"
       >
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin">
+          <BreadcrumbLink as={NextLink} href="/admin">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>
 
         <BreadcrumbItem>
-          <BreadcrumbLink as={Link} href="/admin/users">
+          <BreadcrumbLink as={NextLink} href="/admin/users">
             Users
           </BreadcrumbLink>
         </BreadcrumbItem>
