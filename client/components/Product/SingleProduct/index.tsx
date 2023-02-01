@@ -14,9 +14,12 @@ import {
   Radio,
   RadioGroup,
   useRadioGroup,
+  Button,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
 import SizeRadioCard from "./SizeRadioCard";
+
+import { BsBagCheck, BsSuitHeart } from "react-icons/bs";
 
 interface Product {
   product: IProduct;
@@ -48,8 +51,8 @@ const SingleProduct = ({ product }: Product) => {
           ))}
         </Flex>
       </Box>
-      <Stack w="50%" gap={5}>
-        <Stack>
+      <Stack w="50%" spacing={5}>
+        <Stack my={5}>
           <Text fontSize="3xl" as="b">
             {product?.name}
           </Text>
@@ -77,7 +80,22 @@ const SingleProduct = ({ product }: Product) => {
             </HStack>
           </Stack>
         </Stack>
-
+        <Stack direction="row" spacing={5}>
+          <Button
+            leftIcon={<BsBagCheck />}
+            colorScheme="messenger"
+            variant="solid"
+          >
+            ADD TO BAG
+          </Button>
+          <Button
+            leftIcon={<BsSuitHeart />}
+            colorScheme="messenger"
+            variant="outline"
+          >
+            WISHLIST
+          </Button>
+        </Stack>
         <Accordion
           defaultIndex={[0]}
           allowMultiple

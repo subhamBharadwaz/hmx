@@ -22,6 +22,18 @@ export async function findProduct() {
 	}
 }
 
+export async function findOneProduct(productId: string) {
+	try {
+		return Product.findOne({_id: productId});
+	} catch (error: any) {
+		throw new BaseError(
+			'Could not perform find one product operation',
+			error,
+			'findOneProduct'
+		);
+	}
+}
+
 // eslint-disable-next-line no-undef
 export async function findProductById(id: unknown) {
 	try {
