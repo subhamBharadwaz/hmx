@@ -16,6 +16,7 @@ import {
   useRadioGroup,
   Button,
 } from "@chakra-ui/react";
+import NextLink from "next/link";
 import NextImage from "next/image";
 import SizeRadioCard from "./SizeRadioCard";
 
@@ -86,7 +87,7 @@ const SingleProduct = ({ product }: Product) => {
             colorScheme="messenger"
             variant="solid"
           >
-            ADD TO BAG
+            <NextLink href="/bag">ADD TO BAG</NextLink>
           </Button>
           <Button
             leftIcon={<BsSuitHeart />}

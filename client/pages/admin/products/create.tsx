@@ -250,9 +250,7 @@ export default function CreateProduct() {
                 fontSize={18}
                 {...register("gender")}
               >
-                <option style={{ color: "red" }} value={Gender.Men}>
-                  Men
-                </option>
+                <option value={Gender.Men}>Men</option>
                 <option value={Gender.Women}>Women</option>
                 <option value={Gender.Unisex}>Unisex</option>
               </Select>
