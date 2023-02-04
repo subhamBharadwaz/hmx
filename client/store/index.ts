@@ -9,6 +9,7 @@ import auth from "./services/auth/auth-slice";
 import adminUserSlice from "./services/admin/adminUserSlice";
 import adminProductSlice from "./services/admin/adminProductSlice";
 import productSlice from "./services/product/productSlice";
+import bagSlice from "./services/bag/bagSlice";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const combinedReducer = combineReducers({
@@ -16,6 +17,7 @@ const combinedReducer = combineReducers({
   adminUserSlice,
   adminProductSlice,
   productSlice,
+  bagSlice,
 });
 
 const reducer = (
@@ -69,6 +71,13 @@ const reducer = (
         product: {
           ...action.payload.productSlice.product,
           ...state.productSlice.product,
+        },
+      },
+      bagSlice: {
+        loading: state.bagSlice.loading,
+        bagData: {
+          ...action.payload.bagSlice.bagData,
+          ...state.bagSlice.bagData,
         },
       },
     };

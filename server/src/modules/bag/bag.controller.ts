@@ -40,7 +40,7 @@ export const createBagHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const user = req.user._id;
 
-		const {productId, quantity} = req.body;
+		const {productId, size, quantity} = req.body;
 
 		const bag = await findBagForSingleUser(user);
 
@@ -51,7 +51,7 @@ export const createBagHandler = BigPromise(
 			return next(new APIError(message, 'createBagHandler', HttpStatusCode.NOT_FOUND));
 		}
 
-		const {price, name} = product;
+		const {price, name, photos} = product;
 
 		// If bag already exists for user
 
@@ -62,7 +62,8 @@ export const createBagHandler = BigPromise(
 			// Check if product exists or not
 			if (productIndex > -1) {
 				const product = bag.products[productIndex];
-				product.quantity += quantity;
+				product.quantity = quantity;
+				product.size = size;
 				bag.totalPrice = bag.products.reduce((acc, curr) => {
 					return acc + curr.quantity * curr.price;
 				}, 0);
@@ -71,7 +72,7 @@ export const createBagHandler = BigPromise(
 				await bag.save();
 				res.status(200).send(bag);
 			} else {
-				bag.products.push({productId, name, quantity, price: Number(price)});
+				bag.products.push({productId, name, size, photos, quantity, price: Number(price)});
 				bag.totalPrice = bag.products.reduce((acc, curr) => {
 					return acc + curr.quantity * curr.price;
 				}, 0);
@@ -83,7 +84,7 @@ export const createBagHandler = BigPromise(
 			// no bag exists, create one
 			const newBag = await Bag.create({
 				user,
-				products: [{productId, name, quantity, price}],
+				products: [{productId, name, size, photos, quantity, price}],
 				totalPrice: quantity * Number(price)
 			});
 			res.status(200).send(newBag);

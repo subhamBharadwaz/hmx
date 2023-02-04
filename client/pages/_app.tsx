@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store";
 import { userDetails } from "../store/services/auth/auth-slice";
 import Layout from "../layout/Layout";
+import { getBagItems } from "../store/services/bag/bagSlice";
 
 let tokenFromLocalStorage: string;
 if (typeof window !== "undefined") {
@@ -26,6 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(userDetails());
+    dispatch(getBagItems());
   }, [dispatch]);
   if (router.pathname.startsWith("/admin")) {
     return (

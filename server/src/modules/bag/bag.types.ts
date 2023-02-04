@@ -8,7 +8,13 @@ export interface IBagDocument extends Document {
 		quantity: number;
 		name: string;
 		price: number;
+		size: string;
+		photos: {
+			id: string;
+			secure_url: string;
+		}[];
 	}[];
+
 	totalPrice: number;
 	createdAt: Date;
 	updatedAt: Date;

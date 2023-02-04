@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { BsCart2, BsHeart } from "react-icons/bs";
+import { BsBag, BsHeart } from "react-icons/bs";
 
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -16,6 +16,9 @@ import { RootState } from "../../store";
 const Nav = () => {
   const { user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
+  );
+  const { loading, bagData } = useSelector(
+    (state: RootState) => state.bagSlice
   );
 
   return (
@@ -59,13 +62,16 @@ const Nav = () => {
               </ListItem>
             )}
             <ListItem cursor="pointer" fontSize="2xl">
-              <NextLink href="#">
+              <NextLink href="/">
                 <BsHeart />
               </NextLink>
             </ListItem>
-            <ListItem cursor="pointer" fontSize="2xl">
-              <NextLink href="#">
-                <BsCart2 />
+            <ListItem cursor="pointer" fontSize="2xl" pos="relative">
+              <span className="bag-item-counter">
+                {loading ? null : bagData && bagData?.products.length}
+              </span>
+              <NextLink href="/bag">
+                <BsBag />
               </NextLink>
             </ListItem>
           </HStack>
