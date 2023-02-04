@@ -16,6 +16,17 @@ const BagSchema = new Schema<IBagDocument>(
 					required: true
 				},
 				name: String,
+				size: {
+					type: String,
+					required: true
+				},
+				photos: [
+					{
+						id: String,
+						secure_url: String
+					}
+				],
+
 				quantity: {
 					type: Number,
 					required: true,
