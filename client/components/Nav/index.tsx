@@ -17,9 +17,7 @@ const Nav = () => {
   const { user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
-  const { loading, bagData } = useSelector(
-    (state: RootState) => state.bagSlice
-  );
+  const { bagData } = useSelector((state: RootState) => state.bagSlice);
 
   return (
     <Box
@@ -67,9 +65,11 @@ const Nav = () => {
               </NextLink>
             </ListItem>
             <ListItem cursor="pointer" fontSize="2xl" pos="relative">
-              <span className="bag-item-counter">
-                {loading ? null : bagData && bagData?.products.length}
-              </span>
+              {bagData && (
+                <span className="bag-item-counter">
+                  {bagData.products !== undefined ? bagData.products.length : 0}
+                </span>
+              )}
               <NextLink href="/bag">
                 <BsBag />
               </NextLink>

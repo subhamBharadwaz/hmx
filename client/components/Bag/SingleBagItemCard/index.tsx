@@ -3,7 +3,10 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { Select as RSelect, ChakraStylesConfig } from "chakra-react-select";
-import { createAndUpdateBagItems } from "../../../store/services/bag/bagSlice";
+import {
+  createAndUpdateBagItems,
+  deleteBagItem,
+} from "../../../store/services/bag/bagSlice";
 import { useEffect } from "react";
 import { getSingleProduct } from "../../../store/services/product/productSlice";
 
@@ -71,7 +74,7 @@ const SingleBagItemCard = ({ productData }: IProductData) => {
   };
 
   return (
-    <Box mx="auto" w="60%" border="1px" borderColor="gray.300" p={5}>
+    <Box mx="auto" w="60%" border="1px" borderColor="gray.300" p={5} my={4}>
       <Box>
         <Flex justifyContent="space-between">
           <Box>
@@ -146,7 +149,13 @@ const SingleBagItemCard = ({ productData }: IProductData) => {
       </Box>
       <Box>
         <HStack align="center" spacing={10}>
-          <Button variant="outline" fontSize="sm" fontWeight="bold" size="lg">
+          <Button
+            variant="outline"
+            fontSize="sm"
+            fontWeight="bold"
+            size="lg"
+            onClick={() => dispatch(deleteBagItem(productData.productId))}
+          >
             REMOVE
           </Button>
           <Button variant="outline" fontSize="sm" fontWeight="bold" size="lg">
