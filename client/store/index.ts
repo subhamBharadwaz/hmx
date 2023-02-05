@@ -73,13 +73,6 @@ const reducer = (
           ...state.productSlice.product,
         },
       },
-      bagSlice: {
-        loading: state.bagSlice.loading,
-        bagData: {
-          ...action.payload.bagSlice.bagData,
-          ...state.bagSlice.bagData,
-        },
-      },
     };
     return nextState;
   } else {

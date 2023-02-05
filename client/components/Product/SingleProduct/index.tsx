@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { IProduct } from "../../../types/product";
 import {
   Box,
@@ -16,6 +16,9 @@ import {
   useRadioGroup,
   Button,
 } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store";
+import { createAndUpdateBagItems } from "../../../store/services/bag/bagSlice";
 import NextLink from "next/link";
 import NextImage from "next/image";
 import SizeRadioCard from "./SizeRadioCard";
@@ -27,13 +30,30 @@ interface Product {
 }
 
 const SingleProduct = ({ product }: Product) => {
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [isSizeEmpty, setIsSizeEmpty] = useState(true);
+  const [addToBagButtonText, setAddToBagButtonText] = useState("ADD TO BAG");
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { loading } = useSelector((state: RootState) => state.bagSlice);
+
+  const handleChange = (value) => {
+    setSelectedSize(value);
+    setIsSizeEmpty(false);
+  };
+
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "size",
-    defaultValue: "M",
-    onChange: console.log,
+    defaultValue: "",
+    onChange: handleChange,
   });
 
   const group = getRootProps();
+
+  const handleAddToBag = (productId, size) => {
+    dispatch(createAndUpdateBagItems({ productId, size, quantity: 1 }));
+    setAddToBagButtonText("GO TO BAG");
+  };
 
   return (
     <Flex w="100%" justifyContent="space-between">
@@ -66,9 +86,16 @@ const SingleProduct = ({ product }: Product) => {
             letterSpacing={1.1}
           >{`₹${product?.price}`}</Text>
           <Stack gap={3}>
-            <Text as="b" fontSize="md">
-              Please select a size.
-            </Text>
+            <HStack>
+              <Text as="b" fontSize="md">
+                Select Size
+              </Text>
+              {isSizeEmpty && (
+                <Text color="red.400" fontSize="md">
+                  Please select size
+                </Text>
+              )}
+            </HStack>
             <HStack {...group}>
               {product?.size?.map((value) => {
                 const radio = getRadioProps({ value });
@@ -83,11 +110,21 @@ const SingleProduct = ({ product }: Product) => {
         </Stack>
         <Stack direction="row" spacing={5}>
           <Button
+            isLoading={loading ? true : false}
+            loadingText="Adding to Bag"
+            spinnerPlacement="start"
             leftIcon={<BsBagCheck />}
             colorScheme="messenger"
             variant="solid"
+            onClick={() =>
+              isSizeEmpty
+                ? console.log("please select a size")
+                : handleAddToBag(product._id, selectedSize)
+            }
           >
-            <NextLink href="/bag">ADD TO BAG</NextLink>
+            <NextLink href={addToBagButtonText === "GO TO BAG" ? "/bag" : "#"}>
+              {addToBagButtonText}
+            </NextLink>
           </Button>
           <Button
             leftIcon={<BsSuitHeart />}

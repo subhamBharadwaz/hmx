@@ -54,6 +54,25 @@ export const createAndUpdateBagItems = createAsyncThunk(
   }
 );
 
+// delete bag item
+export const deleteBagItem = createAsyncThunk(
+  "bag/delete",
+  async (productId: string, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag/${productId}`,
+
+        {
+          withCredentials: true,
+        }
+      );
+      return await res.data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const bagSlice = createSlice({
   name: "bagActions",
   initialState,
@@ -83,6 +102,19 @@ const bagSlice = createSlice({
       state.bagData = { ...payload };
     });
     builder.addCase(createAndUpdateBagItems.rejected, (state) => {
+      state.loading = true;
+      state.bagData = state.bagData;
+    });
+    // delete bag item
+    builder.addCase(deleteBagItem.pending, (state) => {
+      state.loading = true;
+      state.bagData = state.bagData;
+    });
+    builder.addCase(deleteBagItem.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.bagData = { ...payload };
+    });
+    builder.addCase(deleteBagItem.rejected, (state) => {
       state.loading = true;
       state.bagData = state.bagData;
     });
