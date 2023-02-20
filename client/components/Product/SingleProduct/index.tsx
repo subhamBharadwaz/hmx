@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IProduct } from "../../../types/product";
 import {
   Box,
@@ -11,8 +11,6 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-  Radio,
-  RadioGroup,
   useRadioGroup,
   Button,
 } from "@chakra-ui/react";
@@ -23,19 +21,46 @@ import NextLink from "next/link";
 import NextImage from "next/image";
 import SizeRadioCard from "./SizeRadioCard";
 
-import { BsBagCheck, BsSuitHeart } from "react-icons/bs";
+import { BsBagCheck, BsSuitHeart, BsFillHeartFill } from "react-icons/bs";
+import {
+  createWishlist,
+  deleteWishlistItem,
+  getWishlistItems,
+} from "../../../store/services/wishlist/wishlistSlice";
 
 interface Product {
   product: IProduct;
 }
 
+const allSizes = ["S", "M", "L", "XL", "XXL"];
+
 const SingleProduct = ({ product }: Product) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [isSizeEmpty, setIsSizeEmpty] = useState(true);
   const [addToBagButtonText, setAddToBagButtonText] = useState("ADD TO BAG");
+  const [isAlreadyAddedToWishlist, setIsAlreadyAddedToWishlist] =
+    useState(false);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const { loading } = useSelector((state: RootState) => state.bagSlice);
+  const { wishlistData } = useSelector(
+    (state: RootState) => state.wishlistSlice
+  );
+
+  useEffect(() => {
+    dispatch(getWishlistItems());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (wishlistData?.products?.find((p) => p.productId === product._id)) {
+        setIsAlreadyAddedToWishlist(true);
+      } else {
+        setIsAlreadyAddedToWishlist(false);
+      }
+    }
+  }, [isAlreadyAddedToWishlist, loading, product._id, wishlistData?.products]);
 
   const handleChange = (value) => {
     setSelectedSize(value);
@@ -97,12 +122,17 @@ const SingleProduct = ({ product }: Product) => {
               )}
             </HStack>
             <HStack {...group}>
-              {product?.size?.map((value) => {
+              {allSizes.map((value) => {
                 const radio = getRadioProps({ value });
                 return (
-                  <SizeRadioCard key={value} {...radio}>
-                    {value}
-                  </SizeRadioCard>
+                  <Box
+                    key={value}
+                    className={
+                      product?.size?.some((s) => s === value) ? "" : "outstock"
+                    }
+                  >
+                    <SizeRadioCard {...radio}>{value}</SizeRadioCard>
+                  </Box>
                 );
               })}
             </HStack>
@@ -127,9 +157,16 @@ const SingleProduct = ({ product }: Product) => {
             </NextLink>
           </Button>
           <Button
-            leftIcon={<BsSuitHeart />}
+            leftIcon={
+              isAlreadyAddedToWishlist ? <BsFillHeartFill /> : <BsSuitHeart />
+            }
             colorScheme="messenger"
             variant="outline"
+            onClick={() =>
+              isAlreadyAddedToWishlist
+                ? dispatch(deleteWishlistItem({ productId: product._id }))
+                : dispatch(createWishlist({ productId: product._id }))
+            }
           >
             WISHLIST
           </Button>

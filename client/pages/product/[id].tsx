@@ -8,6 +8,7 @@ const Product = () => {
   const { loading, product } = useSelector(
     (state: RootState) => state.productSlice
   );
+
   return (
     <>
       {loading ? (

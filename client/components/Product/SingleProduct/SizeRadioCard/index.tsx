@@ -14,7 +14,7 @@ const SizeRadioCard = (props) => {
         cursor="pointer"
         borderWidth="1px"
         borderRadius="md"
-        boxShadow="md"
+        boxShadow="base"
         _checked={{
           bg: "blackAlpha.900",
           color: "white",
@@ -37,3 +37,14 @@ const SizeRadioCard = (props) => {
   );
 };
 export default SizeRadioCard;
+
+// const radio = getRadioProps({ value });
+
+//                   return (
+//                     <Box
+//                       key={value}
+//                       className={value === s ? "" : "size-not-available"}
+//                     >
+//                       <SizeRadioCard {...radio}>{value}</SizeRadioCard>
+//                     </Box>
+//                   );
