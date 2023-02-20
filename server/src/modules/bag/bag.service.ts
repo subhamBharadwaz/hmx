@@ -14,3 +14,26 @@ export async function findBagForSingleUser(user: string) {
 		);
 	}
 }
+
+// export async function createBag(
+// 	user: string,
+// 	products: {
+// 		productId: string;
+// 		name: string;
+// 		size: string;
+// 		photos: {id: string; secure_url: string}[];
+// 		quantity: number;
+// 		price: number;
+// 	},
+// 	totalPrice: number
+// ) {
+// 	try {
+// 		return Bag.create({user, products, totalPrice});
+// 	} catch (error: any) {
+// 		throw new BaseError(
+// 			'Could not perform  create bag for the logged in user operation',
+// 			error,
+// 			'createBag'
+// 		);
+// 	}
+// }

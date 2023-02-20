@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { CookieValueTypes } from "cookies-next";
-import { CreateBagInput, IBag } from "../../../types/bag";
+import { IBag } from "../../../types/bag";
 
 interface IBagData {
   loading: boolean;

@@ -1,33 +1,34 @@
-import { Box, Text, Stack, Button, Skeleton } from "@chakra-ui/react";
-
+import React from "react";
+import WishlistItem from "../../components/WishlistItem";
 import { useSelector } from "react-redux";
-import SingleBagItemCard from "../../components/Bag/SingleBagItemCard";
 import { RootState } from "../../store";
-
 import NextImage from "next/image";
 import NextLink from "next/link";
+import {
+  Box,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 
-export default function Bag() {
-  const { loading, bagData } = useSelector(
-    (state: RootState) => state.bagSlice
+export default function Wishlist() {
+  const { loading, wishlistData } = useSelector(
+    (state: RootState) => state.wishlistSlice
   );
-
   return (
-    <Box my={20}>
+    <Box my="5%">
       {loading ? (
-        <Stack>
-          <Skeleton height="40px" />
-          <Skeleton height="40px" />
-          <Skeleton height="40px" />
-        </Stack>
+        <Box padding="6" boxShadow="lg" bg="white">
+          <SkeletonCircle size="10" />
+          <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
+        </Box>
       ) : (
         <Stack direction="row" spacing={5}>
-          {bagData && bagData?.products?.length > 0 ? (
-            bagData?.products?.map((product) => (
-              <SingleBagItemCard
-                key={product.productId}
-                productData={product}
-              />
+          {wishlistData && wishlistData?.products?.length > 0 ? (
+            wishlistData?.products?.map((product) => (
+              <WishlistItem key={product.productId} product={product} />
             ))
           ) : (
             <Box
@@ -42,17 +43,18 @@ export default function Bag() {
             >
               <Box position="relative" w={300} h={300}>
                 <NextImage
-                  src="/static/svgs/emptyCart.svg"
+                  src="/static/svgs/emptyWishlist.svg"
                   layout="fill"
                   objectFit="cover"
                   alt="Banner"
                 />
               </Box>
               <Text fontSize="xl" fontWeight="bold" my={5}>
-                Your shopping cart is empty.
+                Your wishlist is lonely and looking for love.
               </Text>
               <Text fontSize="lg" mb={5}>
-                Please add something soon, carts have feelings too.
+                Add products to your wishlist, review them anytime and easily
+                move to cart.
               </Text>
               <Button colorScheme="messenger" size="lg">
                 <NextLink href="/">Continue Shopping</NextLink>

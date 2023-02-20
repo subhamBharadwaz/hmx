@@ -18,6 +18,9 @@ const Nav = () => {
     (state: RootState) => state.auth
   );
   const { bagData } = useSelector((state: RootState) => state.bagSlice);
+  const { wishlistData } = useSelector(
+    (state: RootState) => state.wishlistSlice
+  );
 
   return (
     <Box
@@ -50,7 +53,7 @@ const Nav = () => {
         <List fontSize={18} fontWeight="semibold">
           <HStack spacing={10}>
             {!isAuthenticated && <ListItem>Login</ListItem>}
-            {user?.user?.role === "admin" && (
+            {user?.role === "admin" && (
               <ListItem>
                 <NextLink href="/admin/">
                   <Button fontSize={18} colorScheme="messenger">
@@ -59,15 +62,24 @@ const Nav = () => {
                 </NextLink>
               </ListItem>
             )}
-            <ListItem cursor="pointer" fontSize="2xl">
-              <NextLink href="/">
+            <ListItem cursor="pointer" fontSize="2xl" pos="relative">
+              {wishlistData && (
+                <span className="item-count">
+                  {wishlistData?.products !== undefined
+                    ? wishlistData?.products?.length
+                    : 0}
+                </span>
+              )}
+              <NextLink href="/wishlist">
                 <BsHeart />
               </NextLink>
             </ListItem>
             <ListItem cursor="pointer" fontSize="2xl" pos="relative">
               {bagData && (
-                <span className="bag-item-counter">
-                  {bagData.products !== undefined ? bagData.products.length : 0}
+                <span className="item-count">
+                  {bagData?.products !== undefined
+                    ? bagData?.products?.length
+                    : 0}
                 </span>
               )}
               <NextLink href="/bag">

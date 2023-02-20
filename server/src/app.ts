@@ -19,6 +19,7 @@ import product from './modules/product/product.route';
 import payment from './modules/payment/payment.route';
 import order from './modules/order/order.route';
 import bag from './modules/bag/bag.route';
+import wishlist from './modules/wishlist/wishlist.route';
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use('/api/v1', product);
 app.use('/api/v1', payment);
 app.use('/api/v1', order);
 app.use('/api/v1', bag);
+app.use('/api/v1', wishlist);
 
 // Handling errors
 app.use(errorMiddleware);

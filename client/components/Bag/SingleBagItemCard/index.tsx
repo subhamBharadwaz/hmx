@@ -1,5 +1,20 @@
-import { Box, Flex, Stack, Text, Button, HStack } from "@chakra-ui/react";
-import Image from "next/image";
+import { useRef } from "react";
+import {
+  Box,
+  Flex,
+  Stack,
+  Text,
+  Button,
+  HStack,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
+import NextImage from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { Select as RSelect, ChakraStylesConfig } from "chakra-react-select";
@@ -9,6 +24,7 @@ import {
 } from "../../../store/services/bag/bagSlice";
 import { useEffect } from "react";
 import { getSingleProduct } from "../../../store/services/product/productSlice";
+import { createWishlist } from "../../../store/services/wishlist/wishlistSlice";
 
 interface IProductData {
   productData: {
@@ -56,11 +72,18 @@ const productQuantityOptions: IProductQuantity[] = [
 ];
 
 const SingleBagItemCard = ({ productData }: IProductData) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(getSingleProduct(productData.productId));
   }, [dispatch, productData.productId]);
+
+  const handleMoveToWishlist = (productId) => {
+    dispatch(createWishlist({ productId }));
+    dispatch(deleteBagItem(productId));
+  };
 
   const { loading, product } = useSelector(
     (state: RootState) => state.productSlice
@@ -137,7 +160,7 @@ const SingleBagItemCard = ({ productData }: IProductData) => {
             </Stack>
           </Box>
           <Box borderRadius="20px" overflow="hidden">
-            <Image
+            <NextImage
               src={productData?.photos[0]?.secure_url}
               alt={productData.name}
               height={166}
@@ -158,10 +181,61 @@ const SingleBagItemCard = ({ productData }: IProductData) => {
           >
             REMOVE
           </Button>
-          <Button variant="outline" fontSize="sm" fontWeight="bold" size="lg">
+          <Button
+            variant="outline"
+            fontSize="sm"
+            fontWeight="bold"
+            size="lg"
+            onClick={onOpen}
+          >
             MOVE TO WISHLIST
           </Button>
         </HStack>
+        <AlertDialog
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+        >
+          <AlertDialogOverlay>
+            <AlertDialogContent>
+              <Flex p={10}>
+                <NextImage
+                  src={productData?.photos[0]?.secure_url}
+                  alt={productData.name}
+                  height={45}
+                  width={100}
+                  objectFit="cover"
+                />
+                <Box>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Move Item To Wishlist
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>
+                    Are you sure you want to remove the product from the cart
+                    and add to wishlist?
+                  </AlertDialogBody>
+                </Box>
+              </Flex>
+
+              <AlertDialogFooter gap={5}>
+                <Button ref={cancelRef} onClick={onClose} w="50%">
+                  NO
+                </Button>
+                <Button
+                  colorScheme="messenger"
+                  onClick={() => {
+                    handleMoveToWishlist(productData.productId);
+                    onClose;
+                  }}
+                  w="50%"
+                >
+                  YES
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialogOverlay>
+        </AlertDialog>
       </Box>
     </Box>
   );
