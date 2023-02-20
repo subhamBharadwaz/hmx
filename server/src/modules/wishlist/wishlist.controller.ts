@@ -12,7 +12,7 @@ import Wishlist from './wishlist.model';
 import {findOneProduct} from '../product/product.service';
 import {findWishlistForSingleUser} from './wishlist.service';
 
-/** 
+/**
 @desc    Get Wishlist
 @route   GET /api/v1/wishlist
 @access  Private
@@ -32,7 +32,7 @@ export const getWishlistHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Create Wishlist
 @route   PUT /api/v1/wishlist
 @access  Private
@@ -91,7 +91,7 @@ export const createWishlistHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete Wishlist item
 @route   DELETE /api/v1/wishlist/id
 @access  Private

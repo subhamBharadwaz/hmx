@@ -12,7 +12,7 @@ import Bag from './bag.model';
 import {findOneProduct} from '../product/product.service';
 import {findBagForSingleUser} from './bag.service';
 
-/** 
+/**
 @desc    Get Bag
 @route   GET /api/v1/bag
 @access  Private
@@ -30,7 +30,7 @@ export const getBagHandler = BigPromise(async (req: IGetUserAuthInfoRequest, res
 	}
 });
 
-/** 
+/**
 @desc    Create Bag
 @route   PUT /api/v1/bag
 @access  Private
@@ -92,7 +92,7 @@ export const createBagHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Delete Product in Bag
 @route   DELETE /api/v1/bag
 @access  Private
