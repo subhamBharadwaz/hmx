@@ -10,6 +10,7 @@ import adminUserSlice from "./services/admin/adminUserSlice";
 import adminProductSlice from "./services/admin/adminProductSlice";
 import productSlice from "./services/product/productSlice";
 import bagSlice from "./services/bag/bagSlice";
+import wishlistSlice from "./services/wishlist/wishlistSlice";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const combinedReducer = combineReducers({
@@ -18,6 +19,7 @@ const combinedReducer = combineReducers({
   adminProductSlice,
   productSlice,
   bagSlice,
+  wishlistSlice,
 });
 
 const reducer = (
@@ -27,15 +29,6 @@ const reducer = (
   if (action.type === HYDRATE) {
     const nextState = {
       ...state,
-      auth: {
-        token: state.auth.token,
-        isAuthenticated: state.auth.isAuthenticated,
-        loading: state.auth.loading,
-        user: {
-          ...action.payload.auth.user,
-          ...state.auth.user,
-        },
-      },
       adminUserSlice: {
         loading: state.adminUserSlice.loading,
         success: state.adminUserSlice.success,

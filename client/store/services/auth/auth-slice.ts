@@ -16,6 +16,7 @@ export interface IAuthState {
   isAuthenticated: boolean;
   loading: boolean;
   user: IUser | null;
+  error: null | unknown;
 }
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   isAuthenticated: false,
   loading: null,
   user: null,
+  error: null,
 } as IAuthState;
 
 // Logged in user details
@@ -42,7 +44,7 @@ export const userDetails = createAsyncThunk(
         }
       );
 
-      return await res.data;
+      return res.data;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -119,21 +121,22 @@ const authSlice = createSlice({
     // user details
     builder.addCase(userDetails.pending, (state) => {
       state.loading = true;
-      state.isAuthenticated = false;
-      state.token = tokenFromLocalStorage;
+      state.isAuthenticated;
+      state.token = null;
       state.user = null;
     });
     builder.addCase(userDetails.fulfilled, (state, { payload }) => {
       state.isAuthenticated = true;
       state.loading = false;
       state.token = tokenFromLocalStorage;
-      state.user = { ...payload };
+      state.user = { ...payload.user };
     });
-    builder.addCase(userDetails.rejected, (state) => {
-      state.isAuthenticated = false;
+    builder.addCase(userDetails.rejected, (state, { payload }) => {
+      state.isAuthenticated;
       state.loading = true;
       state.token = null;
       state.user = null;
+      state.error = payload;
     });
 
     // register
@@ -141,6 +144,7 @@ const authSlice = createSlice({
       state.loading = true;
       state.isAuthenticated = false;
       state.token = tokenFromLocalStorage;
+      state.user = null;
     });
     builder.addCase(registerUser.fulfilled, (state, { payload }) => {
       state.isAuthenticated = true;
@@ -152,6 +156,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = true;
       state.token = null;
+      state.user = null;
     });
 
     // login
@@ -159,6 +164,7 @@ const authSlice = createSlice({
       state.loading = true;
       state.isAuthenticated = false;
       state.token = tokenFromLocalStorage;
+      state.user = null;
     });
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
       state.isAuthenticated = true;
@@ -170,6 +176,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = true;
       state.token = null;
+      state.user = null;
     });
 
     // logout
@@ -177,16 +184,19 @@ const authSlice = createSlice({
       state.loading = true;
       state.isAuthenticated = true;
       state.token = tokenFromLocalStorage;
+      state.user = state.user;
     });
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.isAuthenticated = false;
       state.loading = false;
       state.token = null;
+      state.user = null;
     });
     builder.addCase(logoutUser.rejected, (state) => {
-      state.isAuthenticated = null;
+      state.isAuthenticated = true;
       state.loading = true;
       state.token = null;
+      state.user = state.user;
     });
   },
 });
