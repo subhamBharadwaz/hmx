@@ -103,7 +103,7 @@ export const deleteBagProductHandler = BigPromise(
 		const user = req.user._id;
 
 		const {productId} = req.params;
-		console.log(productId);
+
 		let bag = await findBagForSingleUser(user);
 
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
