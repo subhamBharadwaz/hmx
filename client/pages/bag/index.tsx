@@ -21,7 +21,7 @@ export default function Bag() {
           <Skeleton height="40px" />
         </Stack>
       ) : (
-        <Stack direction="row" spacing={5}>
+        <Box>
           {bagData && bagData?.products?.length > 0 ? (
             bagData?.products?.map((product) => (
               <SingleBagItemCard
@@ -59,7 +59,7 @@ export default function Bag() {
               </Button>
             </Box>
           )}
-        </Stack>
+        </Box>
       )}
     </Box>
   );

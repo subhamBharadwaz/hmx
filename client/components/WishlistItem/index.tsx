@@ -71,7 +71,7 @@ const WishlistItem = ({ product }: IProductData) => {
   };
 
   return (
-    <Box w="25%" minW={200} pos="relative" float="left">
+    <Box pos="relative" float="left">
       <span
         className="wishlist-close"
         onClick={() =>
@@ -86,6 +86,7 @@ const WishlistItem = ({ product }: IProductData) => {
           pos="relative"
           paddingTop="125%"
           background="rgb(246,249,246)"
+          cursor="pointer"
         >
           <Image
             src={product.photos[0].secure_url}
