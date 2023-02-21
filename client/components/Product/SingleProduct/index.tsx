@@ -27,6 +27,7 @@ import {
   deleteWishlistItem,
   getWishlistItems,
 } from "../../../store/services/wishlist/wishlistSlice";
+import SizeGuide from "../SizeGuide";
 
 interface Product {
   product: IProduct;
@@ -36,11 +37,10 @@ const allSizes = ["S", "M", "L", "XL", "XXL"];
 
 const SingleProduct = ({ product }: Product) => {
   const [selectedSize, setSelectedSize] = useState(null);
-  const [isSizeEmpty, setIsSizeEmpty] = useState(true);
+  const [isSizeEmpty, setIsSizeEmpty] = useState(null);
   const [addToBagButtonText, setAddToBagButtonText] = useState("ADD TO BAG");
   const [isAlreadyAddedToWishlist, setIsAlreadyAddedToWishlist] =
     useState(false);
-
   const dispatch = useDispatch<AppDispatch>();
 
   const { loading } = useSelector((state: RootState) => state.bagSlice);
@@ -111,31 +111,46 @@ const SingleProduct = ({ product }: Product) => {
             letterSpacing={1.1}
           >{`₹${product?.price}`}</Text>
           <Stack gap={3}>
-            <HStack>
+            <HStack spacing={5}>
               <Text as="b" fontSize="md">
                 Select Size
               </Text>
+
+              <SizeGuide />
+            </HStack>
+            <Stack>
+              <HStack {...group}>
+                {allSizes.map((value) => {
+                  const radio = getRadioProps({ value });
+                  return (
+                    <Box
+                      key={value}
+                      className={
+                        product?.size?.some((s) => s === value)
+                          ? ""
+                          : "outstock"
+                      }
+                    >
+                      <SizeRadioCard {...radio}>{value}</SizeRadioCard>
+                    </Box>
+                  );
+                })}
+              </HStack>
               {isSizeEmpty && (
-                <Text color="red.400" fontSize="md">
+                <Box
+                  py={2}
+                  px={3}
+                  bg="red.100"
+                  w="50%"
+                  border="1px solid transparent"
+                  borderColor="red.200"
+                  borderRadius="md"
+                  color="red.700"
+                >
                   Please select size
-                </Text>
+                </Box>
               )}
-            </HStack>
-            <HStack {...group}>
-              {allSizes.map((value) => {
-                const radio = getRadioProps({ value });
-                return (
-                  <Box
-                    key={value}
-                    className={
-                      product?.size?.some((s) => s === value) ? "" : "outstock"
-                    }
-                  >
-                    <SizeRadioCard {...radio}>{value}</SizeRadioCard>
-                  </Box>
-                );
-              })}
-            </HStack>
+            </Stack>
           </Stack>
         </Stack>
         <Stack direction="row" spacing={5}>
@@ -147,8 +162,8 @@ const SingleProduct = ({ product }: Product) => {
             colorScheme="messenger"
             variant="solid"
             onClick={() =>
-              isSizeEmpty
-                ? console.log("please select a size")
+              isSizeEmpty || selectedSize === null
+                ? setIsSizeEmpty(true)
                 : handleAddToBag(product._id, selectedSize)
             }
           >

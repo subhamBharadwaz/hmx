@@ -8,9 +8,9 @@ import {
   Box,
   SkeletonCircle,
   SkeletonText,
-  Stack,
   Text,
   Button,
+  SimpleGrid,
 } from "@chakra-ui/react";
 
 export default function Wishlist() {
@@ -25,11 +25,13 @@ export default function Wishlist() {
           <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
         </Box>
       ) : (
-        <Stack direction="row" spacing={5}>
+        <Box>
           {wishlistData && wishlistData?.products?.length > 0 ? (
-            wishlistData?.products?.map((product) => (
-              <WishlistItem key={product.productId} product={product} />
-            ))
+            <SimpleGrid minChildWidth="250px" spacing={5} p={[10, 0, 0]}>
+              {wishlistData?.products?.map((product) => (
+                <WishlistItem key={product.productId} product={product} />
+              ))}
+            </SimpleGrid>
           ) : (
             <Box
               w="100%"
@@ -61,7 +63,7 @@ export default function Wishlist() {
               </Button>
             </Box>
           )}
-        </Stack>
+        </Box>
       )}
     </Box>
   );
