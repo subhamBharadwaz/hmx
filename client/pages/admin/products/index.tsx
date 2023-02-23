@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Box,
   Button,
@@ -36,15 +36,24 @@ import {
 } from "../../../store/services/admin/adminProductSlice";
 import { IProduct } from "../../../types/product";
 import { useRouter } from "next/router";
-import { Select } from "chakra-react-select";
 import Pagination from "../../../components/Pagination";
 
 export default function Products() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { loading, products, deleteSuccess } = useSelector(
+  const { loading, products, deleteSuccess, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
+
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  // useEffect(() => {
+  //   if (isAuthenticated && user?.role !== "admin") {
+  //     router.push("/404");
+  //   }
+  // }, [isAuthenticated, router, user?.role]);
 
   // toast
   const toast = useToast();

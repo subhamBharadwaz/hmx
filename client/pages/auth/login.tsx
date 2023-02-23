@@ -1,10 +1,11 @@
 /* eslint-disable react/no-children-prop */
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import {
   Box,
   Flex,
@@ -18,23 +19,38 @@ import {
   Spinner,
   InputGroup,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 
 import { AppDispatch, RootState } from "../../store";
 import { loginUserSchema } from "../../schema/userSchema";
 import { CreateLoginUserInput } from "../../types/user";
-import { loginUser } from "../../store/services/auth/auth-slice";
+import { loginUser, userDetails } from "../../store/services/auth/auth-slice";
 
 export default function RegisterPage() {
-  const [registerError, setRegisterError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const { isAuthenticated, loading } = useSelector(
+  const { isAuthenticated, loading, error } = useSelector(
     (state: RootState) => state.auth
   );
 
-  const dispatch = useDispatch<AppDispatch>();
+  const [registerError, setRegisterError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: error,
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
+
   const router = useRouter();
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     register,
@@ -48,10 +64,10 @@ export default function RegisterPage() {
     dispatch(loginUser(values));
   }
 
-  // Redirect if logged in
-  // if (isAuthenticated) router.push("/auth");
-
   const handleShowPassword = () => setShowPassword(!showPassword);
+
+  // Redirect if logged in
+  if (isAuthenticated) router.push("/");
 
   return (
     <Box p="2em">
@@ -67,7 +83,7 @@ export default function RegisterPage() {
           mb={[10, 10, 0]}
           mr={[0, 0, "2em"]}
         >
-          <Image
+          <NextImage
             src="/static/images/banner.webp"
             layout="fill"
             objectFit="cover"
@@ -131,11 +147,14 @@ export default function RegisterPage() {
               </Button>
             </form>
             <Flex justifyContent="center" alignItems="center" w="100%">
-              {!loading && <Spinner />}
+              {loading && <Spinner />}
             </Flex>
           </VStack>
           <Text mt={7}>
-            Not a Registered Customer? <Button variant="link">Register</Button>
+            Not a Registered Customer?{" "}
+            <Button variant="link">
+              <NextLink href="/auth/register">Register</NextLink>
+            </Button>
           </Text>
         </Box>
       </Flex>

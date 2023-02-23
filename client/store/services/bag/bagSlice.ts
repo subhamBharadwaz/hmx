@@ -6,11 +6,13 @@ import { IBag } from "../../../types/bag";
 interface IBagData {
   loading: boolean;
   bagData: IBag;
+  error: string | null;
 }
 
 const initialState = {
   loading: false,
   bagData: null,
+  error: null,
 } as IBagData;
 
 // get all bag items
@@ -84,9 +86,12 @@ const bagSlice = createSlice({
     });
     builder.addCase(getBagItems.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.bagData = { ...payload };
     });
-    builder.addCase(getBagItems.rejected, (state) => {
+    builder.addCase(getBagItems.rejected, (state, payload) => {
       state.loading = true;
       state.bagData = null;
     });
@@ -98,6 +103,9 @@ const bagSlice = createSlice({
     });
     builder.addCase(createAndUpdateBagItems.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.bagData = { ...payload };
     });
     builder.addCase(createAndUpdateBagItems.rejected, (state) => {
@@ -107,10 +115,14 @@ const bagSlice = createSlice({
     // delete bag item
     builder.addCase(deleteBagItem.pending, (state) => {
       state.loading = true;
+
       state.bagData = state.bagData;
     });
     builder.addCase(deleteBagItem.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.bagData = { ...payload };
     });
     builder.addCase(deleteBagItem.rejected, (state) => {

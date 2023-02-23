@@ -2,16 +2,10 @@ import { useSelector } from "react-redux";
 import SingleProduct from "../../components/Product/SingleProduct";
 import { RootState, wrapper } from "../../store";
 import { getSingleProduct } from "../../store/services/product/productSlice";
-import {
-  Box,
-  SkeletonText,
-  SkeletonCircle,
-  Skeleton,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, SkeletonText, SkeletonCircle } from "@chakra-ui/react";
 
 const Product = () => {
-  const { loading, product } = useSelector(
+  const { loading, product, error } = useSelector(
     (state: RootState) => state.productSlice
   );
 

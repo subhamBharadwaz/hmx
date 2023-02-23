@@ -43,7 +43,7 @@ import { AppDispatch, RootState } from "../../../store";
 import { createProduct } from "../../../store/services/admin/adminProductSlice";
 
 import NextLink from "next/link";
-
+import { useRouter } from "next/router";
 import { FiFile } from "react-icons/fi";
 
 interface IProductSize {
@@ -63,9 +63,15 @@ const productSizeOptions: IProductSize[] = [
 export default function CreateProduct() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { loading, createSuccess } = useSelector(
+  const { loading, createSuccess, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
+
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const router = useRouter();
 
   // Custom style for multi select
   const chakraStyles: ChakraStylesConfig = {
@@ -78,6 +84,17 @@ export default function CreateProduct() {
 
   // Toast
   const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
 
   useEffect(() => {
     if (createSuccess) {

@@ -11,6 +11,7 @@ interface IProducts {
   createSuccess: boolean;
   updateSuccess: boolean;
   deleteSuccess: boolean;
+  error: string | null;
 }
 
 const initialState = {
@@ -22,6 +23,7 @@ const initialState = {
   createSuccess: false,
   updateSuccess: false,
   deleteSuccess: false,
+  error: null,
 } as IProducts;
 
 // get all products
@@ -178,6 +180,9 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(getAllProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products = { ...payload };
       state.product = null;
     });
@@ -195,6 +200,9 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(getAllFilteredProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products = { ...payload };
       state.product = null;
     });
@@ -212,6 +220,9 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(getSingleProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products = state.products;
       state.product = { ...payload };
     });
@@ -230,6 +241,9 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(createProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products = state.products;
       state.product = { ...payload };
       state.createSuccess = true;
@@ -250,6 +264,9 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products.products = state.products.products.map((product) =>
         product._id === payload.id ? payload : product
       );
@@ -272,6 +289,12 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
+      // @ts-ignore
+      if (payload.error) {
+        // @ts-ignore
+
+        state.error = payload.error;
+      }
       state.products.products = state.products.products.filter(
         (product) => product._id !== payload
       );

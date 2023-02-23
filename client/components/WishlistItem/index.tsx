@@ -71,7 +71,7 @@ const WishlistItem = ({ product }: IProductData) => {
   };
 
   return (
-    <Box pos="relative" float="left">
+    <Box maxW={300} pos="relative">
       <span
         className="wishlist-close"
         onClick={() =>

@@ -1,5 +1,4 @@
-import React from "react";
-
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, wrapper } from "../../../store";
 
@@ -17,11 +16,14 @@ import {
 } from "@chakra-ui/react";
 
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 export default function SingleUserDetails() {
-  const { loading, user } = useSelector(
+  const { loading, user, error } = useSelector(
     (state: RootState) => state.adminUserSlice
   );
+
+  const auth = useSelector((state: RootState) => state.auth);
 
   return (
     <Box>

@@ -10,8 +10,9 @@ import {
 import NextLink from "next/link";
 import { BsBag, BsHeart } from "react-icons/bs";
 
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
+import { logoutUser } from "../../store/services/auth/auth-slice";
 
 const Nav = () => {
   const { user, isAuthenticated } = useSelector(
@@ -21,6 +22,8 @@ const Nav = () => {
   const { wishlistData } = useSelector(
     (state: RootState) => state.wishlistSlice
   );
+
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <Box
@@ -52,7 +55,6 @@ const Nav = () => {
         </List>
         <List fontSize={18} fontWeight="semibold">
           <HStack spacing={10}>
-            {!isAuthenticated && <ListItem>Login</ListItem>}
             {user?.role === "admin" && (
               <ListItem>
                 <NextLink href="/admin/">
@@ -63,7 +65,7 @@ const Nav = () => {
               </ListItem>
             )}
             <ListItem cursor="pointer" fontSize="2xl" pos="relative">
-              {wishlistData && (
+              {isAuthenticated && wishlistData && (
                 <span className="item-count">
                   {wishlistData?.products !== undefined
                     ? wishlistData?.products?.length
@@ -75,7 +77,7 @@ const Nav = () => {
               </NextLink>
             </ListItem>
             <ListItem cursor="pointer" fontSize="2xl" pos="relative">
-              {bagData && (
+              {isAuthenticated && bagData && (
                 <span className="item-count">
                   {bagData?.products !== undefined
                     ? bagData?.products?.length
@@ -85,6 +87,15 @@ const Nav = () => {
               <NextLink href="/bag">
                 <BsBag />
               </NextLink>
+            </ListItem>
+            <ListItem>
+              {isAuthenticated ? (
+                <Button onClick={() => dispatch(logoutUser())}>Logout</Button>
+              ) : (
+                <NextLink href="/auth/login">
+                  <Button>Login</Button>
+                </NextLink>
+              )}
             </ListItem>
           </HStack>
         </List>
