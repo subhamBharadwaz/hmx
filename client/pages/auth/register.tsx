@@ -1,11 +1,12 @@
 /* eslint-disable react/no-children-prop */
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import { registerUser } from "../../store/services/auth/auth-slice";
 import {
   Box,
@@ -24,6 +25,7 @@ import {
   Text,
   Spinner,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 
 import { registerUserSchema } from "../../schema/userSchema";
@@ -35,9 +37,22 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { isAuthenticated, loading } = useSelector(
+  const { isAuthenticated, loading, error } = useSelector(
     (state: RootState) => state.auth
   );
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -55,7 +70,7 @@ export default function RegisterPage() {
   }
 
   // Redirect if logged in
-  if (isAuthenticated) router.push("/auth");
+  if (isAuthenticated) router.push("/");
 
   const handleShowPassword = () => setShowPassword(!showPassword);
   const handleShowConfirmPassword = () =>
@@ -75,7 +90,7 @@ export default function RegisterPage() {
           mb={[10, 10, 0]}
           mr={[0, 0, "2em"]}
         >
-          <Image
+          <NextImage
             src="/static/images/banner.webp"
             layout="fill"
             objectFit="cover"
@@ -227,7 +242,10 @@ export default function RegisterPage() {
             </form>
           </VStack>
           <Text mt={7}>
-            Already a Customer? <Button variant="link">Login</Button>
+            Already a Customer?{" "}
+            <Button variant="link">
+              <NextLink href="/auth/login">Login</NextLink>
+            </Button>
           </Text>
         </Box>
       </Flex>

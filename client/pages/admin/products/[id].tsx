@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { RootState, wrapper } from "../../../store";
 
@@ -24,8 +24,12 @@ import NextLink from "next/link";
 import UpdateProductDetails from "../../../components/admin/product/UpdateProductDetails";
 
 export default function SingleProductDetails() {
-  const { loading, product } = useSelector(
+  const { loading, product, error } = useSelector(
     (state: RootState) => state.adminProductSlice
+  );
+
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
   );
 
   return (

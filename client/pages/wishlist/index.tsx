@@ -1,7 +1,7 @@
-import React from "react";
+import { useEffect } from "react";
 import WishlistItem from "../../components/WishlistItem";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import NextImage from "next/image";
 import NextLink from "next/link";
 import {
@@ -11,18 +11,60 @@ import {
   Text,
   Button,
   SimpleGrid,
+  HStack,
 } from "@chakra-ui/react";
+import { getWishlistItems } from "../../store/services/wishlist/wishlistSlice";
 
 export default function Wishlist() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const { loading, wishlistData } = useSelector(
     (state: RootState) => state.wishlistSlice
   );
+
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  useEffect(() => {
+    dispatch(getWishlistItems());
+  }, [dispatch]);
+
   return (
     <Box my="5%">
       {loading ? (
         <Box padding="6" boxShadow="lg" bg="white">
           <SkeletonCircle size="10" />
           <SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
+        </Box>
+      ) : !isAuthenticated ? (
+        <Box
+          w="100%"
+          h="100%"
+          mb={[10, 10, 0]}
+          mr={[0, 0, "2em"]}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          flexDir="column"
+        >
+          <Box position="relative" w={300} h={300}>
+            <NextImage
+              src="/static/svgs/authentication.svg"
+              layout="fill"
+              objectFit="cover"
+              alt="Banner"
+            />
+          </Box>
+          <Text fontSize="xl" fontWeight="bold" my={5}>
+            Please login to view your wish-list.
+          </Text>
+
+          <HStack>
+            <Button colorScheme="messenger" size="lg">
+              <NextLink href="/auth/register">Register</NextLink>
+            </Button>
+            <Button colorScheme="messenger" variant="outline" size="lg">
+              <NextLink href="/auth/login">Login</NextLink>
+            </Button>
+          </HStack>
         </Box>
       ) : (
         <Box>

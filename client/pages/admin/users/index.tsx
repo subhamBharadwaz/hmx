@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   Box,
   Spinner,
@@ -12,11 +12,16 @@ import UsersTable from "../../../components/admin/user/UsersTable";
 import { RootState } from "../../../store";
 import { getAllUsers } from "../../../store/services/admin/adminUserSlice";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
 
 export default function Users() {
-  const { loading, users } = useSelector(
+  const { loading, users, error } = useSelector(
     (state: RootState) => state.adminUserSlice
+  );
+
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
   );
 
   return (

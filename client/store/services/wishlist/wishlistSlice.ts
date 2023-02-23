@@ -6,11 +6,13 @@ import { IWishlist } from "../../../types/wishlist";
 interface IWishlistData {
   loading: boolean;
   wishlistData: IWishlist;
+  error: string | null;
 }
 
 const initialState = {
   loading: false,
   wishlistData: null,
+  error: null,
 } as IWishlistData;
 
 // get all wishlist items
@@ -81,6 +83,9 @@ const wishlistSlice = createSlice({
     });
     builder.addCase(getWishlistItems.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.wishlistData = { ...payload };
     });
     builder.addCase(getWishlistItems.rejected, (state) => {
@@ -95,6 +100,9 @@ const wishlistSlice = createSlice({
     });
     builder.addCase(createWishlist.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.wishlistData = { ...payload };
     });
     builder.addCase(createWishlist.rejected, (state) => {
@@ -109,6 +117,9 @@ const wishlistSlice = createSlice({
     });
     builder.addCase(deleteWishlistItem.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.wishlistData = { ...payload };
     });
     builder.addCase(deleteWishlistItem.rejected, (state) => {

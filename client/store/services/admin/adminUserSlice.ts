@@ -11,6 +11,7 @@ interface IUsers {
   };
   user: IUser;
   success: boolean;
+  error: string | null;
 }
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   },
   user: {},
   success: false,
+  error: null,
 } as IUsers;
 
 // get all users
@@ -125,6 +127,9 @@ const adminUserSlice = createSlice({
     });
     builder.addCase(getAllUsers.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.users = { ...payload };
       state.user = null;
     });
@@ -142,6 +147,9 @@ const adminUserSlice = createSlice({
     });
     builder.addCase(getSingleUser.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.users = state.users;
       state.user = { ...payload };
     });
@@ -160,6 +168,9 @@ const adminUserSlice = createSlice({
     });
     builder.addCase(updateUserDetails.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.users.users = state.users.users.map((user) =>
         user._id === payload.id ? payload : user
       );
@@ -181,6 +192,12 @@ const adminUserSlice = createSlice({
     });
     builder.addCase(deleteUser.fulfilled, (state, { payload }) => {
       state.loading = false;
+      // @ts-ignore
+      if (payload.error) {
+        // @ts-ignore
+
+        state.error = payload.error;
+      }
       state.users.users = state.users.users.filter(
         (user) => user._id !== payload
       );

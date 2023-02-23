@@ -11,7 +11,7 @@ import { AppDispatch } from "../store";
 import { userDetails } from "../store/services/auth/auth-slice";
 import Layout from "../layout/Layout";
 import { getBagItems } from "../store/services/bag/bagSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
+import PrivateRoute from "../components/PrivateRoute";
 import { getWishlistItems } from "../store/services/wishlist/wishlistSlice";
 
 let tokenFromLocalStorage: string;
@@ -36,20 +36,33 @@ function MyApp({ Component, pageProps }: AppProps) {
     dispatch(getBagItems());
     dispatch(getWishlistItems());
   }, [dispatch]);
+  const protectedRoutes = [
+    "/admin",
+    "/admin/dashboard",
+    "/admin/products",
+    "/admin/products/[id]",
+    "/admin/products/create",
+    "/admin/users",
+    "/admin/users/[id]",
+  ];
   if (router.pathname.startsWith("/admin")) {
     return (
       <ChakraProvider>
-        <AdminLayout>
-          <Component {...pageProps} />
-        </AdminLayout>
+        <PrivateRoute protectedRoutes={protectedRoutes}>
+          <AdminLayout>
+            <Component {...pageProps} />
+          </AdminLayout>
+        </PrivateRoute>
       </ChakraProvider>
     );
   }
   return (
     <ChakraProvider>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <PrivateRoute protectedRoutes={protectedRoutes}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </PrivateRoute>
     </ChakraProvider>
   );
 }

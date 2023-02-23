@@ -8,6 +8,7 @@ interface IProducts {
   loading: boolean;
   products: { products: IProduct[] };
   product: IProduct;
+  error: string | null;
 }
 
 const initialState = {
@@ -16,6 +17,7 @@ const initialState = {
     products: [],
   },
   product: {},
+  error: null,
 } as IProducts;
 
 // get all products
@@ -67,6 +69,9 @@ const productSlice = createSlice({
     });
     builder.addCase(getAllProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products = { ...payload };
       state.product = null;
     });
@@ -84,6 +89,9 @@ const productSlice = createSlice({
     });
     builder.addCase(getSingleProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
       state.products = state.products;
       state.product = { ...payload };
     });

@@ -32,6 +32,7 @@ const reducer = (
       adminUserSlice: {
         loading: state.adminUserSlice.loading,
         success: state.adminUserSlice.success,
+        error: action.payload.adminUserSlice.error,
         users: {
           ...action.payload.adminUserSlice.users,
           ...state.adminUserSlice.users,
@@ -46,6 +47,7 @@ const reducer = (
         createSuccess: state.adminProductSlice.createSuccess,
         updateSuccess: state.adminProductSlice.updateSuccess,
         deleteSuccess: state.adminProductSlice.deleteSuccess,
+        error: action.payload.adminProductSlice.error,
         products: {
           ...action.payload.adminProductSlice.products,
           ...state.adminProductSlice.products,
@@ -57,6 +59,7 @@ const reducer = (
       },
       productSlice: {
         loading: state.productSlice.loading,
+        error: action.payload.productSlice.error,
         products: {
           ...action.payload.productSlice.products,
           ...state.productSlice.products,
