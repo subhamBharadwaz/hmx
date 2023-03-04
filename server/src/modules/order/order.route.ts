@@ -13,7 +13,8 @@ import {
 	getLoggedInUserOrdersHandler,
 	adminGetAllOrdersHandler,
 	adminUpdateSingleOrderHandler,
-	adminDeleteSingleOrderHandler
+	adminDeleteSingleOrderHandler,
+	adminGetSingleOrderHandler
 } from './order.controller';
 
 const router = Router();
@@ -31,15 +32,16 @@ router.route('/order/:id').get(isLoggedIn, getSingleOrderHandler);
  * //?
  * Whatever the routes that expecting a id, place them at the very end so all the above things are evaluated
  */
-router.route('/myorder').get(isLoggedIn, getLoggedInUserOrdersHandler);
+router.route('/myorder').get(isLoggedIn, getLoggedInUserOrdersHandler); // ex: http://localhost:4000/myorder
 
 // Admin only routes
 router.route('/admin/orders').get(isLoggedIn, customRole('admin'), adminGetAllOrdersHandler);
 router
-	.route('/admin/order/:id')
+	.route('/admin/orders/:id')
+	.get(isLoggedIn, customRole('admin'), adminGetSingleOrderHandler)
 	.put(isLoggedIn, customRole('admin'), adminUpdateSingleOrderHandler);
 router
-	.route('/admin/order/:id')
+	.route('/admin/orders/:id')
 	.delete(isLoggedIn, customRole('admin'), adminDeleteSingleOrderHandler);
 
 export default router;

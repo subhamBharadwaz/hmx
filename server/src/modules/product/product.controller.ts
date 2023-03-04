@@ -31,12 +31,14 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 
 	// if we have some chained query going on, like .find(), .somethingFind() on top of that, mongoose doesn't allow all of that, all we gotta do, chain a .clone()
 	products = await productsObj.base.clone();
+	const pageCount = Math.ceil(productCount / resultPerPage);
 
 	res.status(200).json({
 		success: true,
 		products,
 		filteredProductNumber,
-		productCount
+		productCount,
+		pageCount
 	});
 });
 

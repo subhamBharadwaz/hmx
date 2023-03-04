@@ -1,9 +1,13 @@
-import {Request, Response} from 'express';
+/* eslint-disable camelcase */
+import crypto from 'crypto';
+import {Request, Response, NextFunction} from 'express';
 import config from 'config';
 import Stripe from 'stripe';
 import Razorpay from 'razorpay';
 import {nanoid} from 'nanoid';
 import {BigPromise} from '../../middlewares';
+import {APIError} from '../../utils';
+import {HttpStatusCode} from '../../types/http.model';
 
 const stripe = new Stripe(config.get<string>('stripeApiSecret'), {apiVersion: '2020-08-27'});
 
@@ -31,7 +35,7 @@ export const captureStripePayment = BigPromise(async (req: Request, res: Respons
 
 export const sendRazorpayKey = BigPromise(async (req: Request, res: Response) => {
 	res.status(200).json({
-		stripeApiKey: config.get<string>('razorpayApiKey')
+		razorpayApiKey: config.get<string>('razorpayApiKey')
 	});
 });
 
@@ -42,7 +46,7 @@ export const captureRazorpayPayment = BigPromise(async (req: Request, res: Respo
 	});
 
 	const options = {
-		amount: req.body.amount,
+		amount: req.body.amount * 100,
 		currency: 'INR',
 		receipt: `receipt#${nanoid()}`
 	};
@@ -54,3 +58,29 @@ export const captureRazorpayPayment = BigPromise(async (req: Request, res: Respo
 		order: myOrder
 	});
 });
+
+export const verifyRazorpayPayment = BigPromise(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const {razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+
+		const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+
+		const expectedSignature = crypto
+			.createHmac('sha256', config.get<string>('razorpayApiSecret'))
+			.update(body.toString())
+			.digest('hex');
+
+		const isAuthentic = expectedSignature === razorpay_signature;
+
+		if (isAuthentic) {
+			//  database comes here
+			res.status(200).json({
+				success: true,
+				message: 'Your order has been placed successfully'
+			});
+		} else {
+			const message = 'Not a legit payment';
+			return next(new APIError(message, 'verifyRazorpayPayment', HttpStatusCode.BAD_REQUEST));
+		}
+	}
+);

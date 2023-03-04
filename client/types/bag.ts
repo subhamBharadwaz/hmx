@@ -2,6 +2,7 @@ import { TypeOf } from "zod";
 import { createBagSchema } from "../schema/bagSchema";
 
 export interface IBag {
+  _id: string;
   user: string;
   products: {
     productId: string;

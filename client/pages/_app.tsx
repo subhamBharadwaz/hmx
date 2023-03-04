@@ -13,8 +13,11 @@ import Layout from "../layout/Layout";
 import { getBagItems } from "../store/services/bag/bagSlice";
 import PrivateRoute from "../components/PrivateRoute";
 import { getWishlistItems } from "../store/services/wishlist/wishlistSlice";
+import { IAddress } from "../types/address";
+import { getShippingAddress } from "../store/services/address/addressSlice";
 
 let tokenFromLocalStorage: string;
+let shippingAddress;
 if (typeof window !== "undefined") {
   // Perform localStorage action
   tokenFromLocalStorage = localStorage.getItem("token");
@@ -35,7 +38,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
     dispatch(getBagItems());
     dispatch(getWishlistItems());
+    dispatch(getShippingAddress());
   }, [dispatch]);
+
   const protectedRoutes = [
     "/admin",
     "/admin/dashboard",

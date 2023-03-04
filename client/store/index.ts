@@ -11,6 +11,9 @@ import adminProductSlice from "./services/admin/adminProductSlice";
 import productSlice from "./services/product/productSlice";
 import bagSlice from "./services/bag/bagSlice";
 import wishlistSlice from "./services/wishlist/wishlistSlice";
+import addressSlice from "./services/address/addressSlice";
+import checkoutSlice from "./services/checkout/checkoutSlice";
+import orderSlice from "./services/order/orderSlice";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const combinedReducer = combineReducers({
@@ -20,6 +23,9 @@ const combinedReducer = combineReducers({
   productSlice,
   bagSlice,
   wishlistSlice,
+  addressSlice,
+  checkoutSlice,
+  orderSlice,
 });
 
 const reducer = (

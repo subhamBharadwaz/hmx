@@ -9,29 +9,37 @@ export enum OrderStatusType {
 }
 
 export interface IOrderDocument extends Document {
-	shippingInfo: {
-		address: string;
-		city: string;
-		phoneNo: string;
-		postalCode: string;
-		state: string;
-		country: string;
-	};
 	user: Types.ObjectId;
+
+	shippingInfo: {
+		firstName: string;
+		lastName: string;
+		houseNo: string;
+		streetName: string;
+		landMark: string;
+		postalCode: string;
+		city: string;
+		country: string;
+		state: string;
+		phoneNumber: string;
+	};
+
 	orderItems: {
 		name: string;
+		size: string;
 		quantity: number;
 		image: string;
 		price: number;
 		product: Types.ObjectId;
 	}[];
+	deliveredAt: Date;
+	orderStatus: OrderStatusType;
 	paymentInfo: {
 		id: string;
 	};
+
 	taxAmount: number;
 	shippingAmount: number;
 	totalAmount: number;
-	orderStatus: OrderStatusType;
-	deliveredAt: Date;
 	createdAt: Date;
 }

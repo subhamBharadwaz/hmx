@@ -97,7 +97,7 @@ const SingleBagItemCard = ({ productData }: IProductData) => {
   };
 
   return (
-    <Box mx="auto" w="60%" border="1px" borderColor="gray.300" p={5} my={4}>
+    <Box mx="auto" border="1px" borderColor="gray.300" p={5} my={4}>
       <Box>
         <Flex justifyContent="space-between">
           <Box>

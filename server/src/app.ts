@@ -60,10 +60,10 @@ app.use(helmet());
 // router middleware
 app.use('/api/v1', user);
 app.use('/api/v1', product);
-app.use('/api/v1', payment);
 app.use('/api/v1', order);
 app.use('/api/v1', bag);
 app.use('/api/v1', wishlist);
+app.use('/api/v1', payment);
 
 // Handling errors
 app.use(errorMiddleware);
