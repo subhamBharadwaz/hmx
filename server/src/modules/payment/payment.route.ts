@@ -4,7 +4,8 @@ import {
 	sendRazorpayKey,
 	sendStripeKey,
 	captureRazorpayPayment,
-	captureStripePayment
+	captureStripePayment,
+	verifyRazorpayPayment
 } from './payment.controller';
 
 const router = Router();
@@ -12,7 +13,9 @@ const router = Router();
 router.route('/stripekey').get(isLoggedIn, sendStripeKey);
 router.route('/razorpaykey').get(isLoggedIn, sendRazorpayKey);
 
-router.route('/capturestripepayment').get(isLoggedIn, captureStripePayment);
-router.route('/capturerazorpaypayment').get(isLoggedIn, captureRazorpayPayment);
+router.route('/capturestripepayment').post(isLoggedIn, captureStripePayment);
+router.route('/capturerazorpaypayment').post(isLoggedIn, captureRazorpayPayment);
+
+router.route('/payment/verification').post(isLoggedIn, verifyRazorpayPayment);
 
 export default router;
