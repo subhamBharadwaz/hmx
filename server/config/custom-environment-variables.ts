@@ -10,5 +10,6 @@ export default {
 	stripeApiKey: 'STRIPE_API_KEY',
 	stripeApiSecret: 'STRIPE_API_SECRET',
 	razorpayApiKey: 'RAZORPAY_API_KEY',
-	razorpayApiSecret: 'RAZORPAY_API_SECRET'
+	razorpayApiSecret: 'RAZORPAY_API_SECRET',
+	razorpayWebhookSecret: 'RAZORPAY_WEBHOOK_SECRET'
 };
