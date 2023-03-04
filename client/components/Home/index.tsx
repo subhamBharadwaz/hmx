@@ -18,7 +18,7 @@ const Home = () => {
           <Skeleton height="50px" />
         </Stack>
       ) : (
-        <Carousel products={products} />
+        <Carousel />
       )}
     </>
   );

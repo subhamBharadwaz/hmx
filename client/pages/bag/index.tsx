@@ -1,5 +1,13 @@
 import { useEffect } from "react";
-import { Box, Text, Stack, Button, Skeleton, HStack } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Stack,
+  Button,
+  Skeleton,
+  HStack,
+  Flex,
+} from "@chakra-ui/react";
 
 import { useSelector, useDispatch } from "react-redux";
 import SingleBagItemCard from "../../components/Bag/SingleBagItemCard";
@@ -8,6 +16,7 @@ import { AppDispatch, RootState } from "../../store";
 import NextImage from "next/image";
 import NextLink from "next/link";
 import { getBagItems } from "../../store/services/bag/bagSlice";
+import TotalPrice from "../../components/Bag/TotalPrice";
 
 export default function Bag() {
   const dispatch = useDispatch<AppDispatch>();
@@ -64,12 +73,19 @@ export default function Bag() {
       ) : (
         <Box>
           {bagData && bagData?.products?.length > 0 ? (
-            bagData?.products?.map((product) => (
-              <SingleBagItemCard
-                key={product.productId}
-                productData={product}
-              />
-            ))
+            <Flex justifyContent="space-between">
+              <Box w="60%">
+                {bagData?.products?.map((product) => (
+                  <SingleBagItemCard
+                    key={product.productId}
+                    productData={product}
+                  />
+                ))}
+              </Box>
+              <Box w="35%">
+                <TotalPrice totalPrice={bagData?.totalPrice} />
+              </Box>
+            </Flex>
           ) : (
             <Box
               w="100%"
