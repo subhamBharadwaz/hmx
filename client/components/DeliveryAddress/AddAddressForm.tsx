@@ -35,7 +35,7 @@ import { loginUserSchema } from "../../schema/userSchema";
 import { CreateLoginUserInput } from "../../types/user";
 import { loginUser, userDetails } from "../../store/services/auth/auth-slice";
 
-import { createAddressSchema } from "../../schema/adressSchema";
+import { createAddressSchema } from "../../schema/addressSchema";
 import { CreateAddressInput } from "../../types/address";
 import { createShippingAddress } from "../../store/services/address/addressSlice";
 const AddAddress = ({ isOpen, onClose }) => {
