@@ -3,8 +3,30 @@ import {IOrderDocument, OrderStatusType} from './order.types';
 
 const OrderSchema = new Schema<IOrderDocument>(
 	{
+		user: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: true
+		},
+
 		shippingInfo: {
-			address: {
+			firstName: {
+				type: String,
+				required: true
+			},
+			lastName: {
+				type: String,
+				required: true
+			},
+			houseNo: {
+				type: String,
+				required: true
+			},
+			streetName: {
+				type: String,
+				required: true
+			},
+			landMark: {
 				type: String,
 				required: true
 			},
@@ -12,11 +34,7 @@ const OrderSchema = new Schema<IOrderDocument>(
 				type: String,
 				required: true
 			},
-			phoneNo: {
-				type: String,
-				required: true
-			},
-			postalCode: {
+			country: {
 				type: String,
 				required: true
 			},
@@ -24,21 +42,21 @@ const OrderSchema = new Schema<IOrderDocument>(
 				type: String,
 				required: true
 			},
-			country: {
+			phoneNumber: {
 				type: String,
 				required: true
 			}
 		},
-		user: {
-			type: Schema.Types.ObjectId,
-			ref: 'User',
-			required: true
-		},
+
 		orderItems: [
 			{
 				name: {
 					type: String,
 					required: true
+				},
+				size: {
+					type: String,
+					require: true
 				},
 				quantity: {
 					type: Number,
@@ -64,6 +82,17 @@ const OrderSchema = new Schema<IOrderDocument>(
 				type: String
 			}
 		},
+
+		orderStatus: {
+			type: String,
+			enum: {
+				values: Object.values(OrderStatusType)
+			}
+		},
+		deliveredAt: {
+			type: Date
+		},
+
 		taxAmount: {
 			type: Number,
 			required: true
@@ -75,16 +104,6 @@ const OrderSchema = new Schema<IOrderDocument>(
 		totalAmount: {
 			type: Number,
 			required: true
-		},
-		orderStatus: {
-			type: String,
-			required: true,
-			enum: {
-				values: Object.values(OrderStatusType)
-			}
-		},
-		deliveredAt: {
-			type: Date
 		}
 	},
 	{

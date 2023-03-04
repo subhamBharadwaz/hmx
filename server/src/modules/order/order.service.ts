@@ -10,9 +10,9 @@ export async function createOrder(data: IOrderDocument) {
 	}
 }
 
-export async function findOrderByIdAndPopulate(id: string, ...data: string[]) {
+export async function findOrderByIdAndPopulate(id: string, data: string) {
 	try {
-		return Order.findById(id).populate(data);
+		return Order.findById(id).populate('user', data);
 	} catch (error: any) {
 		throw new BaseError(
 			'Could not perform find order by ID operation',

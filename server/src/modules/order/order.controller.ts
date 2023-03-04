@@ -26,21 +26,20 @@ export const createOrderHandler = BigPromise(
 			paymentInfo,
 			taxAmount,
 			shippingAmount,
-			totalAmount,
-			orderStatus
+			totalAmount
 		}: IOrderDocument = req.body;
 
-		if (
-			!shippingInfo ||
-			!orderItems ||
-			!paymentInfo ||
-			!taxAmount ||
-			!shippingAmount ||
-			!totalAmount
-		) {
-			const message = 'Required fields must be filled';
-			return next(new APIError(message, 'createOrderHandler', HttpStatusCode.BAD_REQUEST));
-		}
+		// if (
+		// 	!shippingInfo ||
+		// 	!orderItems ||
+		// 	!paymentInfo ||
+		// 	!taxAmount ||
+		// 	!shippingAmount ||
+		// 	!totalAmount
+		// ) {
+		// 	const message = 'Required fields must be filled';
+		// 	return next(new APIError(message, 'createOrderHandler', HttpStatusCode.BAD_REQUEST));
+		// }
 
 		const userId = req.user._id;
 		isValidMongooseObjectId(userId, next);
@@ -48,11 +47,11 @@ export const createOrderHandler = BigPromise(
 		const order = await createOrder({
 			shippingInfo,
 			orderItems,
-			paymentInfo,
 			taxAmount,
+			paymentInfo,
 			shippingAmount,
 			totalAmount,
-			orderStatus,
+
 			user: userId
 		} as IOrderDocument);
 
@@ -72,7 +71,7 @@ export const getSingleOrderHandler = BigPromise(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const orderId = req.params.id;
 		isValidMongooseObjectId(orderId, next);
-		const order = await findOrderByIdAndPopulate(orderId, 'user', 'name email');
+		const order = await findOrderByIdAndPopulate(orderId, 'firstName lastName email');
 
 		if (!order) {
 			const message = 'Please check your order ID';
@@ -118,6 +117,25 @@ export const adminGetAllOrdersHandler = BigPromise(
 );
 
 /** 
+@desc     Get single order - Admin only
+@route   GET /api/v1/order/id
+@access  Private
+*/
+export const adminGetSingleOrderHandler = BigPromise(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const orderId = req.params.id;
+		isValidMongooseObjectId(orderId, next);
+		const order = await findOrderByIdAndPopulate(orderId, 'firstName lastName email');
+
+		if (!order) {
+			const message = 'Please check your order ID';
+			return next(new APIError(message, 'getSingleOrderHandler', HttpStatusCode.BAD_REQUEST));
+		}
+		res.status(200).json({success: true, order});
+	}
+);
+
+/** 
 @desc    Update single order - Admin only
 @route   PUT /api/v1/order/id
 @access  Private
@@ -154,7 +172,6 @@ export const adminUpdateSingleOrderHandler = BigPromise(
 		res.status(200).json({success: true, order});
 	}
 );
-
 /** 
 @desc    Delete single order - Admin only
 @route   DELETE /api/v1/order/id
