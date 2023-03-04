@@ -10,7 +10,7 @@ import {HttpStatusCode} from '../../types/http.model';
 
 import Bag from './bag.model';
 import {findOneProduct} from '../product/product.service';
-import {findBagForSingleUser} from './bag.service';
+import {emptyBag, findBagForSingleUser} from './bag.service';
 
 /** 
 @desc    Get Bag
@@ -129,5 +129,25 @@ export const deleteBagProductHandler = BigPromise(
 
 			return next(new APIError(message, 'deleteBagProductHandler', HttpStatusCode.NOT_FOUND));
 		}
+	}
+);
+
+/** 
+@desc    Delete bag
+@route   DELETE /api/v1/bag/emptybag
+@access  Private
+*/
+
+export const deleteManyBagProductsHandler = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response) => {
+		// const user = req.user._id;
+
+		const {bagId} = req.params;
+
+		// const bag = await findBagForSingleUser(user);
+
+		await emptyBag(bagId);
+
+		res.status(200).send('records deleted successfully');
 	}
 );

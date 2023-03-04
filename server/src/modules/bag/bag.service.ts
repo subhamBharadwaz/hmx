@@ -15,6 +15,19 @@ export async function findBagForSingleUser(user: string) {
 	}
 }
 
+// Empty bag
+export async function emptyBag(bagId: string) {
+	try {
+		return Bag.findByIdAndDelete(bagId);
+	} catch (error: any) {
+		throw new BaseError(
+			'Could not perform empty bag for the logged in user operation',
+			error,
+			'emptyBag'
+		);
+	}
+}
+
 // export async function createBag(
 // 	user: string,
 // 	products: {
