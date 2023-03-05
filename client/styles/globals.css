@@ -67,3 +67,11 @@ form {
   );
   pointer-events: none;
 }
+
+.cardMb:not(:last-child) {
+  margin-bottom: 26px;
+}
+
+.text-bold {
+  color: #4e4e4e;
+}
