@@ -326,12 +326,12 @@ export const changePasswordHandler = BigPromise(
 */
 export const updateUserDetailsHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-		const {firstName, lastName, email}: IUser = req.body;
+		const {firstName, lastName, phoneNumber}: IUser = req.body;
 
 		const newData = {
 			firstName,
 			lastName,
-			email
+			phoneNumber
 		} as IUser;
 
 		if (req.files) {

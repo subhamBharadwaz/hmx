@@ -64,14 +64,3 @@ const BillingDetails = ({ totalPrice, makePayment, shippingAddress }) => {
 };
 
 export default BillingDetails;
-
-// !shippingAddress && !toast.isActive(toastId)
-//             ? toast({
-//                 title: "Please add your address.",
-//                 description: "We've created your account for you.",
-//                 status: "error",
-//                 position: "top-right",
-//                 duration: 9000,
-//                 isClosable: true,
-//               })
-//             : makePayment();

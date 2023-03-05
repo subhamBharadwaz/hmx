@@ -138,16 +138,14 @@ export const deleteBagProductHandler = BigPromise(
 @access  Private
 */
 
-export const deleteManyBagProductsHandler = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response) => {
-		// const user = req.user._id;
+export const emptyBagHandler = BigPromise(async (req: IGetUserAuthInfoRequest, res: Response) => {
+	// const user = req.user._id;
 
-		const {bagId} = req.params;
+	const {bagId} = req.params;
 
-		// const bag = await findBagForSingleUser(user);
+	// const bag = await findBagForSingleUser(user);
 
-		await emptyBag(bagId);
+	await emptyBag(bagId);
 
-		res.status(200).send('records deleted successfully');
-	}
-);
+	res.status(200).send('records deleted successfully');
+});
