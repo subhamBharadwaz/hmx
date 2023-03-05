@@ -37,3 +37,14 @@ export const loginUserSchema = object({
 
   password: string().nonempty({ message: "Password is required" }),
 });
+
+export const updateUserSchema = object({
+  firstName: string().nonempty({ message: "First Name is required" }),
+
+  lastName: string().nonempty({ message: "Last name is required" }),
+  phoneNumber: string()
+    .nonempty({ message: "Phone number is required" })
+    .min(10)
+    .max(10),
+  photo: any(),
+});

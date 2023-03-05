@@ -26,6 +26,7 @@ export const createOrderHandler = BigPromise(
 			paymentInfo,
 			taxAmount,
 			shippingAmount,
+			orderStatus,
 			totalAmount
 		}: IOrderDocument = req.body;
 
@@ -50,8 +51,8 @@ export const createOrderHandler = BigPromise(
 			taxAmount,
 			paymentInfo,
 			shippingAmount,
+			orderStatus,
 			totalAmount,
-
 			user: userId
 		} as IOrderDocument);
 
@@ -91,15 +92,15 @@ export const getLoggedInUserOrdersHandler = BigPromise(
 		const userId = req.user._id;
 		isValidMongooseObjectId(userId, next);
 
-		const order = await findLoggedInUserOrders(userId);
+		const orders = await findLoggedInUserOrders(userId);
 
-		if (!order) {
+		if (!orders) {
 			const message = 'Please check your order ID';
 			return next(
 				new APIError(message, 'getLoggedInUserOrdersHandler', HttpStatusCode.BAD_REQUEST)
 			);
 		}
-		res.status(200).json({success: true, order});
+		res.status(200).json({success: true, orders});
 	}
 );
 

@@ -80,7 +80,7 @@ export const emptyBag = createAsyncThunk(
   async (bagId: string, { rejectWithValue }) => {
     try {
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag/${bagId}`,
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag/emptybag/${bagId}`,
 
         {
           withCredentials: true,

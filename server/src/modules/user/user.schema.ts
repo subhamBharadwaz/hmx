@@ -49,8 +49,8 @@ export type CreateLoginUserInput = TypeOf<typeof loginUserSchema>['body'];
 export const updateUserSchema = object({
 	body: object({
 		firstName: string({required_error: 'First name is required'}).min(1, 'Must be filled'),
-
-		lastName: string({required_error: 'Last Name is required'}).min(1, 'Must be filled')
+		lastName: string({required_error: 'Last Name is required'}).min(1, 'Must be filled'),
+		phoneNumber: string({required_error: 'Phone number is required'}).min(10).max(10)
 	})
 });
 

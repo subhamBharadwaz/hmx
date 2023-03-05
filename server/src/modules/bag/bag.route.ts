@@ -11,7 +11,7 @@ import {
 	getBagHandler,
 	createBagHandler,
 	deleteBagProductHandler,
-	deleteManyBagProductsHandler
+	emptyBagHandler
 } from './bag.controller';
 
 const router = Router();
@@ -20,7 +20,7 @@ router
 	.route('/bag')
 	.get(isLoggedIn, getBagHandler)
 	.put(isLoggedIn, validateResource(createBagSchema), createBagHandler);
-router.route('/bag/:bagId').delete(isLoggedIn, deleteManyBagProductsHandler);
 router.route('/bag/:productId').delete(isLoggedIn, deleteBagProductHandler);
+router.route('/bag/emptybag/:bagId').delete(isLoggedIn, emptyBagHandler);
 
 export default router;

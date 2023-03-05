@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { CreateLoginUserInput, IUser } from "../../../types/user";
+import {
+  CreateLoginUserInput,
+  CreateUpdateUserInput,
+  IUser,
+} from "../../../types/user";
 import axios from "axios";
 import { CookieValueTypes } from "cookies-next";
 import { CreateRegisterUserInput } from "../../../types/user";
@@ -113,12 +117,34 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+// update user dashboard
+export const updateUserDetails = createAsyncThunk(
+  "auth/update-user-details",
+  async (values: CreateUpdateUserInput, { rejectWithValue }) => {
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/userdashboard/update`,
+        values,
+        {
+          headers: {
+            "Content-Type": "Multipart/Form-Data",
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // user details
+    // get user details
     builder.addCase(userDetails.pending, (state) => {
       state.loading = true;
 
@@ -141,6 +167,25 @@ const authSlice = createSlice({
       state.loading = true;
       state.token = null;
       state.user = null;
+    });
+
+    // update user details
+    builder.addCase(updateUserDetails.pending, (state) => {
+      state.loading = true;
+
+      state.user = state.user;
+    });
+    builder.addCase(updateUserDetails.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+        state.isAuthenticated = false;
+      }
+      state.user = payload.user;
+    });
+    builder.addCase(updateUserDetails.rejected, (state, payload) => {
+      state.loading = true;
+      state.user = state.user;
     });
 
     // register

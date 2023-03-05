@@ -20,6 +20,7 @@ export interface IOrder {
     phoneNumber: string;
   };
   orderItems: {
+    _id?: string;
     name: string;
     size: string;
     quantity: number;
@@ -33,5 +34,6 @@ export interface IOrder {
   taxAmount: number;
   shippingAmount: number;
   totalAmount: number;
+  createdAt?: Date;
   orderStatus: OrderStatusType;
 }

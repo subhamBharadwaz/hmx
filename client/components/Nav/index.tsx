@@ -97,6 +97,11 @@ const Nav = () => {
                 </NextLink>
               )}
             </ListItem>
+            <ListItem>
+              <NextLink href="/my-account">
+                <Button>My Account</Button>
+              </NextLink>
+            </ListItem>
           </HStack>
         </List>
       </Flex>

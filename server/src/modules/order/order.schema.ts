@@ -25,6 +25,7 @@ export const createOrderSchema = z.object({
 		),
 		paymentInfo: z.object({id: z.string({required_error: 'user Id is required'})}),
 		taxAmount: z.number({required_error: 'Tax amount is required'}),
+		orderStatus: z.enum(['Processing', 'Shipped', 'Out for delivery', 'Delivered']),
 		shippingAmount: z.number({required_error: 'Tax amount is required'}),
 		totalAmount: z.number({required_error: 'Tax amount is required'})
 	})
