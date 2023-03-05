@@ -75,6 +75,17 @@ const reducer = (
           ...state.productSlice.product,
         },
       },
+      orderSlice: {
+        loading: state.orderSlice.loading,
+        error: action.payload.orderSlice.error,
+        orders: [
+          ...action.payload.orderSlice.orders,
+          ...state.orderSlice.orders,
+        ],
+        order: {
+          ...action.payload.orderSlice.order,
+        },
+      },
     };
     return nextState;
   } else {
