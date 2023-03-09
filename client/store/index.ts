@@ -55,24 +55,24 @@ const reducer = (
         deleteSuccess: state.adminProductSlice.deleteSuccess,
         error: action.payload.adminProductSlice.error,
         products: {
-          ...action.payload.adminProductSlice.products,
           ...state.adminProductSlice.products,
+          ...action.payload.adminProductSlice.products,
         },
         product: {
-          ...action.payload.adminProductSlice.product,
           ...state.adminProductSlice.product,
+          ...action.payload.adminProductSlice.product,
         },
       },
       productSlice: {
         loading: state.productSlice.loading,
         error: action.payload.productSlice.error,
         products: {
-          ...action.payload.productSlice.products,
           ...state.productSlice.products,
+          ...action.payload.productSlice.products,
         },
         product: {
-          ...action.payload.productSlice.product,
           ...state.productSlice.product,
+          ...action.payload.productSlice.product,
         },
       },
       orderSlice: {

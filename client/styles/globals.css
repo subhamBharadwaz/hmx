@@ -37,6 +37,38 @@ form {
   top: 0;
 }
 
+.wishlist-icon {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: rgb(233, 233, 233);
+  z-index: 20;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(107, 107, 107, 0.425);
+}
+
+.wishlist-icon-fill {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #0063d1;
+  z-index: 20;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+}
+
 .wishlist-close {
   background-color: hsla(0, 0%, 100%, 0.7);
   width: 35px;
