@@ -9,10 +9,7 @@ import { userDetails } from "../store/services/auth/auth-slice";
 
 export default function Index() {
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(userDetails());
-    dispatch(getAllProducts());
-  }, [dispatch]);
+
   return (
     <Box my="10%">
       <Home />

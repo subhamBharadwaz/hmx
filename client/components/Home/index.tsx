@@ -4,6 +4,7 @@ import { IProduct } from "../../types/product";
 import { Stack, shouldForwardProp, Skeleton } from "@chakra-ui/react";
 
 import Carousel from "../Product/Carousel";
+import FilterProducts from "../FilterProducts";
 
 const Home = () => {
   const { loading, products } = useSelector(
