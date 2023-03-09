@@ -23,14 +23,29 @@ const initialState = {
 // get all products
 export const getAllProducts = createAsyncThunk(
   "/products",
-  async (_, { rejectWithValue }) => {
+  async (
+    data: {
+      category?: string | string[];
+      gender?: string | string[];
+      size?: string | string[];
+      page?: number;
+      limit?: number;
+    },
+    { rejectWithValue }
+  ) => {
+    const { category, gender, size, page, limit } = data;
     try {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products`,
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products?page=${
+          page || 1
+        }&limit=${limit}&category=${category || "All"}&gender=${
+          gender || "All"
+        }&size=${size || "All"}`,
         {
           withCredentials: true,
         }
       );
+
       return await res.data;
     } catch (err) {
       return rejectWithValue(err);
@@ -65,20 +80,20 @@ const productSlice = createSlice({
     builder.addCase(getAllProducts.pending, (state) => {
       state.loading = true;
       state.products = null;
-      state.product = null;
+      state.product = state.product;
     });
     builder.addCase(getAllProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
       if (payload.error) {
         state.error = payload.error;
       }
-      state.products = { ...payload };
-      state.product = null;
+      state.products = payload;
+      state.product = state.product;
     });
     builder.addCase(getAllProducts.rejected, (state) => {
       state.loading = true;
       state.products = null;
-      state.product = null;
+      state.product = state.product;
     });
 
     // single product

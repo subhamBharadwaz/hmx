@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -5,7 +6,6 @@ import "../styles/globals.css";
 import AdminLayout from "../layout/AdminLayout";
 import setAuthToken from "../utils/setAuthToken";
 import { RootState, wrapper } from "../store";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { userDetails } from "../store/services/auth/auth-slice";
@@ -28,14 +28,10 @@ if (tokenFromLocalStorage) {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { isAuthenticated, error } = useSelector(
-    (state: RootState) => state.auth
-  );
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(userDetails());
-
     dispatch(getBagItems());
     dispatch(getWishlistItems());
     dispatch(getShippingAddress());

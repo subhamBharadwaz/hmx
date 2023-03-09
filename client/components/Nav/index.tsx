@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   Box,
   Flex,
@@ -6,15 +7,22 @@ import {
   HStack,
   Text,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { BsBag, BsHeart } from "react-icons/bs";
+import { HiMenuAlt1 } from "react-icons/hi";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { logoutUser } from "../../store/services/auth/auth-slice";
+import Sidebar from "../Sidebar";
 
 const Nav = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const menuRef = useRef();
+
   const { user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
@@ -22,8 +30,6 @@ const Nav = () => {
   const { wishlistData } = useSelector(
     (state: RootState) => state.wishlistSlice
   );
-
-  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <Box
@@ -44,13 +50,19 @@ const Nav = () => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Text fontSize="2xl">
-          <NextLink href="/">HMX</NextLink>
-        </Text>
+        <HStack>
+          <Text fontSize="3xl" cursor="pointer" ref={menuRef} onClick={onOpen}>
+            <HiMenuAlt1 />
+          </Text>
+          <Text fontSize="2xl">
+            <NextLink href="/">HMX</NextLink>
+          </Text>
+        </HStack>
+        <Sidebar isOpen={isOpen} onClose={onClose} menuRef={menuRef} />
         <List fontSize={18} fontWeight="semibold">
           <HStack spacing={10}>
-            <ListItem>Men</ListItem>
-            <ListItem>Women</ListItem>
+            <NextLink href="/products/men">Men</NextLink>
+            <NextLink href="/products/women">Women</NextLink>
           </HStack>
         </List>
         <List fontSize={18} fontWeight="semibold">
