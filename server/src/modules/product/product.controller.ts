@@ -1,3 +1,6 @@
+/* eslint-disable radix */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable security/detect-object-injection */
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
@@ -15,29 +18,108 @@ import Product from './product.model';
 @route   GET /api/v1/products
 @access  Public
 */
+// export const getAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
+// 	const resultPerPage = 6;
+
+// 	// count the total products (all products)
+// 	const productCount = await totalProducts();
+
+// 	const productsObj = new WhereClause(Product.find(), req.query).search().filter();
+
+// 	let products = await productsObj.base;
+
+// 	const filteredProductNumber = products.length;
+
+// 	productsObj.pager(resultPerPage);
+
+// 	// if we have some chained query going on, like .find(), .somethingFind() on top of that, mongoose doesn't allow all of that, all we gotta do, chain a .clone()
+// 	products = await productsObj.base.clone();
+// 	const pageCount = Math.ceil(productCount / resultPerPage);
+
+// 	res.status(200).json({
+// 		success: true,
+// 		products,
+// 		filteredProductNumber,
+// 		productCount,
+// 		pageCount
+// 	});
+// });
+
 export const getAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
 	const resultPerPage = 6;
 
 	// count the total products (all products)
 	const productCount = await totalProducts();
 
-	const productsObj = new WhereClause(Product.find(), req.query).search().filter();
+	const page = parseInt(req.query.page as string) - 1 || 0;
+	const limit = parseInt(req.query.limit as string) || 20;
+	const search = req.query.search || '';
+	let sort = req.query.sort || 'price';
+	let category = req.query.category || 'All';
+	let size = req.query.size || 'All';
+	let gender = req.query.gender || 'All';
 
-	let products = await productsObj.base;
+	const categoryOptions = [
+		'Twill Jogger',
+		'Shirred Jogger',
+		'Motoknit Jogger',
+		'Dropcrotch Jogger',
+		'Hiphop Jogger',
+		'Shadingblock Jogger',
+		'Chino Jogger',
+		'Handcuffed Jogger',
+		'Loosepocket Jogger',
+		'Splashcolor Jogger',
+		'Wool Jogger',
+		'Distressed Jogger',
+		'Noncuffed Jogger'
+	];
+	const genderOptions = ['Men', 'Women', 'Unisex'];
+	const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
 
-	const filteredProductNumber = products.length;
+	category === 'All'
+		? (category = [...categoryOptions])
+		: (category = (req.query.category as string).split(','));
+	gender === 'All'
+		? (gender = [...genderOptions])
+		: (gender = (req.query.gender as string).split(','));
+	size === 'All' ? (size = [...sizeOptions]) : (size = (req.query.size as string).split(','));
+	req.query.sort ? (sort = (req.query.sort as string).split(',')) : (sort = [sort as string]);
 
-	productsObj.pager(resultPerPage);
+	const sortBy = {};
+	// @ts-ignore
+	if (sort[1]) {
+		// @ts-ignore
+		// eslint-disable-next-line prefer-destructuring
+		sortBy[sort[0]] = sort[1];
+	} else {
+		// @ts-ignore
+		sortBy[sort[0]] = 'asc';
+	}
+	const products = await Product.find({name: {$regex: search, $options: 'i'}})
+		.where('category')
+		.in([...category])
+		.where('gender')
+		.in([...gender])
+		.where('size')
+		.in([...sizeOptions])
+		.sort(sortBy)
+		.skip(page * limit)
+		.limit(limit);
 
-	// if we have some chained query going on, like .find(), .somethingFind() on top of that, mongoose doesn't allow all of that, all we gotta do, chain a .clone()
-	products = await productsObj.base.clone();
+	const total = await Product.countDocuments({
+		category: {$in: [...category]},
+		name: {$regex: search, $options: 'i'}
+	});
 	const pageCount = Math.ceil(productCount / resultPerPage);
 
 	res.status(200).json({
 		success: true,
-		products,
-		filteredProductNumber,
 		productCount,
+		total,
+		limit,
+		page: page + 1,
+		products,
 		pageCount
 	});
 });
