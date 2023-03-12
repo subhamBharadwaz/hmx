@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from 'express';
 import Product from '../product/product.model';
 import {BigPromise} from '../../middlewares';
-import {IOrderDocument} from './order.types';
+import {IOrderDocument, OrderStatusType} from './order.types';
 import {IGetUserAuthInfoRequest} from '../user/user.types';
 import {HttpStatusCode} from '../../types/http.model';
 import {isValidMongooseObjectId, APIError} from '../../utils';
@@ -20,13 +20,13 @@ import {
 */
 export const createOrderHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+		const orderStatus = OrderStatusType.Processing;
 		const {
 			shippingInfo,
 			orderItems,
 			paymentInfo,
 			taxAmount,
 			shippingAmount,
-			orderStatus,
 			totalAmount
 		}: IOrderDocument = req.body;
 
