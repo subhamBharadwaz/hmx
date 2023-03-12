@@ -67,7 +67,6 @@ const SizeGuide = () => {
                   colorScheme={isInch ? "messenger" : "gray"}
                   onClick={() => {
                     setIsInch(true);
-                    console.log(isInch);
                   }}
                 >
                   In
@@ -76,7 +75,6 @@ const SizeGuide = () => {
                   colorScheme={isInch ? "gray" : "messenger"}
                   onClick={() => {
                     setIsInch(false);
-                    console.log(isInch);
                   }}
                 >
                   Cms

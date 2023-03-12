@@ -15,7 +15,7 @@ import { RootState, wrapper } from "../../store";
 import { getAllProducts } from "../../store/services/product/productSlice";
 import NextLink from "next/link";
 
-export default function MenProducts() {
+export default function SearchedProducts({ q }) {
   const { products, loading } = useSelector(
     (state: RootState) => state.productSlice
   );
@@ -34,19 +34,30 @@ export default function MenProducts() {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink>Men</BreadcrumbLink>
+          <BreadcrumbLink>{q}</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
       <Flex justifyContent="space-between">
         <Box w="20%">
           <FilterProducts
+            searchQuery={q}
             loading={loading}
-            productGender="Men"
+            productGender="All"
             productCategory={undefined}
-            searchQuery={undefined}
           />
         </Box>
         <Box w="75%">
+          <Text
+            fontSize="xl"
+            fontWeight="semibold"
+            color="blackAlpha.700"
+            mb={10}
+          >
+            Showing results for {q}{" "}
+            {/* <Text color="blackAlpha.500" display="inline-block">
+            {products?.total} item(s)
+          </Text> */}
+          </Text>
           {loading ? (
             <SimpleGrid columns={[2, null, 3]} spacingX="20px" spacingY="40px">
               <Skeleton height="400px" />
@@ -75,10 +86,15 @@ export default function MenProducts() {
 }
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  (store) => async () => {
-    await store.dispatch(getAllProducts({ gender: "Men" }));
-    return {
-      props: {},
-    };
-  }
+  (store) =>
+    async ({ req, res, query }) => {
+      const { q } = query;
+      console.log(query);
+      await store.dispatch(getAllProducts({ search: q }));
+      return {
+        props: {
+          q,
+        },
+      };
+    }
 );

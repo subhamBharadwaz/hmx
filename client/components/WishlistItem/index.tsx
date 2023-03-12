@@ -26,6 +26,7 @@ import SizeRadioCard from "../Product/SingleProduct/SizeRadioCard";
 import { createAndUpdateBagItems } from "../../store/services/bag/bagSlice";
 import NextImage from "next/image";
 import { RxCross1 } from "react-icons/rx";
+import { motion } from "framer-motion";
 
 interface IProductData {
   product: {
@@ -39,11 +40,12 @@ interface IProductData {
     size: string[];
     category: string;
   };
+  variants: any;
 }
 
 const allSizes = ["S", "M", "L", "XL", "XXL"];
 
-const WishlistItem = ({ product }: IProductData) => {
+const WishlistItem = ({ product, variants }: IProductData) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [isSizeEmpty, setIsSizeEmpty] = useState(true);
 
@@ -70,7 +72,7 @@ const WishlistItem = ({ product }: IProductData) => {
   };
 
   return (
-    <Box maxW={300} pos="relative">
+    <Box maxW={300} pos="relative" as={motion.div} variants={variants}>
       <span
         className="wishlist-close"
         onClick={() =>
@@ -79,7 +81,7 @@ const WishlistItem = ({ product }: IProductData) => {
       >
         <GrClose />
       </span>
-      <NextLink href={`/product/${product.productId}`}>
+      <NextLink href={`/products/${product.productId}`}>
         <Box
           w="100%"
           pos="relative"

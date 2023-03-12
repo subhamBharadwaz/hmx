@@ -96,7 +96,10 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		// @ts-ignore
 		sortBy[sort[0]] = 'asc';
 	}
-	const products = await Product.find({name: {$regex: search, $options: 'i'}})
+
+	const products = await Product.find({
+		$or: [{name: {$regex: search, $options: 'i'}}, {category: {$regex: search, $options: 'i'}}]
+	})
 		.where('category')
 		.in([...category])
 		.where('gender')
@@ -105,7 +108,8 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		.in([...sizeOptions])
 		.sort(sortBy)
 		.skip(page * limit)
-		.limit(limit);
+		.limit(limit)
+		.lean();
 
 	const total = await Product.countDocuments({
 		category: {$in: [...category]},

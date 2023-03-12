@@ -1,5 +1,13 @@
 import { useEffect } from "react";
-import { Box, Flex, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  useDisclosure,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from "@chakra-ui/react";
 import Script from "next/script";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../store";
@@ -13,6 +21,7 @@ import { createOrder } from "../../store/services/order/orderSlice";
 import { useRouter } from "next/router";
 import AddressCard from "../../components/DeliveryAddress/AddressCard";
 import { emptyBag } from "../../store/services/bag/bagSlice";
+import NextLink from "next/link";
 
 export default function DeliveryAddress() {
   const dispatch = useDispatch<AppDispatch>();
@@ -64,8 +73,9 @@ export default function DeliveryAddress() {
     taxAmount: 0,
     shippingAmount: 0,
     totalAmount: bagData?.totalPrice,
-    orderStatus: OrderStatusType.Processing,
   };
+
+  console.log(orderDetails);
 
   // Making the payment
   const makePayment = async () => {
@@ -102,7 +112,7 @@ export default function DeliveryAddress() {
               router.push(`/checkout/success`);
             })
             .catch((err) => {
-              console.log(err);
+              console.error(err);
             });
         },
 
@@ -127,6 +137,29 @@ export default function DeliveryAddress() {
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
+      <Breadcrumb
+        fontWeight="medium"
+        fontSize="md"
+        mb={10}
+        color="blackAlpha.600"
+      >
+        <BreadcrumbItem>
+          <BreadcrumbLink as={NextLink} href="/">
+            Home
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem>
+          <BreadcrumbLink>
+            {" "}
+            <BreadcrumbLink as={NextLink} href="/bag">
+              Bag
+            </BreadcrumbLink>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>
+          <BreadcrumbLink>Checkout</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Box>
         <Flex justifyContent="space-between">
           <Box>

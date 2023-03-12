@@ -91,7 +91,8 @@ const OrderSchema = new Schema<IOrderDocument>(
 			type: String,
 			enum: {
 				values: Object.values(OrderStatusType)
-			}
+			},
+			default: OrderStatusType.Processing
 		},
 		deliveredAt: {
 			type: Date

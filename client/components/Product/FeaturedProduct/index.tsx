@@ -101,7 +101,7 @@ const FeaturedProduct = () => {
               href="#"
               // as={`/product/${product._id}`}
             >
-              <Box p={2} minW="20rem">
+              <Box p={2} minW="20rem" userSelect="none">
                 <Stack>
                   <Image
                     draggable={false}

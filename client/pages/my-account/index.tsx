@@ -1,5 +1,12 @@
-import React from "react";
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  HStack,
+  Text,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
 import { BsChevronRight } from "react-icons/bs";
 import { useDispatch } from "react-redux";
@@ -10,6 +17,21 @@ export default function MyAccount() {
   const dispatch = useDispatch<AppDispatch>();
   return (
     <>
+      <Breadcrumb
+        fontWeight="medium"
+        fontSize="md"
+        mb={10}
+        color="blackAlpha.600"
+      >
+        <BreadcrumbItem>
+          <BreadcrumbLink as={NextLink} href="/">
+            Home
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbItem isCurrentPage>
+          <BreadcrumbLink>My Account</BreadcrumbLink>
+        </BreadcrumbItem>
+      </Breadcrumb>
       <Box>
         <NextLink href="/my-account/profile">
           <HStack

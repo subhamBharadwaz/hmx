@@ -30,10 +30,17 @@ if (tokenFromLocalStorage) {
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   useEffect(() => {
     dispatch(userDetails());
+  }, [dispatch]);
+  useEffect(() => {
     dispatch(getBagItems());
+  }, [dispatch]);
+  useEffect(() => {
     dispatch(getWishlistItems());
+  }, [dispatch]);
+  useEffect(() => {
     dispatch(getShippingAddress());
   }, [dispatch]);
 

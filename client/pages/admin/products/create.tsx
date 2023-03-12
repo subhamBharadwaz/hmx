@@ -153,7 +153,6 @@ export default function CreateProduct() {
 
   //   dispatch(createProduct(data));
   // }
-  console.log(errors);
 
   return (
     <>
