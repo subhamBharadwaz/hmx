@@ -3,6 +3,7 @@ import {
   registerUserSchema,
   loginUserSchema,
   updateUserSchema,
+  changePasswordSchema,
 } from "../schema/userSchema";
 import { adminUpdateUserSchema } from "../schema/adminSchema";
 
@@ -38,3 +39,4 @@ export type CreateRegisterUserInput = TypeOf<typeof registerUserSchema>;
 export type CreateAdminUpdateUserInput = TypeOf<typeof adminUpdateUserSchema>;
 export type CreateUpdateUserInput = TypeOf<typeof updateUserSchema>;
 export type CreateLoginUserInput = TypeOf<typeof loginUserSchema>;
+export type CreateChangePasswordInput = TypeOf<typeof changePasswordSchema>;

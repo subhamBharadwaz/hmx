@@ -48,3 +48,24 @@ export const updateUserSchema = object({
     .max(10),
   photo: any(),
 });
+
+// Change password Schema
+export const changePasswordSchema = object({
+  currentPassword: string().nonempty({
+    message: "Current Password is required",
+  }),
+  newPassword: string()
+    .nonempty({
+      message: "New Password is required",
+    })
+    .regex(
+      passwordRegex,
+      "Password is required\n, The password length must be greater than or equal to 8,\n The password must contain one or more uppercase characters,\n The password must contain one or more lowercase characters,\n The password must contain one or more numeric values,\n The password must contain one or more special characters\n"
+    ),
+  confirmNewPassword: string().nonempty({
+    message: "Confirm New Password is required",
+  }),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "Passwords do not match",
+  path: ["confirmNewPassword"],
+});

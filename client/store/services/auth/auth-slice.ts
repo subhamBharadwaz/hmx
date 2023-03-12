@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  CreateChangePasswordInput,
   CreateLoginUserInput,
   CreateUpdateUserInput,
   IUser,
@@ -139,6 +140,28 @@ export const updateUserDetails = createAsyncThunk(
   }
 );
 
+// update user password
+export const updateUserPassword = createAsyncThunk(
+  "auth/update-user-details/password",
+  async (values: CreateChangePasswordInput, { rejectWithValue }) => {
+    try {
+      const res = await axios.put(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/password/update`,
+        values,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -179,13 +202,29 @@ const authSlice = createSlice({
       state.loading = false;
       if (payload.error) {
         state.error = payload.error;
-        state.isAuthenticated = false;
       }
       state.user = payload.user;
     });
     builder.addCase(updateUserDetails.rejected, (state, payload) => {
       state.loading = true;
       state.user = state.user;
+    });
+
+    // update user password
+    builder.addCase(updateUserPassword.pending, (state) => {
+      state.loading = true;
+      state.token = state.token;
+    });
+    builder.addCase(updateUserPassword.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
+      state.token = localStorage.setItem("token", payload.token);
+    });
+    builder.addCase(updateUserPassword.rejected, (state, payload) => {
+      state.loading = true;
+      state.token = state.token;
     });
 
     // register
