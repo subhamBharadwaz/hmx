@@ -8,6 +8,7 @@ import {
 import auth from "./services/auth/auth-slice";
 import adminUserSlice from "./services/admin/adminUserSlice";
 import adminProductSlice from "./services/admin/adminProductSlice";
+import adminOrderSlice from "./services/admin/adminOrderSlice";
 import productSlice from "./services/product/productSlice";
 import bagSlice from "./services/bag/bagSlice";
 import wishlistSlice from "./services/wishlist/wishlistSlice";
@@ -20,6 +21,7 @@ const combinedReducer = combineReducers({
   auth,
   adminUserSlice,
   adminProductSlice,
+  adminOrderSlice,
   productSlice,
   bagSlice,
   wishlistSlice,
@@ -40,12 +42,12 @@ const reducer = (
         success: state.adminUserSlice.success,
         error: action.payload.adminUserSlice.error,
         users: {
-          ...action.payload.adminUserSlice.users,
           ...state.adminUserSlice.users,
+          ...action.payload.adminUserSlice.users,
         },
         user: {
-          ...action.payload.adminUserSlice.user,
           ...state.adminUserSlice.user,
+          ...action.payload.adminUserSlice.user,
         },
       },
       adminProductSlice: {
@@ -61,6 +63,19 @@ const reducer = (
         product: {
           ...state.adminProductSlice.product,
           ...action.payload.adminProductSlice.product,
+        },
+      },
+      adminOrderSlice: {
+        loading: state.adminOrderSlice.loading,
+        message: action.payload.adminOrderSlice.message,
+        error: action.payload.adminOrderSlice.error,
+        orders: [
+          ...state.adminOrderSlice.orders,
+          ...action.payload.adminOrderSlice.orders,
+        ],
+        order: {
+          ...state.adminOrderSlice.order,
+          ...action.payload.adminOrderSlice.order,
         },
       },
       productSlice: {
@@ -79,10 +94,11 @@ const reducer = (
         loading: state.orderSlice.loading,
         error: action.payload.orderSlice.error,
         orders: [
-          ...action.payload.orderSlice.orders,
           ...state.orderSlice.orders,
+          ...action.payload.orderSlice.orders,
         ],
         order: {
+          ...state.orderSlice.order,
           ...action.payload.orderSlice.order,
         },
       },
