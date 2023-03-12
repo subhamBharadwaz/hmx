@@ -61,7 +61,7 @@ const AddAddress = ({ isOpen, onClose }) => {
       onClose;
     }
   }
-  console.log(errors);
+
   return (
     <Box>
       <Modal isOpen={isOpen} onClose={onClose}>

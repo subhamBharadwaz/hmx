@@ -127,11 +127,13 @@ const orderSlice = createSlice({
     });
     builder.addCase(createOrder.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.orders = [...payload.order];
+      state.orders = state.orders;
+      state.order = payload.order;
     });
     builder.addCase(createOrder.rejected, (state) => {
       state.loading = false;
       state.orders = null;
+      state.order = null;
     });
   },
 });

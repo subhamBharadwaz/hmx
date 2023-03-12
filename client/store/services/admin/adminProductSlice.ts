@@ -101,7 +101,6 @@ export const createProduct = createAsyncThunk(
           onUploadProgress: (progress) => {
             const { loaded, total } = progress;
             let percent = Math.floor((loaded * 100) / total);
-            console.log(`${loaded}kb of ${total}kb | ${percent}%`);
           },
           withCredentials: true,
           headers: {
@@ -133,7 +132,6 @@ export const updateProduct = createAsyncThunk(
           onUploadProgress: (progress) => {
             const { loaded, total } = progress;
             let percent = Math.floor((loaded * 100) / total);
-            console.log(`${loaded}kb of ${total}kb | ${percent}%`);
           },
           withCredentials: true,
           headers: {

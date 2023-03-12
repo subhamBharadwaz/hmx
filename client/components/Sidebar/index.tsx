@@ -64,7 +64,7 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
             initial="hidden"
             animate="show"
           >
-            <Stack spacing={3}>
+            <Stack spacing={5}>
               <Text
                 fontWeight="bold"
                 color="blackAlpha.500"
@@ -74,24 +74,32 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
               >
                 SHOP IN
               </Text>
-              <Text
-                fontWeight="bold"
-                fontSize="sm"
-                as={motion.div}
-                variants={item}
-              >
-                Men
-              </Text>
-              <Text
-                fontWeight="bold"
-                fontSize="sm"
-                as={motion.div}
-                variants={item}
-              >
-                Women
-              </Text>
+              <NextLink href="/products/men">
+                <Text
+                  fontWeight="bold"
+                  fontSize="sm"
+                  cursor="pointer"
+                  as={motion.div}
+                  onClick={onClose}
+                  variants={item}
+                >
+                  Men
+                </Text>
+              </NextLink>
+              <NextLink href="/products/women">
+                <Text
+                  fontWeight="bold"
+                  cursor="pointer"
+                  fontSize="sm"
+                  onClick={onClose}
+                  as={motion.div}
+                  variants={item}
+                >
+                  Women
+                </Text>
+              </NextLink>
             </Stack>
-            <Stack spacing={3}>
+            <Stack spacing={5}>
               <Text
                 fontWeight="bold"
                 color="blackAlpha.500"
@@ -138,7 +146,7 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
                 </Text>
               </NextLink>
             </Stack>
-            <Stack spacing={3}>
+            <Stack spacing={5}>
               <Text
                 fontWeight="bold"
                 color="blackAlpha.500"
@@ -165,7 +173,7 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
                 Feedback & Suggestions
               </Text>
             </Stack>
-            <Stack spacing={3}>
+            <Stack spacing={5}>
               <Text
                 fontWeight="bold"
                 color="blackAlpha.500"
@@ -192,7 +200,7 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
                 Blog
               </Text>
             </Stack>
-            <Stack spacing={3}>
+            <Stack spacing={5}>
               <Text
                 fontWeight="bold"
                 fontSize="sm"

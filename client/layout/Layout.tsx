@@ -5,7 +5,7 @@ const Layout = ({ children }) => {
   return (
     <Box>
       <Nav />
-      <Box w={["100%", "80%", "80%"]} mx="auto">
+      <Box w={["100%", "90%", "85%"]} mx="auto" minH="75vh" mt="2%">
         {children}
       </Box>
     </Box>

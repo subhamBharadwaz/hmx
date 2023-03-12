@@ -25,7 +25,7 @@ import {
 import { useEffect } from "react";
 import { getSingleProduct } from "../../../store/services/product/productSlice";
 import { createWishlist } from "../../../store/services/wishlist/wishlistSlice";
-
+import { motion } from "framer-motion";
 interface IProductData {
   productData: {
     productId: string;
@@ -38,6 +38,7 @@ interface IProductData {
       secure_url: string;
     }[];
   };
+  variants: any;
 }
 
 interface IProductSize {
@@ -71,7 +72,7 @@ const productQuantityOptions: IProductQuantity[] = [
   { value: 10, label: 10 },
 ];
 
-const SingleBagItemCard = ({ productData }: IProductData) => {
+const SingleBagItemCard = ({ productData, variants }: IProductData) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const dispatch = useDispatch<AppDispatch>();
@@ -97,7 +98,15 @@ const SingleBagItemCard = ({ productData }: IProductData) => {
   };
 
   return (
-    <Box mx="auto" border="1px" borderColor="gray.300" p={5} my={4}>
+    <Box
+      mx="auto"
+      border="1px"
+      borderColor="gray.300"
+      p={5}
+      my={4}
+      as={motion.div}
+      variants={variants}
+    >
       <Box>
         <Flex justifyContent="space-between">
           <Box>

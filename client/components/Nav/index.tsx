@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   Box,
   Flex,
@@ -8,18 +8,31 @@ import {
   Text,
   Button,
   useDisclosure,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  IconButton,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { BsBag, BsHeart } from "react-icons/bs";
 import { HiMenuAlt1 } from "react-icons/hi";
+import { AiOutlineUser } from "react-icons/ai";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store";
 import { logoutUser } from "../../store/services/auth/auth-slice";
 import Sidebar from "../Sidebar";
+import { useRouter } from "next/router";
+import SearchInput from "../Search";
 
 const Nav = () => {
   const dispatch = useDispatch<AppDispatch>();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const menuRef = useRef();
 
@@ -34,7 +47,7 @@ const Nav = () => {
   return (
     <Box
       minW="100%"
-      minH={20}
+      minH="52px"
       py={5}
       pos="sticky"
       top="0"
@@ -45,7 +58,7 @@ const Nav = () => {
       boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;"
     >
       <Flex
-        w={["100%", "80%", "80%"]}
+        w={["100%", "80%", "90%"]}
         mx="auto"
         alignItems="center"
         justifyContent="space-between"
@@ -59,63 +72,101 @@ const Nav = () => {
           </Text>
         </HStack>
         <Sidebar isOpen={isOpen} onClose={onClose} menuRef={menuRef} />
+
         <List fontSize={18} fontWeight="semibold">
           <HStack spacing={10}>
             <NextLink href="/products/men">Men</NextLink>
             <NextLink href="/products/women">Women</NextLink>
           </HStack>
         </List>
-        <List fontSize={18} fontWeight="semibold">
-          <HStack spacing={10}>
-            {user?.role === "admin" && (
+        <HStack>
+          <List fontSize={18} fontWeight="semibold">
+            <HStack spacing={5}>
+              {user?.role === "admin" && (
+                <ListItem>
+                  <NextLink href="/admin/">
+                    <Button fontSize={18} colorScheme="messenger">
+                      Admin Dashboard
+                    </Button>
+                  </NextLink>
+                </ListItem>
+              )}
               <ListItem>
-                <NextLink href="/admin/">
-                  <Button fontSize={18} colorScheme="messenger">
-                    Admin Dashboard
+                <SearchInput />
+              </ListItem>
+              <ListItem>
+                {isAuthenticated ? (
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<AiOutlineUser />}
+                      fontSize="2xl"
+                      aria-label="User options"
+                      variant="unstyled"
+                    />
+                    <MenuList fontSize="md">
+                      <MenuItem>
+                        <NextLink href="/my-account">My Account</NextLink>
+                      </MenuItem>
+                      <MenuItem>
+                        <NextLink href="/my-account/orders">My Orders</NextLink>
+                      </MenuItem>
+                      <MenuItem>
+                        <NextLink href="/wishlist">My Wishlist</NextLink>
+                      </MenuItem>
+                      <MenuItem>
+                        <NextLink href="/my-account/profile">
+                          My Profile
+                        </NextLink>
+                      </MenuItem>
+                      <MenuItem onClick={() => dispatch(logoutUser())}>
+                        Logout
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                ) : (
+                  <Button>
+                    <NextLink href="/auth/login">Login</NextLink>
                   </Button>
+                )}
+              </ListItem>
+              <ListItem cursor="pointer" fontSize="2xl" pos="relative">
+                {isAuthenticated && wishlistData && (
+                  <span className="item-count">
+                    {wishlistData?.products !== undefined
+                      ? wishlistData?.products?.length
+                      : 0}
+                  </span>
+                )}
+                <NextLink href="/wishlist">
+                  <IconButton
+                    fontSize="2xl"
+                    variant="unstyled"
+                    aria-label="Search database"
+                    icon={<BsHeart />}
+                  />
                 </NextLink>
               </ListItem>
-            )}
-            <ListItem cursor="pointer" fontSize="2xl" pos="relative">
-              {isAuthenticated && wishlistData && (
-                <span className="item-count">
-                  {wishlistData?.products !== undefined
-                    ? wishlistData?.products?.length
-                    : 0}
-                </span>
-              )}
-              <NextLink href="/wishlist">
-                <BsHeart />
-              </NextLink>
-            </ListItem>
-            <ListItem cursor="pointer" fontSize="2xl" pos="relative">
-              {isAuthenticated && bagData && (
-                <span className="item-count">
-                  {bagData?.products !== undefined
-                    ? bagData?.products?.length
-                    : 0}
-                </span>
-              )}
-              <NextLink href="/bag">
-                <BsBag />
-              </NextLink>
-            </ListItem>
-            <ListItem>
-              {isAuthenticated ? (
-                <Button onClick={() => dispatch(logoutUser())}>Logout</Button>
-              ) : (
-                <NextLink href="/auth/login">
-                  <Button>Login</Button>
+              <ListItem cursor="pointer" fontSize="2xl" pos="relative">
+                {isAuthenticated && bagData && (
+                  <span className="item-count">
+                    {bagData?.products !== undefined
+                      ? bagData?.products?.length
+                      : 0}
+                  </span>
+                )}
+                <NextLink href="/bag">
+                  <IconButton
+                    fontSize="2xl"
+                    variant="unstyled"
+                    aria-label="Search database"
+                    icon={<BsBag />}
+                  />
                 </NextLink>
-              )}
-            </ListItem>
-            <ListItem>
-              <NextLink href="/my-account">
-                <Button>My Account</Button>
-              </NextLink>
-            </ListItem>
-          </HStack>
-        </List>
+              </ListItem>
+            </HStack>
+          </List>
+        </HStack>
       </Flex>
     </Box>
   );

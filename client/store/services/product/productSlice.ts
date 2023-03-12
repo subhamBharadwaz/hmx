@@ -30,17 +30,18 @@ export const getAllProducts = createAsyncThunk(
       size?: string | string[];
       page?: number;
       limit?: number;
+      search?: string | string[];
     },
     { rejectWithValue }
   ) => {
-    const { category, gender, size, page, limit } = data;
+    const { category, gender, size, page, limit, search } = data;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products?page=${
           page || 1
         }&limit=${limit}&category=${category || "All"}&gender=${
           gender || "All"
-        }&size=${size || "All"}`,
+        }&size=${size || "All"}&search=${search || ""}`,
         {
           withCredentials: true,
         }
@@ -104,9 +105,6 @@ const productSlice = createSlice({
     });
     builder.addCase(getSingleProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
       state.products = state.products;
       state.product = { ...payload };
     });

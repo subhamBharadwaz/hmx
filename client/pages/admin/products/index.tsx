@@ -11,22 +11,12 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Menu,
-  MenuItem,
-  MenuButton,
-  MenuOptionGroup,
-  MenuList,
-  MenuItemOption,
-  MenuDivider,
-  MenuItemOptionProps,
-  Checkbox,
   useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
 
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
-import { BsChevronDown } from "react-icons/bs";
 
 import { AppDispatch, RootState } from "../../../store";
 import { useDispatch, useSelector } from "react-redux";

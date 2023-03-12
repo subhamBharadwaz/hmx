@@ -14,12 +14,14 @@ import {
   Button,
   ButtonGroup,
   HStack,
+  Box,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store";
 import { getAllProducts } from "../../store/services/product/productSlice";
-
+import { motion } from "framer-motion";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 const categories = [
   "Twill Jogger",
@@ -40,14 +42,22 @@ const categories = [
 const gender = ["Men", "Women", "Unisex"];
 const sizes = ["S", "M", "L", "XL", "XXL"];
 
-const FilterProducts = ({ loading, productGender }) => {
+const FilterProducts = ({
+  loading,
+  productGender,
+  productCategory,
+  searchQuery,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const [showGenders, setShowGenders] = useState(false);
   const [selectedGenders, setSelectedGenders] = useState([productGender]);
 
   const [showCategories, setShowCategories] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([
+    productCategory,
+  ]);
 
   const [showSizes, setShowSizes] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -58,9 +68,7 @@ const FilterProducts = ({ loading, productGender }) => {
   const [sliderValue, setSliderValue] = useState([499, 3999]);
   const [showSort, setShowSort] = useState(false);
 
-  useEffect(() => {
-    console.log(selectedCategories, selectedGenders, selectedSizes);
-  }, [selectedCategories, selectedGenders, selectedSizes]);
+  useEffect(() => {}, [selectedCategories, selectedGenders, selectedSizes]);
 
   const handleApplyFilters = () => {
     dispatch(
@@ -69,6 +77,7 @@ const FilterProducts = ({ loading, productGender }) => {
         size: selectedSizes,
         page,
         gender: selectedGenders,
+        search: searchQuery,
       })
     );
   };
@@ -122,7 +131,13 @@ const FilterProducts = ({ loading, productGender }) => {
   };
 
   return (
-    <>
+    <Box
+      as={motion.div}
+      initial={{ opacity: 0, x: -200 }}
+      animate={{ opacity: 1, x: 0 }}
+      pos="sticky"
+      top="15%"
+    >
       <Stack maxW={300}>
         <Stack borderBottom="1px" pb={5} borderColor="blackAlpha.300">
           <HStack
@@ -289,7 +304,7 @@ const FilterProducts = ({ loading, productGender }) => {
           <Button onClick={handleClearFilters}>Clear Filters</Button>
         </ButtonGroup>
       </HStack>
-    </>
+    </Box>
   );
 };
 

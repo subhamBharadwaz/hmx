@@ -21,6 +21,7 @@
     "framer-motion": "^6",
     "next": "12.2.5",
     "next-redux-wrapper": "^8.1.0",
+    "popmotion": "^11.0.5",
     "razorpay": "^2.8.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
