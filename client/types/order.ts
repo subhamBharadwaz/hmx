@@ -34,6 +34,6 @@ export interface IOrder {
   taxAmount: number;
   shippingAmount: number;
   totalAmount: number;
+  orderStatus?: OrderStatusType;
   createdAt?: Date;
-  orderStatus: OrderStatusType;
 }
