@@ -13,7 +13,7 @@ import {getSales, getSalesByState} from './sales.service';
 @route   GET /api/v1/sales/:year/:month
 @access  Private
 */
-export const getSalesDataHandler = BigPromise(
+export const handleGetSalesDataHandler = BigPromise(
 	async (req: Request, res: Response, next: NextFunction) => {
 		const {year, month} = req.params;
 
@@ -33,7 +33,7 @@ export const getSalesDataHandler = BigPromise(
 @route   GET /api/v1/sales/state
 @access  Private
 */
-export const getSalesByStates = BigPromise(async (req: Request, res: Response) => {
+export const handleGetSalesByStates = BigPromise(async (req: Request, res: Response) => {
 	const {year, month} = req.query;
 
 	const matchQuery: any = {'shippingInfo.state': {$exists: true}};

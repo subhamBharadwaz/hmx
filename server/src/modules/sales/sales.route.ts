@@ -4,11 +4,11 @@ import {Router} from 'express';
 import {isLoggedIn, customRole} from '../../middlewares';
 
 // import controllers
-import {getSalesDataHandler, getSalesByStates} from './sales.controller';
+import {handleGetSalesDataHandler, handleGetSalesByStates} from './sales.controller';
 
 const router = Router();
 
-router.route('/sales/:year/:month').get(isLoggedIn, customRole('admin'), getSalesDataHandler);
-router.route('/sales/state').get(isLoggedIn, customRole('admin'), getSalesByStates);
+router.route('/sales/:year/:month').get(isLoggedIn, customRole('admin'), handleGetSalesDataHandler);
+router.route('/sales/state').get(isLoggedIn, customRole('admin'), handleGetSalesByStates);
 
 export default router;
