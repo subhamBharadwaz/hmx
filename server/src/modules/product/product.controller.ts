@@ -10,7 +10,13 @@ import {BigPromise} from '../../middlewares';
 import {isValidMongooseObjectId, WhereClause, APIError} from '../../utils';
 import {IGetUserAuthInfoRequest} from '../user/user.types';
 import {HttpStatusCode} from '../../types/http.model';
-import {totalProducts, findProductById, updateProductById, addProduct} from './product.service';
+import {
+	totalProducts,
+	findProductById,
+	updateProductById,
+	addProduct,
+	getTopSellingProducts
+} from './product.service';
 import Product from './product.model';
 
 /** 
@@ -149,6 +155,17 @@ export const getSingleProductHandler = BigPromise(
 		res.status(200).json({success: true, product});
 	}
 );
+
+/** 
+@desc    Get top selling products
+@route   GET /api/v1/sales/state
+@access  Private
+*/
+export const handleGetToSellingProducts = BigPromise(async (req: Request, res: Response) => {
+	const topSellingProducts = await getTopSellingProducts();
+
+	res.status(200).json({success: true, products: topSellingProducts});
+});
 
 /** 
 @desc    Add Review
