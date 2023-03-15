@@ -66,6 +66,7 @@ export default function Orders() {
             <OrderCard
               id={order._id}
               key={order._id}
+              order={order}
               orderItems={order?.orderItems}
             />
           ))}

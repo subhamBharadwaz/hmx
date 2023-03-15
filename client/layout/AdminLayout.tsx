@@ -5,11 +5,9 @@ import React from "react";
 
 const AdminLayout = ({ children }) => {
   return (
-    <Box w={["100%", "80%", "80%"]} mx="auto">
+    <Box>
       <Sidebar>
-        <Box flex={1} py={7} w="90%" mx="auto">
-          {children}
-        </Box>
+        <Box flex={1}>{children}</Box>
       </Sidebar>
     </Box>
   );

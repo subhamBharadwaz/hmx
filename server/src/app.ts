@@ -13,13 +13,15 @@ import config from 'config';
 
 import {BaseError, logger, ErrorHandler} from './utils/index';
 import {HttpStatusCode} from './types/http.model';
+
 // import routes
-import user from './modules/user/user.route';
 import product from './modules/product/product.route';
+import user from './modules/user/user.route';
 import payment from './modules/payment/payment.route';
 import order from './modules/order/order.route';
 import bag from './modules/bag/bag.route';
 import wishlist from './modules/wishlist/wishlist.route';
+import sales from './modules/sales/sales.route';
 
 const app = express();
 
@@ -64,6 +66,7 @@ app.use('/api/v1', order);
 app.use('/api/v1', bag);
 app.use('/api/v1', wishlist);
 app.use('/api/v1', payment);
+app.use('/api/v1', sales);
 
 // Handling errors
 app.use(errorMiddleware);

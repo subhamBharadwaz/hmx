@@ -32,6 +32,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/bcryptjs": "^2.4.2",
+		"@types/bluebird": "^3.5.38",
 		"@types/config": "^0.0.40",
 		"@types/cookie-parser": "^1.4.2",
 		"@types/cors": "^2.8.12",
@@ -86,6 +87,7 @@
 		"pino": "^7.6.0",
 		"pino-pretty": "^7.3.0",
 		"razorpay": "^2.8.0",
+		"redis": "^4.6.5",
 		"stripe": "^8.193.0",
 		"swagger-ui-express": "^4.2.0",
 		"yamljs": "^0.3.0",

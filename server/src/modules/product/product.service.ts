@@ -98,7 +98,8 @@ export async function getTopSellingProducts() {
 					quantitySold: 1,
 					totalRevenue: 1,
 					name: {$arrayElemAt: ['$productInfo.name', 0]},
-					image: {$arrayElemAt: ['$productInfo.photos', 0]},
+					photos: {$arrayElemAt: ['$productInfo.photos', 0]},
+					price: {$arrayElemAt: ['$productInfo.price', 0]},
 					category: {$arrayElemAt: ['$productInfo.category', 0]}
 				}
 			},

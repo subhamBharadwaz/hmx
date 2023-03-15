@@ -32,7 +32,7 @@ export interface IOrderDocument extends Document {
 		price: number;
 		product: Types.ObjectId;
 	}[];
-	deliveredAt: Date;
+	deliveryDate: Date;
 	orderStatus: OrderStatusType;
 	paymentInfo: {
 		id: string;

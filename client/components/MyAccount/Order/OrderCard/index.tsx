@@ -6,10 +6,11 @@ import {
   Stack,
   HStack,
   Button,
-  Highlight,
+  Badge,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
 import NextLink from "next/link";
+import { IOrder } from "../../../../types/order";
 
 interface IItem {
   _id?: string;
@@ -24,9 +25,10 @@ interface IItem {
 interface Item {
   id: string;
   orderItems: IItem[];
+  order: IOrder;
 }
 
-const OrderCard = ({ orderItems, id }: Item) => {
+const OrderCard = ({ orderItems, id, order }: Item) => {
   return (
     <Box mx="auto" border="1px" borderColor="gray.300" my={4} pos="relative">
       {orderItems?.map((item, idx) => (
@@ -52,21 +54,22 @@ const OrderCard = ({ orderItems, id }: Item) => {
                 <Text mt={3} fontSize="lg" fontWeight="medium">
                   Size: {item.size}
                 </Text>
-                <Text my={6}>30 Jun, 2018</Text>
+                <Text my={6}>
+                  {new Date(order?.createdAt).toLocaleDateString()}
+                </Text>
 
-                <Highlight
-                  query="DELIVERED"
-                  styles={{
-                    px: "5",
-                    py: "1",
-                    bg: "blue.100",
-                    fontWeight: "medium",
-                    fontSize: 14,
-                    color: "blue.600",
-                  }}
+                <Badge
+                  fontSize="md"
+                  colorScheme={
+                    order?.orderStatus === "Delivered"
+                      ? "green"
+                      : order?.orderStatus === "Processing"
+                      ? "yellow"
+                      : "cyan"
+                  }
                 >
-                  DELIVERED
-                </Highlight>
+                  {order?.orderStatus}
+                </Badge>
               </Box>
             </Flex>
           </Flex>
