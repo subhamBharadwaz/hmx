@@ -9,6 +9,7 @@ import auth from "./services/auth/auth-slice";
 import adminUserSlice from "./services/admin/adminUserSlice";
 import adminProductSlice from "./services/admin/adminProductSlice";
 import adminOrderSlice from "./services/admin/adminOrderSlice";
+import adminSalesSlice from "./services/admin/adminSalesSlice";
 import productSlice from "./services/product/productSlice";
 import bagSlice from "./services/bag/bagSlice";
 import wishlistSlice from "./services/wishlist/wishlistSlice";
@@ -22,6 +23,7 @@ const combinedReducer = combineReducers({
   adminUserSlice,
   adminProductSlice,
   adminOrderSlice,
+  adminSalesSlice,
   productSlice,
   bagSlice,
   wishlistSlice,
@@ -37,6 +39,15 @@ const reducer = (
   if (action.type === HYDRATE) {
     const nextState = {
       ...state,
+      auth: {
+        loading: state.auth.loading,
+        token: state.auth.token,
+        isAuthenticated: state.auth.isAuthenticated,
+        user: {
+          ...state.auth.user,
+          ...action.payload.auth.user,
+        },
+      },
       adminUserSlice: {
         loading: state.adminUserSlice.loading,
         success: state.adminUserSlice.success,
@@ -78,6 +89,18 @@ const reducer = (
           ...action.payload.adminOrderSlice.order,
         },
       },
+      adminSalesSlice: {
+        loading: state.adminSalesSlice.loading,
+        error: action.payload.adminSalesSlice.error,
+        salesData: [
+          ...state.adminSalesSlice.salesData,
+          ...action.payload.adminSalesSlice.salesData,
+        ],
+        salesDataByState: [
+          ...state.adminSalesSlice.salesDataByState,
+          ...action.payload.adminSalesSlice.salesDataByState,
+        ],
+      },
       productSlice: {
         loading: state.productSlice.loading,
         error: action.payload.productSlice.error,
@@ -85,6 +108,10 @@ const reducer = (
           ...state.productSlice.products,
           ...action.payload.productSlice.products,
         },
+        topSellingProducts: [
+          ...state.productSlice.topSellingProducts,
+          ...action.payload.productSlice.topSellingProducts,
+        ],
         product: {
           ...state.productSlice.product,
           ...action.payload.productSlice.product,
