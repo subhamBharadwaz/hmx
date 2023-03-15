@@ -7,6 +7,7 @@ import { CookieValueTypes } from "cookies-next";
 interface IProducts {
   loading: boolean;
   products: { products: IProduct[] };
+  topSellingProducts: IProduct[];
   product: IProduct;
   error: string | null;
 }
@@ -16,6 +17,7 @@ const initialState = {
   products: {
     products: [],
   },
+  topSellingProducts: [],
   product: {},
   error: null,
 } as IProducts;
@@ -48,6 +50,25 @@ export const getAllProducts = createAsyncThunk(
       );
 
       return await res.data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+// get top-selling products
+export const getTopSellingProducts = createAsyncThunk(
+  "/products/top-selling",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/top-selling`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      return await res.data.products;
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -95,6 +116,24 @@ const productSlice = createSlice({
       state.loading = true;
       state.products = null;
       state.product = state.product;
+    });
+
+    // all products
+    builder.addCase(getTopSellingProducts.pending, (state) => {
+      state.loading = true;
+      state.topSellingProducts = [];
+    });
+    builder.addCase(getTopSellingProducts.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      if (payload.error) {
+        state.error = payload.error;
+      }
+      state.topSellingProducts = [...payload];
+    });
+    builder.addCase(getTopSellingProducts.rejected, (state) => {
+      state.loading = true;
+      state.products = null;
+      state.topSellingProducts = [];
     });
 
     // single product
