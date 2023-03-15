@@ -22,8 +22,10 @@ import {
 import { getSingleProduct } from "../../../store/services/admin/adminProductSlice";
 import NextLink from "next/link";
 import UpdateProductDetails from "../../../components/admin/product/UpdateProductDetails";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
-export default function SingleProductDetails() {
+function SingleProductDetails() {
   const { loading, product, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
@@ -66,6 +68,8 @@ export default function SingleProductDetails() {
     </Box>
   );
 }
+
+export default withAuth(SingleProductDetails, AdminLayout);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

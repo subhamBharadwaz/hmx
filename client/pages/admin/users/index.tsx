@@ -14,8 +14,10 @@ import { getAllUsers } from "../../../store/services/admin/adminUserSlice";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
-export default function Users() {
+function Users() {
   const { loading, users, error } = useSelector(
     (state: RootState) => state.adminUserSlice
   );
@@ -59,3 +61,5 @@ export default function Users() {
     </Box>
   );
 }
+
+export default withAuth(Users, AdminLayout);

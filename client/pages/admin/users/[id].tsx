@@ -17,8 +17,10 @@ import {
 
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
-export default function SingleUserDetails() {
+function SingleUserDetails() {
   const { loading, user, error } = useSelector(
     (state: RootState) => state.adminUserSlice
   );
@@ -60,6 +62,8 @@ export default function SingleUserDetails() {
     </Box>
   );
 }
+
+export default withAuth(SingleUserDetails, AdminLayout);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

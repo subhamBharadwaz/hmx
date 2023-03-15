@@ -45,6 +45,8 @@ import { createProduct } from "../../../store/services/admin/adminProductSlice";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FiFile } from "react-icons/fi";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
 interface IProductSize {
   value: string;
@@ -60,7 +62,7 @@ const productSizeOptions: IProductSize[] = [
   { value: "XXL", label: "XXL" },
 ];
 
-export default function CreateProduct() {
+function CreateProduct() {
   const dispatch = useDispatch<AppDispatch>();
 
   const { loading, createSuccess, error } = useSelector(
@@ -419,3 +421,5 @@ export default function CreateProduct() {
     </>
   );
 }
+
+export default withAuth(CreateProduct, AdminLayout);
