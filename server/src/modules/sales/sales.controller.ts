@@ -8,7 +8,7 @@ import {HttpStatusCode} from '../../types/http.model';
 import {APIError} from '../../utils';
 import {getSales, getSalesByState} from './sales.service';
 
-/** 
+/**
 @desc    Get Sales Details
 @route   GET /api/v1/sales/:year/:month
 @access  Private
@@ -28,7 +28,7 @@ export const handleAdminGetSalesDataHandler = BigPromise(
 	}
 );
 
-/** 
+/**
 @desc    Get Sales Details by States
 @route   GET /api/v1/sales/state
 @access  Private
