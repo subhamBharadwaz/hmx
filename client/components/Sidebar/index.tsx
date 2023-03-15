@@ -12,10 +12,11 @@ import {
   Avatar,
   HStack,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "../../store";
 import NextLink from "next/link";
 import { motion } from "framer-motion";
+import { logoutUser } from "../../store/services/auth/auth-slice";
 
 const container = {
   hidden: { opacity: 0 },
@@ -35,6 +36,7 @@ const item = {
 };
 
 const Sidebar = ({ isOpen, onClose, menuRef }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
   return (
     <Drawer
@@ -205,9 +207,12 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
                 fontWeight="bold"
                 fontSize="sm"
                 cursor="pointer"
-                onClick={onClose}
                 as={motion.div}
                 variants={item}
+                onClick={() => {
+                  onClose;
+                  dispatch(logoutUser());
+                }}
               >
                 Logout
               </Text>

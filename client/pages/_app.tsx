@@ -11,11 +11,13 @@ import { AppDispatch } from "../store";
 import { userDetails } from "../store/services/auth/auth-slice";
 import Layout from "../layout/Layout";
 import { getBagItems } from "../store/services/bag/bagSlice";
-import PrivateRoute from "../components/PrivateRoute";
+import PrivateRoute from "../components/HOC/withAuth";
 import { getWishlistItems } from "../store/services/wishlist/wishlistSlice";
 import { IAddress } from "../types/address";
 import { getShippingAddress } from "../store/services/address/addressSlice";
-
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import { ReactReduxContext } from "react-redux";
 let tokenFromLocalStorage: string;
 let shippingAddress;
 if (typeof window !== "undefined") {
@@ -44,34 +46,19 @@ function MyApp({ Component, pageProps }: AppProps) {
     dispatch(getShippingAddress());
   }, [dispatch]);
 
-  const protectedRoutes = [
-    "/admin",
-    "/admin/dashboard",
-    "/admin/products",
-    "/admin/products/[id]",
-    "/admin/products/create",
-    "/admin/users",
-    "/admin/users/[id]",
-  ];
-  if (router.pathname.startsWith("/admin")) {
-    return (
-      <ChakraProvider>
-        <PrivateRoute protectedRoutes={protectedRoutes}>
-          <AdminLayout>
-            <Component {...pageProps} />
-          </AdminLayout>
-        </PrivateRoute>
-      </ChakraProvider>
-    );
-  }
   return (
-    <ChakraProvider>
-      <PrivateRoute protectedRoutes={protectedRoutes}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </PrivateRoute>
-    </ChakraProvider>
+    <ReactReduxContext.Consumer>
+      {({ store }) => (
+        // @ts-ignore
+        <PersistGate persistor={store.__persistor} loading={null}>
+          <ChakraProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ChakraProvider>
+        </PersistGate>
+      )}
+    </ReactReduxContext.Consumer>
   );
 }
 

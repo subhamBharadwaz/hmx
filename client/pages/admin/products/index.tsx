@@ -27,8 +27,10 @@ import {
 import { IProduct } from "../../../types/product";
 import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
-export default function Products() {
+function Products() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const { loading, products, deleteSuccess, error } = useSelector(
@@ -112,7 +114,7 @@ export default function Products() {
           boxShadow="0 4px 12px rgba(0,0,0,0.05)"
           position="relative"
         >
-          <SimpleGrid minChildWidth="250px" spacing={2}>
+          <SimpleGrid minChildWidth="200px" spacing={4}>
             {products.products &&
               products.products.map((product: IProduct) => (
                 <Box key={product._id} p={2}>
@@ -161,3 +163,5 @@ export default function Products() {
     </Box>
   );
 }
+
+export default withAuth(Products, AdminLayout);

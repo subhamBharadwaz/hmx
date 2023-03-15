@@ -16,7 +16,8 @@ import {
 	adminGetSingleProductsHandler,
 	adminAddProductHandler,
 	adminUpdateSingleProductHandler,
-	adminDeleteSingleProductHandler
+	adminDeleteSingleProductHandler,
+	handleGetToSellingProducts
 } from './product.controller';
 
 const router = Router();
@@ -29,6 +30,7 @@ router
 	.put(isLoggedIn, validateResource(addProductReview), addReviewHandler)
 	.delete(isLoggedIn, deleteReviewHandler);
 router.route('/reviews').get(getSingleProductReviewsHandler);
+router.route('/top-selling').get(handleGetToSellingProducts);
 
 // admin only routes
 router.route('/admin/products').get(isLoggedIn, customRole('admin'), adminGetAllProductsHandler);

@@ -4,8 +4,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Sidebar from "../../components/admin/Sidebar";
 import { useRouter } from "next/router";
+import SalesDataChart from "../../components/admin/sales/SalesDataChart";
+import SalesDataBySate from "../../components/admin/sales/SalesDataByState";
+import withAuth from "../../components/HOC/withAuth";
+import AdminLayout from "../../layout/AdminLayout";
 
-export default function AdminDashboard() {
+const AdminDashboard = () => {
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
@@ -15,5 +19,12 @@ export default function AdminDashboard() {
   //     router.push("/404");
   //   }
   // }, [isAuthenticated, router, user?.role]);
-  return <>admin dashboard</>;
-}
+  return (
+    <>
+      <SalesDataChart />
+      <SalesDataBySate />
+    </>
+  );
+};
+
+export default withAuth(AdminDashboard, AdminLayout);

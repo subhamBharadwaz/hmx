@@ -8,7 +8,7 @@ import {
   Stack,
   HStack,
   Divider,
-  Highlight,
+  Badge,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
 interface IOrderDetails {
@@ -32,7 +32,11 @@ const SingleOrderDetails = ({ order }: IOrderDetails) => {
     taxAmount,
   } = order;
   return (
-    <Flex justifyContent="space-between">
+    <Flex
+      justifyContent="space-between"
+      flexDirection={["column", "column", "row"]}
+      gap={10}
+    >
       <Box minW="60%">
         <HStack justifyContent="space-between" mb={5}>
           <Text color="blackAlpha.600" fontWeight="bold" fontSize="sm">
@@ -60,20 +64,18 @@ const SingleOrderDetails = ({ order }: IOrderDetails) => {
                 </Box>
 
                 <Stack ml={5} p={5}>
-                  <Highlight
-                    query="PROCESSING"
-                    styles={{
-                      px: "5",
-                      py: "2",
-                      bg: "blue.100",
-                      fontWeight: "semibold",
-                      fontSize: 14,
-                      color: "blue.500",
-                      rounded: "2",
-                    }}
+                  <Badge
+                    fontSize="md"
+                    colorScheme={
+                      order?.orderStatus === "Delivered"
+                        ? "green"
+                        : order?.orderStatus === "Processing"
+                        ? "yellow"
+                        : "cyan"
+                    }
                   >
-                    PROCESSING
-                  </Highlight>
+                    {order?.orderStatus}
+                  </Badge>
                   <Text fontSize="md" fontWeight="semibold">
                     {item.name}
                   </Text>

@@ -16,8 +16,10 @@ import NextLink from "next/link";
 import Pagination from "../../../components/Pagination";
 import { adminGetAllOrders } from "../../../store/services/admin/adminOrderSlice";
 import OrdersTable from "../../../components/admin/order/OrderTable";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
-export default function Orders() {
+function Orders() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -67,3 +69,5 @@ export default function Orders() {
     </Box>
   );
 }
+
+export default withAuth(Orders, AdminLayout);

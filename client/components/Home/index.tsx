@@ -3,10 +3,10 @@ import { RootState } from "../../store";
 import { IProduct } from "../../types/product";
 import { Stack, shouldForwardProp, Skeleton, Box } from "@chakra-ui/react";
 
-import Carousel from "../Product/Carousel";
 import FilterProducts from "../FilterProducts";
 import SlideShow from "./SlideShow";
 import Categories from "./Categories";
+import TopSellingProducts from "./TopSellingProducts";
 
 const Home = () => {
   const { loading, products } = useSelector(
@@ -28,7 +28,13 @@ const Home = () => {
       >
         <SlideShow />
       </Box>
-      <Categories />
+      <Box mb={40}>
+        <Categories />
+      </Box>
+
+      <Box mb={40}>
+        <TopSellingProducts />
+      </Box>
     </>
   );
 };

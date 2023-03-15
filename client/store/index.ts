@@ -9,6 +9,7 @@ import auth from "./services/auth/auth-slice";
 import adminUserSlice from "./services/admin/adminUserSlice";
 import adminProductSlice from "./services/admin/adminProductSlice";
 import adminOrderSlice from "./services/admin/adminOrderSlice";
+import adminSalesSlice from "./services/admin/adminSalesSlice";
 import productSlice from "./services/product/productSlice";
 import bagSlice from "./services/bag/bagSlice";
 import wishlistSlice from "./services/wishlist/wishlistSlice";
@@ -16,12 +17,17 @@ import addressSlice from "./services/address/addressSlice";
 import checkoutSlice from "./services/checkout/checkoutSlice";
 import orderSlice from "./services/order/orderSlice";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
+import { persistStore, persistReducer } from "redux-persist";
+const storage = require("redux-persist/lib/storage").default;
+
+const SET_CLIENT_STATE = HYDRATE;
 
 const combinedReducer = combineReducers({
   auth,
   adminUserSlice,
   adminProductSlice,
   adminOrderSlice,
+  adminSalesSlice,
   productSlice,
   bagSlice,
   wishlistSlice,
@@ -30,13 +36,22 @@ const combinedReducer = combineReducers({
   orderSlice,
 });
 
-const reducer = (
+export const reducer = (
   state: ReturnType<typeof combinedReducer>,
   action: AnyAction
 ) => {
-  if (action.type === HYDRATE) {
+  if (action.type === SET_CLIENT_STATE) {
     const nextState = {
       ...state,
+      auth: {
+        loading: state.auth.loading,
+        token: state.auth.token,
+        isAuthenticated: state.auth.isAuthenticated,
+        user: {
+          ...state.auth.user,
+          ...action.payload.auth.user,
+        },
+      },
       adminUserSlice: {
         loading: state.adminUserSlice.loading,
         success: state.adminUserSlice.success,
@@ -78,6 +93,18 @@ const reducer = (
           ...action.payload.adminOrderSlice.order,
         },
       },
+      adminSalesSlice: {
+        loading: state.adminSalesSlice.loading,
+        error: action.payload.adminSalesSlice.error,
+        salesData: [
+          ...state.adminSalesSlice.salesData,
+          ...action.payload.adminSalesSlice.salesData,
+        ],
+        salesDataByState: [
+          ...state.adminSalesSlice.salesDataByState,
+          ...action.payload.adminSalesSlice.salesDataByState,
+        ],
+      },
       productSlice: {
         loading: state.productSlice.loading,
         error: action.payload.productSlice.error,
@@ -85,6 +112,10 @@ const reducer = (
           ...state.productSlice.products,
           ...action.payload.productSlice.products,
         },
+        topSellingProducts: [
+          ...state.productSlice.topSellingProducts,
+          ...action.payload.productSlice.topSellingProducts,
+        ],
         product: {
           ...state.productSlice.product,
           ...action.payload.productSlice.product,
@@ -109,10 +140,37 @@ const reducer = (
   }
 };
 
-export const makeStore = () =>
+const makeConfiguredStore = (reducer) =>
   configureStore({
     reducer,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        immutableCheck: false,
+        serializableCheck: false,
+      }),
   });
+
+const makeStore = () => {
+  const isServer = typeof window === "undefined";
+
+  if (isServer) {
+    return makeConfiguredStore(reducer);
+  } else {
+    // we need it only on client side
+    const persistConfig = {
+      key: "hmx",
+      whitelist: ["auth"], // make sure it does not clash with server keys
+      storage,
+    };
+
+    const persistedReducer = persistReducer(persistConfig, reducer);
+    const store = makeConfiguredStore(persistedReducer);
+    // @ts-ignore
+    store.__persistor = persistStore(store); // Nasty hack
+
+    return store;
+  }
+};
 
 export type Store = ReturnType<typeof makeStore>;
 
@@ -126,3 +184,8 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 >;
 
 export const wrapper = createWrapper(makeStore);
+
+export const setClientState = (clientState) => ({
+  type: SET_CLIENT_STATE,
+  payload: clientState,
+});

@@ -16,8 +16,10 @@ import NextLink from "next/link";
 
 import { adminGetSingleOrder } from "../../../store/services/admin/adminOrderSlice";
 import UpdateOrder from "../../../components/admin/order/UpdateOrder";
+import withAuth from "../../../components/HOC/withAuth";
+import AdminLayout from "../../../layout/AdminLayout";
 
-export default function SingleOrder() {
+function SingleOrder() {
   const { loading, order, error } = useSelector(
     (state: RootState) => state.adminOrderSlice
   );
@@ -56,6 +58,8 @@ export default function SingleOrder() {
     </Box>
   );
 }
+
+export default withAuth(SingleOrder, AdminLayout);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

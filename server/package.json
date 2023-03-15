@@ -86,6 +86,7 @@
 		"pino": "^7.6.0",
 		"pino-pretty": "^7.3.0",
 		"razorpay": "^2.8.0",
+		"redis": "^4.6.5",
 		"stripe": "^8.193.0",
 		"swagger-ui-express": "^4.2.0",
 		"yamljs": "^0.3.0",

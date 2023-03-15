@@ -94,8 +94,13 @@ const OrderSchema = new Schema<IOrderDocument>(
 			},
 			default: OrderStatusType.Processing
 		},
-		deliveredAt: {
-			type: Date
+		deliveryDate: {
+			type: Date,
+			default: () => {
+				const date = new Date();
+				date.setDate(date.getDate() + 7); // Set the delivery date 7 days from today
+				return date;
+			}
 		},
 
 		taxAmount: {
