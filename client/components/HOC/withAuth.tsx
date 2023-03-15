@@ -12,19 +12,21 @@ import { useEffect } from "react";
 const withAuth = (WrappedComponent, LayoutComponent) => {
   const Wrapper = (props) => {
     const router = useRouter();
-    const { isAuthenticated, user } = useSelector(
+    const { isAuthenticated, user, loading } = useSelector(
       (state: RootState) => state.auth
     );
 
     useEffect(() => {
-      if (!isAuthenticated) {
-        router.push("/auth/login");
-      }
+      if (!loading) {
+        if (!isAuthenticated) {
+          router.push("/auth/login");
+        }
 
-      if (isAuthenticated && user?.role !== "admin") {
-        router.push("/404");
+        if (isAuthenticated && user?.role !== "admin") {
+          router.push("/404");
+        }
       }
-    }, [router, isAuthenticated, user]);
+    }, [router, isAuthenticated, user, loading]);
 
     if (!isAuthenticated || (isAuthenticated && user?.role !== "admin")) {
       return null;

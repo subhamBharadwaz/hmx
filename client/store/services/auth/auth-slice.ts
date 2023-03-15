@@ -11,6 +11,7 @@ import { CreateRegisterUserInput } from "../../../types/user";
 import setAuthToken from "../../../utils/setAuthToken";
 
 let tokenFromLocalStorage: string;
+
 if (typeof window !== "undefined") {
   // Perform localStorage action
   tokenFromLocalStorage = localStorage.getItem("token");
@@ -112,6 +113,7 @@ export const logoutUser = createAsyncThunk(
         }
       );
       localStorage.removeItem("token");
+      localStorage.removeItem("auth");
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -181,9 +183,8 @@ const authSlice = createSlice({
         state.error = payload.error;
         state.isAuthenticated = false;
       }
-
       state.token = tokenFromLocalStorage;
-      state.user = payload.user;
+      state.user = { ...payload.user };
     });
     builder.addCase(userDetails.rejected, (state, payload) => {
       state.isAuthenticated = false;
