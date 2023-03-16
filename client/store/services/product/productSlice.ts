@@ -30,8 +30,8 @@ export const getAllProducts = createAsyncThunk(
       category?: string | string[];
       gender?: string | string[];
       size?: string | string[];
-      page?: number;
-      limit?: number;
+      page?: string;
+      limit?: string;
       search?: string | string[];
     },
     { rejectWithValue }
@@ -40,8 +40,8 @@ export const getAllProducts = createAsyncThunk(
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products?page=${
-          page || 1
-        }&limit=${limit}&category=${category || "All"}&gender=${
+          page || "1"
+        }&limit=${limit || "6"}&category=${category || "All"}&gender=${
           gender || "All"
         }&size=${size || "All"}&search=${search || ""}`,
         {
