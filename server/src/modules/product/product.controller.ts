@@ -1,7 +1,5 @@
-/* eslint-disable radix */
 /* eslint-disable no-unused-expressions */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable security/detect-object-injection */
+
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import path from 'path';
@@ -19,69 +17,42 @@ import {
 } from './product.service';
 import Product from './product.model';
 
-/** 
-@desc    Get Products
-@route   GET /api/v1/products
-@access  Public
-*/
-// export const getAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
-// 	const resultPerPage = 6;
-
-// 	// count the total products (all products)
-// 	const productCount = await totalProducts();
-
-// 	const productsObj = new WhereClause(Product.find(), req.query).search().filter();
-
-// 	let products = await productsObj.base;
-
-// 	const filteredProductNumber = products.length;
-
-// 	productsObj.pager(resultPerPage);
-
-// 	// if we have some chained query going on, like .find(), .somethingFind() on top of that, mongoose doesn't allow all of that, all we gotta do, chain a .clone()
-// 	products = await productsObj.base.clone();
-// 	const pageCount = Math.ceil(productCount / resultPerPage);
-
-// 	res.status(200).json({
-// 		success: true,
-// 		products,
-// 		filteredProductNumber,
-// 		productCount,
-// 		pageCount
-// 	});
-// });
+const categoryOptions: string[] = [
+	'Twill Jogger',
+	'Shirred Jogger',
+	'Motoknit Jogger',
+	'Dropcrotch Jogger',
+	'Hiphop Jogger',
+	'Shadingblock Jogger',
+	'Chino Jogger',
+	'Handcuffed Jogger',
+	'Loosepocket Jogger',
+	'Splashcolor Jogger',
+	'Wool Jogger',
+	'Distressed Jogger',
+	'Noncuffed Jogger'
+];
+const genderOptions: string[] = ['Men', 'Women', 'Unisex'];
+const sizeOptions: string[] = ['S', 'M', 'L', 'XL', 'XXL'];
+type SortOrder = 1 | -1;
 
 export const getAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
+	// ? Pagination:
+	// * The resultPerPage variable specifies how many results should be returned per page.
 	const resultPerPage = 6;
 
-	// count the total products (all products)
-	const productCount = await totalProducts();
+	// * The page and limit variables are retrieved from the request query parameters and default to 1 and 6, respectively
+	const {page = 1} = req.query as {page?: string};
+	const {limit = 6} = req.query as {limit?: string};
 
-	const page = parseInt(req.query.page as string) - 1 || 0;
-	const limit = parseInt(req.query.limit as string) || 20;
+	// * he skip variable calculates how many results should be skipped based on the current page and limit, so that the correct set of results is returned for the current page.
+	const skip = (Number(page) - 1) * Number(limit);
+
 	const search = req.query.search || '';
-	let sort = req.query.sort || 'price';
+
 	let category = req.query.category || 'All';
 	let size = req.query.size || 'All';
 	let gender = req.query.gender || 'All';
-
-	const categoryOptions = [
-		'Twill Jogger',
-		'Shirred Jogger',
-		'Motoknit Jogger',
-		'Dropcrotch Jogger',
-		'Hiphop Jogger',
-		'Shadingblock Jogger',
-		'Chino Jogger',
-		'Handcuffed Jogger',
-		'Loosepocket Jogger',
-		'Splashcolor Jogger',
-		'Wool Jogger',
-		'Distressed Jogger',
-		'Noncuffed Jogger'
-	];
-	const genderOptions = ['Men', 'Women', 'Unisex'];
-	const sizeOptions = ['S', 'M', 'L', 'XL', 'XXL'];
 
 	category === 'All'
 		? (category = [...categoryOptions])
@@ -90,45 +61,60 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		? (gender = [...genderOptions])
 		: (gender = (req.query.gender as string).split(','));
 	size === 'All' ? (size = [...sizeOptions]) : (size = (req.query.size as string).split(','));
+
+	// Sorting:
+	// * If sort is not provided, the default sort order is by price
+	let sort = req.query.sort || 'price';
+
+	// * If sort is provided, it is split into an array of field and sort order pairs.
 	req.query.sort ? (sort = (req.query.sort as string).split(',')) : (sort = [sort as string]);
 
-	const sortBy = {};
-	// @ts-ignore
-	if (sort[1]) {
-		// @ts-ignore
-		// eslint-disable-next-line prefer-destructuring
-		sortBy[sort[0]] = sort[1];
-	} else {
-		// @ts-ignore
-		sortBy[sort[0]] = 'asc';
+	// * The sortOrder variable is set based on whether the sort order is ascending or descending
+	const sortOrder: SortOrder = typeof sort === 'string' && sort[1] === 'desc' ? -1 : 1;
+
+	// * The sortBy array is constructed based on the sort parameter and sort order.
+	const sortBy: [string, SortOrder][] = [];
+
+	if (typeof sort === 'string') {
+		sortBy.push([sort, sortOrder]);
 	}
 
-	const products = await Product.find({
-		$or: [{name: {$regex: search, $options: 'i'}}, {category: {$regex: search, $options: 'i'}}]
-	})
-		.where('category')
-		.in([...category])
-		.where('gender')
-		.in([...gender])
-		.where('size')
-		.in([...sizeOptions])
-		.sort(sortBy)
-		.skip(page * limit)
-		.limit(limit)
-		.lean();
+	// ? Filtering:
+	/**
+	 * * This section of the code sets up the filter that will be used to retrieve the products.
+	 * * The $or operator specifies that the filter should match documents where the name, category, or gender fields match the regular expression specified by search.
+	 * * The $in operator is used to match documents where the category, gender, and size fields are in the arrays specified by category, gender, and size, respectively.
+	 */
+	const filter = {
+		$or: [
+			{name: {$regex: search, $options: 'i'}},
+			{category: {$regex: search, $options: 'i'}},
+			{gender: {$regex: search, $options: 'i'}}
+		],
+		category: {$in: category},
+		gender: {$in: gender},
+		size: {$in: size}
+	};
 
-	const total = await Product.countDocuments({
-		category: {$in: [...category]},
-		name: {$regex: search, $options: 'i'}
-	});
-	const pageCount = Math.ceil(productCount / resultPerPage);
+	// ? Retrieving addProductSchema
+	/**
+	 * * This section of the code retrieves the products from the database using the filter, sortBy, skip, and limit parameters.
+	 * * The lean() method is used to return plain JavaScript objects instead of Mongoose documents, which can improve performance.
+	 * * The total variable is set by counting the number of documents that match the filter and query parameters.
+	 * * The Promise.all() method is used to execute both queries concurrently and return the results as an array.
+	 */
+	const [products, total] = await Promise.all([
+		Product.find(filter).sort(sortBy).skip(skip).limit(Number(limit)).lean(),
+		Product.countDocuments({category: {$in: category}, name: {$regex: search, $options: 'i'}})
+	]);
+	const pageCount = Math.ceil(total / resultPerPage);
 
 	res.status(200).json({
 		success: true,
-		productCount,
+		productCount: await totalProducts(),
 		total,
 		limit,
-		page: page + 1,
+		page,
 		products,
 		pageCount
 	});
