@@ -7,20 +7,23 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UsersTable from "../../../components/admin/user/UsersTable";
-import { RootState } from "../../../store";
+import { AppDispatch, RootState } from "../../../store";
 import { getAllUsers } from "../../../store/services/admin/adminUserSlice";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
 import withAuth from "../../../components/HOC/withAuth";
 import AdminLayout from "../../../layout/AdminLayout";
+import FilterUsers from "../../../components/admin/user/FilterUsers";
+import SearchUsers from "../../../components/admin/user/SearchUsers";
 
 function Users() {
   const { loading, users, error } = useSelector(
     (state: RootState) => state.adminUserSlice
   );
+  const dispatch = useDispatch<AppDispatch>();
 
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
@@ -44,6 +47,10 @@ function Users() {
           <BreadcrumbLink isCurrentPage>Users</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
+      <Flex alignItems="center" maxW="100%" justifyContent="flex-end" mb={10}>
+        <SearchUsers />
+        <FilterUsers />
+      </Flex>
       <Flex alignItems="center" justifyContent="center" flex={1}>
         {loading ? (
           <Spinner
