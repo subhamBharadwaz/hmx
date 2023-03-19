@@ -27,10 +27,16 @@ const initialState = {
 // get all users
 export const getAllUsers = createAsyncThunk(
   "admin/users",
-  async (page: number, { rejectWithValue }) => {
+  async (
+    query: { page?: string; role?: string[]; searchQ?: string },
+    { rejectWithValue }
+  ) => {
+    const { page, role, searchQ } = query;
     try {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/users?page=${page}`,
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/users?role=${
+          role || "All"
+        }&search=${searchQ || ""}&page=${page}`,
         {
           withCredentials: true,
         }

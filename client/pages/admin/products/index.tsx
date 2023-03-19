@@ -36,16 +36,9 @@ function Products() {
   const { loading, products, deleteSuccess, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
-
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
-
-  // useEffect(() => {
-  //   if (isAuthenticated && user?.role !== "admin") {
-  //     router.push("/404");
-  //   }
-  // }, [isAuthenticated, router, user?.role]);
 
   // toast
   const toast = useToast();

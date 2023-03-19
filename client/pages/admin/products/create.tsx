@@ -47,6 +47,7 @@ import { useRouter } from "next/router";
 import { FiFile } from "react-icons/fi";
 import withAuth from "../../../components/HOC/withAuth";
 import AdminLayout from "../../../layout/AdminLayout";
+import ImageUpload from "../../../components/ImageUpload";
 
 interface IProductSize {
   value: string;
@@ -112,6 +113,7 @@ function CreateProduct() {
   // react-hook-form
   const {
     register,
+    setValue,
     formState: { errors },
     handleSubmit,
     control,
@@ -386,23 +388,20 @@ function CreateProduct() {
 
         <Stack spacing={5} mt={10}>
           <FormControl mt={7} isInvalid={!!errors.photos}>
-            <HStack>
+            <Stack>
               <Text as="b" fontSize={20} mr={10}>
                 Product Images
               </Text>
-              {/* //TODO */}
 
-              <Input
-                accept="image/*"
-                id="file-upload"
-                className="visually-hidden"
-                colorScheme="linkedin"
-                type="file"
-                multiple
+              <ImageUpload
                 {...register("photos")}
-                w="auto"
+                isMultiple={true}
+                files={[]}
+                onChange={(files: File[]) => {
+                  setValue("photos", files);
+                }}
               />
-            </HStack>
+            </Stack>
             <FormErrorMessage>
               {errors.photos && (errors.photos as any).message}
             </FormErrorMessage>

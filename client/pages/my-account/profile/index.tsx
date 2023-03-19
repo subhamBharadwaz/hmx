@@ -41,6 +41,7 @@ import { CreateUpdateUserInput } from "../../../types/user";
 import { AppDispatch, RootState } from "../../../store";
 import { BsChevronLeft } from "react-icons/bs";
 import ChangePassword from "../../../components/MyAccount/Profile/ChangePassword";
+import ImageUpload from "../../../components/ImageUpload";
 
 export default function Profile() {
   const { loading, user } = useSelector((state: RootState) => state.auth);
@@ -52,6 +53,7 @@ export default function Profile() {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
     reset,
   } = useForm<CreateUpdateUserInput>({
     defaultValues: {
@@ -239,17 +241,18 @@ export default function Profile() {
                   Profile Photo
                 </FormLabel>
 
-                <Input
-                  colorScheme="linkedin"
-                  name="photo"
-                  type="file"
+                <ImageUpload
                   {...register("photo")}
-                  w="auto"
+                  isMultiple={false}
+                  files={[]}
+                  onChange={(file: File[]) => {
+                    setValue("photo", file);
+                  }}
                 />
-
-                {loading && <Spinner />}
               </FormControl>
-
+              <Flex justifyContent="center" alignItems="center" mt={10}>
+                {loading && <Spinner size="xl" color="blue.500" />}
+              </Flex>
               <Button
                 rounded={5}
                 size="lg"

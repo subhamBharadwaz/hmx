@@ -20,7 +20,7 @@ import {
   FormHelperText,
   FormErrorMessage,
   VStack,
-  HStack,
+  Stack,
   Heading,
   Text,
   Spinner,
@@ -31,6 +31,7 @@ import {
 import { registerUserSchema } from "../../schema/userSchema";
 import { CreateRegisterUserInput } from "../../types/user";
 import { AppDispatch, RootState } from "../../store";
+import ImageUpload from "../../components/ImageUpload";
 
 export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
@@ -59,6 +60,7 @@ export default function RegisterPage() {
   const {
     register,
     formState: { errors },
+    setValue,
     handleSubmit,
   } = useForm<CreateRegisterUserInput>({
     resolver: zodResolver(registerUserSchema),
@@ -223,21 +225,21 @@ export default function RegisterPage() {
               </FormControl>
 
               <FormControl mt={7}>
-                <HStack>
+                <Stack>
                   <FormLabel htmlFor="photo"> Profile Picture *</FormLabel>
 
-                  <Input
-                    colorScheme="linkedin"
-                    name="photo"
-                    type="file"
+                  <ImageUpload
                     {...register("photo")}
-                    w="auto"
+                    isMultiple={false}
+                    files={[]}
+                    onChange={(file: File[]) => {
+                      setValue("photo", file);
+                    }}
                   />
-
-                  {loading && <Spinner />}
-                </HStack>
+                </Stack>
               </FormControl>
 
+              {loading && <Spinner />}
               <Button
                 rounded={5}
                 colorScheme="blue"

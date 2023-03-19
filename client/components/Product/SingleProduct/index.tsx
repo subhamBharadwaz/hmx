@@ -13,6 +13,8 @@ import {
   AccordionIcon,
   useRadioGroup,
   Button,
+  useDisclosure,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
@@ -28,6 +30,7 @@ import {
   getWishlistItems,
 } from "../../../store/services/wishlist/wishlistSlice";
 import SizeGuide from "../SizeGuide";
+import ProductImageModel from "../ProductImageModel";
 
 interface Product {
   product: IProduct;
@@ -73,6 +76,8 @@ const SingleProduct = ({ product }: Product) => {
     onChange: handleChange,
   });
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const group = getRootProps();
 
   const handleAddToBag = (productId, size) => {
@@ -83,9 +88,9 @@ const SingleProduct = ({ product }: Product) => {
   return (
     <Flex w="100%" justifyContent="space-between">
       <Box w="45%">
-        <Flex align="center" wrap="wrap" gap={5}>
+        <SimpleGrid minChildWidth={250} gap={5}>
           {product?.photos?.map((photo) => (
-            <Box key={photo?.id}>
+            <Box key={photo?.id} onClick={onOpen} cursor="zoom-in">
               <NextImage
                 src={photo?.secure_url}
                 alt={product?.name}
@@ -95,7 +100,14 @@ const SingleProduct = ({ product }: Product) => {
               />
             </Box>
           ))}
-        </Flex>
+        </SimpleGrid>
+        <Box>
+          <ProductImageModel
+            isOpen={isOpen}
+            onClose={onClose}
+            photos={product?.photos}
+          />
+        </Box>
       </Box>
       <Stack w="50%" spacing={5}>
         <Stack my={5}>
