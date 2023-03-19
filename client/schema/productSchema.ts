@@ -26,16 +26,15 @@ export const addProductSchema = z.object({
   brand: z.string().nonempty({ message: "Product brand is required" }),
   size: z.array(z.string()).nonempty({ message: "Product size is required" }),
   // TODO
-  photos: z
-    .any()
-    .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max image size is 5MB.`
-    )
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
-    ),
+  photos: z.any(),
+  // .refine(
+  //   (files) => files?.[0]?.size <= MAX_FILE_SIZE,
+  //   `Max image size is 5MB.`
+  // )
+  // .refine(
+  //   (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+  //   "Only .jpg, .jpeg, .png and .webp formats are supported."
+  // ),
   // .refine(
   //   (files) => files?.length < 2,
   //   "Minimum 2 images have to be selected"

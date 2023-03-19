@@ -35,7 +35,7 @@ export default function ImageUpload({
   const onDrop = useCallback(
     (acceptedFiles) => {
       if (
-        (!isMultiple && acceptedFiles.length > 1) ||
+        (!isMultiple && acceptedFiles.length !== 1) ||
         (isMultiple && uploadedFiles.length + acceptedFiles.length > 4)
       ) {
         // reject the selection
@@ -49,8 +49,11 @@ export default function ImageUpload({
         });
         return;
       }
-      setUploadedFiles([...uploadedFiles, ...acceptedFiles]);
-      onChange([...uploadedFiles, ...acceptedFiles]);
+      const newFiles = isMultiple
+        ? [...uploadedFiles, ...acceptedFiles]
+        : [...acceptedFiles.slice(0, 1)];
+      setUploadedFiles(newFiles);
+      onChange(newFiles);
     },
     [isMultiple, toast, uploadedFiles, onChange]
   );
@@ -63,15 +66,12 @@ export default function ImageUpload({
     multiple: isMultiple,
   });
 
-  const removeFile = (file, event) => {
+  const removeFile = (event, index: number) => {
     // to prevent opening the file manager when removing images
     event.stopPropagation();
-    const newFiles = [...uploadedFiles];
-    const index = newFiles.indexOf(file);
-    if (index > -1) {
-      newFiles.splice(index, 1);
-      setUploadedFiles(newFiles);
-    }
+    const newFiles = uploadedFiles.filter((_, i) => i !== index);
+    setUploadedFiles(newFiles);
+    onChange(newFiles);
   };
 
   const dropText = isDragActive
@@ -99,7 +99,7 @@ export default function ImageUpload({
       <input {...getInputProps()} />
       {uploadedFiles?.length > 0 ? (
         <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-          {uploadedFiles?.map((file) => (
+          {uploadedFiles?.map((file, index) => (
             <GridItem key={file.name}>
               <Box position="relative" borderRadius={4}>
                 <NextImage
@@ -119,7 +119,7 @@ export default function ImageUpload({
                   top={0}
                   right={0}
                   aria-label="Remove"
-                  onClick={(event) => removeFile(file, event)}
+                  onClick={(event) => removeFile(event, index)}
                 />
               </Box>
             </GridItem>

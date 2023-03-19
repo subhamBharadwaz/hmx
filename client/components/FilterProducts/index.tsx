@@ -62,20 +62,16 @@ const FilterProducts = ({
   const [showSizes, setShowSizes] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState([]);
 
-  const [page, setPage] = useState(1);
-
   const [showPrices, setShowPrices] = useState(false);
   const [sliderValue, setSliderValue] = useState([499, 3999]);
   const [showSort, setShowSort] = useState(false);
-
-  useEffect(() => {}, [selectedCategories, selectedGenders, selectedSizes]);
 
   const handleApplyFilters = () => {
     dispatch(
       getAllProducts({
         category: selectedCategories,
         size: selectedSizes,
-        page,
+        page: "1",
         gender: selectedGenders,
         search: searchQuery,
       })
@@ -116,7 +112,7 @@ const FilterProducts = ({
       getAllProducts({
         category: [],
         size: [],
-        page,
+        page: "1",
         gender: productGender,
       })
     );
