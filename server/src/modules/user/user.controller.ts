@@ -4,18 +4,11 @@ import crypto from 'crypto';
 import path from 'path';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
-import {cookieToken, mailHelper, isValidMongooseObjectId, WhereClause, APIError} from '../../utils';
+import {cookieToken, mailHelper, isValidMongooseObjectId, APIError} from '../../utils';
 import {HttpStatusCode} from '../../types/http.model';
 import {IUser, IGetUserAuthInfoRequest} from './user.types';
 import {CreateLoginUserInput} from './user.schema';
-import {
-	findUser,
-	findUserById,
-	registerUser,
-	resetPassword,
-	updateUser,
-	totalUsers
-} from './user.service';
+import {findUser, findUserById, registerUser, resetPassword, updateUser} from './user.service';
 import User from './user.model';
 
 /** 
@@ -387,21 +380,35 @@ export const updateUserDetailsHandler = BigPromise(
 @route   GET /api/v1/admin/users
 @access  Private
 */
+
+const roleOptions = ['admin', 'user'];
+
 export const adminAllUsersHandler = BigPromise(async (req: Request, res: Response) => {
 	const resultPerPage = 12;
 
-	const userCount = await totalUsers();
-	const usersObj = new WhereClause(User.find({}, {password: 0}), req.query).search().filter();
+	const {page = 1} = req.query as {page?: string};
+	let role = req.query.role || 'All';
+	const search = req.query.search || '';
 
-	let users = await usersObj.base;
+	// eslint-disable-next-line no-unused-expressions
+	role === 'All' ? (role = [...roleOptions]) : (role = (req.query.role as string).split(','));
 
-	const filteredUserNumber = users.length;
-	usersObj.pager(resultPerPage);
+	const filter = {
+		$or: [
+			{firstName: {$regex: search, $options: 'i'}},
+			{lastName: {$regex: search, $options: 'i'}},
+			{email: {$regex: search, $options: 'i'}},
+			{role: {$regex: search, $options: 'i'}}
+		],
+		role: {$in: role}
+	};
 
-	users = await usersObj.base.clone();
-	const pageCount = Math.ceil(userCount / resultPerPage);
-
-	res.status(200).json({success: true, users, filteredUserNumber, userCount, pageCount});
+	const [users, total] = await Promise.all([
+		User.find(filter).lean(),
+		User.countDocuments({role: {$in: role}, name: {$regex: search, $options: 'i'}})
+	]);
+	const pageCount = Math.ceil(total / resultPerPage);
+	res.status(200).json({success: true, users, total, page, pageCount});
 });
 
 /** 
