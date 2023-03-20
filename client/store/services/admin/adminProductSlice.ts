@@ -29,10 +29,28 @@ const initialState = {
 // get all products
 export const getAllProducts = createAsyncThunk(
   "admin/products",
-  async (page: number, { rejectWithValue }) => {
+  async (
+    data: {
+      category?: string | string[];
+      gender?: string | string[];
+      size?: string | string[];
+      page?: string;
+      limit?: string;
+      search?: string | string[];
+    },
+    { rejectWithValue }
+  ) => {
     try {
+      const { category, gender, size, page, limit, search } = data;
+
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/products?page=${page}`,
+        `${
+          process.env.NEXT_PUBLIC_SERVER_ENDPOINT
+        }/api/v1/admin/products?page=${page}&limit=${limit || "10"}&category=${
+          category || "All"
+        }&gender=${gender || "All"}&size=${size || "All"}&search=${
+          search || ""
+        }`,
         {
           withCredentials: true,
         }
