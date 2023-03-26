@@ -384,7 +384,7 @@ export const updateUserDetailsHandler = BigPromise(
 const roleOptions = ['admin', 'user'];
 
 export const adminAllUsersHandler = BigPromise(async (req: Request, res: Response) => {
-	const resultPerPage = 3;
+	const resultPerPage = 10;
 
 	const {page = 1} = req.query as {page?: string};
 	const parsedPage = parseInt(page as string, 10);

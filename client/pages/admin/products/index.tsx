@@ -28,7 +28,8 @@ import { IProduct } from "../../../types/product";
 import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
 import withAuth from "../../../components/HOC/withAuth";
-import AdminLayout from "../../../layout/AdminLayout";
+
+import FilterProducts from "../../../components/admin/product/FilterProducts";
 
 function Products() {
   const dispatch = useDispatch<AppDispatch>();
@@ -72,12 +73,12 @@ function Products() {
         </BreadcrumbItem>
       </Breadcrumb>
 
-      <Flex alignItems="center" justifyContent="space-between" mb={10}>
+      <Flex alignItems="center" justifyContent="space-between" mb={3}>
         <Text fontSize="3xl" fontWeight="semibold">
           Product List
         </Text>
+
         <Flex gap={5}>
-          {/* //TODO filter */}
           <NextLink href="/admin/products/create">
             <Button
               fontSize={18}
@@ -89,7 +90,18 @@ function Products() {
           </NextLink>
         </Flex>
       </Flex>
-
+      <Box mb={6}>
+        <Stack direction="row" alignItems="center" spacing={5}>
+          <Text fontSize={16} fontWeight="semibold">
+            Filter by
+          </Text>
+          <FilterProducts
+            productCategory="All"
+            productGender="All"
+            searchQuery=""
+          />
+        </Stack>
+      </Box>
       {loading ? (
         <Flex align="center" justifyContent="center">
           <Spinner
@@ -157,4 +169,4 @@ function Products() {
   );
 }
 
-export default withAuth(Products, AdminLayout);
+export default withAuth(Products);

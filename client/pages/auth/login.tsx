@@ -26,8 +26,9 @@ import { AppDispatch, RootState } from "../../store";
 import { loginUserSchema } from "../../schema/userSchema";
 import { CreateLoginUserInput } from "../../types/user";
 import { loginUser, userDetails } from "../../store/services/auth/auth-slice";
+import withAuth from "../../components/HOC/withAuth";
 
-export default function RegisterPage() {
+function LoginPage() {
   const { isAuthenticated, loading, error } = useSelector(
     (state: RootState) => state.auth
   );
@@ -161,3 +162,5 @@ export default function RegisterPage() {
     </Box>
   );
 }
+
+export default LoginPage;

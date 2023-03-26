@@ -7,6 +7,7 @@ import FilterProducts from "../FilterProducts";
 import SlideShow from "./SlideShow";
 import Categories from "./Categories";
 import TopSellingProducts from "./TopSellingProducts";
+import withAuth from "../HOC/withAuth";
 
 const Home = () => {
   const { loading, products } = useSelector(

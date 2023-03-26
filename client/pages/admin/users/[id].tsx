@@ -63,7 +63,7 @@ function SingleUserDetails() {
   );
 }
 
-export default withAuth(SingleUserDetails, AdminLayout);
+export default withAuth(SingleUserDetails);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

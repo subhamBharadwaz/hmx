@@ -49,7 +49,6 @@ const FilterProducts = ({
   searchQuery,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
 
   const [showGenders, setShowGenders] = useState(false);
   const [selectedGenders, setSelectedGenders] = useState([productGender]);
