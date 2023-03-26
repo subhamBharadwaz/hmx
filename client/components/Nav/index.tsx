@@ -12,10 +12,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
   IconButton,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -29,11 +25,18 @@ import { logoutUser } from "../../store/services/auth/auth-slice";
 import Sidebar from "../Sidebar";
 import { useRouter } from "next/router";
 import SearchInput from "../Search";
+import { AiOutlineSearch } from "react-icons/ai";
+import MobileSearch from "../Search/MobileSearch";
 
 const Nav = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: MobileIsOpen,
+    onOpen: MobileOnOpen,
+    onClose: MobileOnClose,
+  } = useDisclosure();
   const menuRef = useRef();
 
   const { user, isAuthenticated } = useSelector(
@@ -46,7 +49,7 @@ const Nav = () => {
 
   return (
     <Box
-      minW="100%"
+      w="full"
       minH="52px"
       py={5}
       pos="sticky"
@@ -58,7 +61,7 @@ const Nav = () => {
       boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;"
     >
       <Flex
-        w={["100%", "80%", "90%"]}
+        w={["95%", "95%", "90%"]}
         mx="auto"
         alignItems="center"
         justifyContent="space-between"
@@ -73,7 +76,11 @@ const Nav = () => {
         </HStack>
         <Sidebar isOpen={isOpen} onClose={onClose} menuRef={menuRef} />
 
-        <List fontSize={18} fontWeight="semibold">
+        <List
+          fontSize={18}
+          fontWeight="semibold"
+          display={["none", "none", "block"]}
+        >
           <HStack spacing={10}>
             <NextLink href="/products/men">Men</NextLink>
             <NextLink href="/products/women">Women</NextLink>
@@ -81,9 +88,9 @@ const Nav = () => {
         </List>
         <HStack>
           <List fontSize={18} fontWeight="semibold">
-            <HStack spacing={5}>
+            <HStack spacing={[1, 1, 5]}>
               {user?.role === "admin" && (
-                <ListItem>
+                <ListItem display={["none", "none", "block"]}>
                   <NextLink href="/admin/">
                     <Button fontSize={18} colorScheme="messenger">
                       Admin Dashboard
@@ -91,8 +98,18 @@ const Nav = () => {
                   </NextLink>
                 </ListItem>
               )}
-              <ListItem>
+              <ListItem display={["none", "none", "block"]}>
                 <SearchInput />
+              </ListItem>
+              <ListItem display={["block", "block", "none"]}>
+                <IconButton
+                  fontSize="2xl"
+                  variant="unstyled"
+                  aria-label="Search database"
+                  icon={<AiOutlineSearch />}
+                  onClick={MobileOnOpen}
+                />
+                <MobileSearch onClose={MobileOnClose} isOpen={MobileIsOpen} />
               </ListItem>
               <ListItem>
                 {isAuthenticated ? (
@@ -104,7 +121,7 @@ const Nav = () => {
                       aria-label="User options"
                       variant="unstyled"
                     />
-                    <MenuList fontSize="md">
+                    <MenuList fontSize="md" zIndex={100}>
                       <MenuItem>
                         <NextLink href="/my-account">My Account</NextLink>
                       </MenuItem>
