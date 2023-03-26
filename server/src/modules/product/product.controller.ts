@@ -6,7 +6,7 @@ import path from 'path';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
 import {isValidMongooseObjectId, APIError} from '../../utils';
-import {IGetUserAuthInfoRequest} from '../user/user.types';
+import {IGetUserAuthInfoRequest, IUser} from '../user/user.types';
 import {HttpStatusCode} from '../../types/http.model';
 import {
 	totalProducts,
@@ -161,12 +161,14 @@ export const handleGetToSellingProducts = BigPromise(async (req: Request, res: R
 export const addReviewHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
 		const {rating, comment, productId} = req.body;
-
+		const {firstName, lastName, email, photo}: IUser = req.user;
+		const userInfo = {firstName, lastName, email, photo: photo.secure_url};
 		const review = {
 			user: req.user._id,
-			name: req.user.name,
+			userInfo,
 			rating: Number(rating),
-			comment
+			comment,
+			date: new Date()
 		};
 		// check for if the given id is an valid objectId or not
 		isValidMongooseObjectId(productId, next);
@@ -180,8 +182,10 @@ export const addReviewHandler = BigPromise(
 		if (AlreadyReviewed) {
 			product?.reviews.forEach(rev => {
 				if (rev.user.toString() === req.user._id.toString()) {
+					rev.userInfo = userInfo;
 					rev.comment = comment;
 					rev.rating = rating;
+					rev.date = new Date();
 				}
 			});
 		} else {
@@ -198,7 +202,7 @@ export const addReviewHandler = BigPromise(
 
 		await product?.save({validateBeforeSave: false});
 
-		res.status(200).json({success: true});
+		res.status(200).json({success: true, review});
 	}
 );
 
@@ -251,7 +255,7 @@ export const getSingleProductReviewsHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response) => {
 		const product = await findProductById(req.query.id);
 
-		res.status(200).json({success: true, reviews: product?.reviews});
+		res.status(200).json({success: true, reviews: product?.reviews ? product?.reviews : []});
 	}
 );
 
