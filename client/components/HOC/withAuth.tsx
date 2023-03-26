@@ -9,7 +9,7 @@ import { useEffect } from "react";
  * * The withAuth function returns a function that takes props as an argument.
  */
 
-const withAuth = (WrappedComponent, LayoutComponent) => {
+const withAuth = (WrappedComponent) => {
   const Wrapper = (props) => {
     const router = useRouter();
     const { isAuthenticated, user, loading } = useSelector(
@@ -32,11 +32,7 @@ const withAuth = (WrappedComponent, LayoutComponent) => {
       return null;
     }
 
-    return (
-      <LayoutComponent>
-        <WrappedComponent {...props} />
-      </LayoutComponent>
-    );
+    return <WrappedComponent {...props} />;
   };
 
   /**
