@@ -46,7 +46,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FiFile } from "react-icons/fi";
 import withAuth from "../../../components/HOC/withAuth";
-import AdminLayout from "../../../layout/AdminLayout";
+
 import ImageUpload from "../../../components/ImageUpload";
 
 interface IProductSize {
@@ -421,4 +421,4 @@ function CreateProduct() {
   );
 }
 
-export default withAuth(CreateProduct, AdminLayout);
+export default withAuth(CreateProduct);

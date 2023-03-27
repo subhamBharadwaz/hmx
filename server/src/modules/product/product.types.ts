@@ -48,9 +48,15 @@ export interface IProductDocument extends Document {
 	numberOfReviews: number;
 	reviews: {
 		user: Types.ObjectId;
-		name: string;
+		userInfo: {
+			firstName: string;
+			lastName: string;
+			email: string;
+			photo: string;
+		};
 		rating: number;
-		comment: string;
+		comment?: string;
+		date: Date;
 	}[];
 	user: Types.ObjectId;
 	createdAt: Date;

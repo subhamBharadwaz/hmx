@@ -55,7 +55,7 @@ const FilterUsers = () => {
     );
   };
   return (
-    <Box zIndex={100}>
+    <Box>
       <Menu closeOnSelect={false}>
         <MenuButton
           as={Button}

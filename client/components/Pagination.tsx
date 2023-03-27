@@ -25,7 +25,7 @@ const Pagination = ({ data, action }) => {
   }, [data, setPageCount]);
 
   useEffect(() => {
-    dispatch(action(page));
+    dispatch(action({ page }));
   }, [action, dispatch, page]);
 
   /**

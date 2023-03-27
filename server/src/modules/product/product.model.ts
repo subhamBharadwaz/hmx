@@ -69,8 +69,23 @@ const ProductSchema = new Schema<IProductDocument>(
 					ref: 'User',
 					required: true
 				},
-				name: {
-					type: String
+				userInfo: {
+					firstName: {
+						type: String,
+						required: true
+					},
+					lastName: {
+						type: String,
+						required: true
+					},
+					email: {
+						type: String,
+						required: true
+					},
+					photo: {
+						type: String,
+						required: true
+					}
 				},
 				rating: {
 					type: Number,
@@ -81,8 +96,12 @@ const ProductSchema = new Schema<IProductDocument>(
 					}
 				},
 				comment: {
-					type: String,
-					required: true
+					type: String
+				},
+				date: {
+					type: Date,
+					required: true,
+					default: Date.now
 				}
 			}
 		],

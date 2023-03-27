@@ -43,7 +43,7 @@ const FilteredProducts = ({ products }: IFilterProducts) => {
 
   return (
     <SimpleGrid
-      columns={[2, null, 3]}
+      minChildWidth={200}
       spacingX="20px"
       spacingY="40px"
       as={motion.div}
@@ -58,6 +58,7 @@ const FilteredProducts = ({ products }: IFilterProducts) => {
           position="relative"
           as={motion.div}
           variants={item}
+          maxW={250}
         >
           <span
             className={

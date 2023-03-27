@@ -27,10 +27,6 @@ const TopSellingProducts = () => {
   const carousel = useRef<HTMLDivElement>(null);
   const [constraint, setConstraint] = useState(0);
 
-  useEffect(() => {
-    dispatch(getTopSellingProducts());
-  }, [dispatch]);
-
   const { loading, topSellingProducts } = useSelector(
     (state: RootState) => state.productSlice
   );

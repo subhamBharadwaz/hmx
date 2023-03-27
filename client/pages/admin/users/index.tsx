@@ -15,9 +15,10 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
 import withAuth from "../../../components/HOC/withAuth";
-import AdminLayout from "../../../layout/AdminLayout";
+
 import FilterUsers from "../../../components/admin/user/FilterUsers";
 import SearchUsers from "../../../components/admin/user/SearchUsers";
+import AdminLayout from "../../../layout/AdminLayout";
 
 function Users() {
   const { loading, users, error } = useSelector(
@@ -69,4 +70,4 @@ function Users() {
   );
 }
 
-export default withAuth(Users, AdminLayout);
+export default withAuth(Users);

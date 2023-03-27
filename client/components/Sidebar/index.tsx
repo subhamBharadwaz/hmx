@@ -11,12 +11,15 @@ import {
   Text,
   Avatar,
   HStack,
+  Box,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../store";
 import NextLink from "next/link";
 import { motion } from "framer-motion";
 import { logoutUser } from "../../store/services/auth/auth-slice";
+import styled from "@emotion/styled";
 
 const container = {
   hidden: { opacity: 0 },
@@ -38,6 +41,27 @@ const item = {
 const Sidebar = ({ isOpen, onClose, menuRef }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useSelector((state: RootState) => state.auth);
+
+  const ScrollableBox = styled(Stack)`
+    /* Customize scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: ${useColorModeValue("gray.100", "gray.800")};
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: ${useColorModeValue("gray.300", "gray.600")};
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: ${useColorModeValue("gray.400", "gray.700")};
+    }
+  `;
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -59,13 +83,26 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
         </DrawerHeader>
         <Divider />
         <DrawerBody mt={5}>
-          <Stack
+          <ScrollableBox
             spacing={5}
             as={motion.div}
             variants={container}
             initial="hidden"
             animate="show"
+            overflow="auto"
+            h="full"
           >
+            <Box display={["block", "block", "none"]}>
+              {user?.role === "admin" && (
+                <Box>
+                  <NextLink href="/admin/">
+                    <Button colorScheme="messenger" size="sm">
+                      Admin Dashboard
+                    </Button>
+                  </NextLink>
+                </Box>
+              )}
+            </Box>
             <Stack spacing={5}>
               <Text
                 fontWeight="bold"
@@ -217,7 +254,7 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
                 Logout
               </Text>
             </Stack>
-          </Stack>
+          </ScrollableBox>
         </DrawerBody>
       </DrawerContent>
     </Drawer>

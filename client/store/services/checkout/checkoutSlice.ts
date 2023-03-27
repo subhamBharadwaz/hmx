@@ -1,9 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
-import { log } from "console";
 import { IOrder } from "../../../types/order";
-import { createOrder } from "../order/orderSlice";
 
 interface ICheckout {
   loading: boolean;

@@ -7,6 +7,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  useToast,
 } from "@chakra-ui/react";
 import Script from "next/script";
 import { useSelector, useDispatch } from "react-redux";
@@ -75,7 +76,7 @@ export default function DeliveryAddress() {
     totalAmount: bagData?.totalPrice,
   };
 
-  console.log(orderDetails);
+  const toast = useToast();
 
   // Making the payment
   const makePayment = async () => {
@@ -111,8 +112,16 @@ export default function DeliveryAddress() {
               dispatch(emptyBag(bagData?._id));
               router.push(`/checkout/success`);
             })
-            .catch((err) => {
-              console.error(err);
+            .catch((error) => {
+              toast({
+                title: "Payment Failed!",
+                description:
+                  "Please try again. Contact us if the issue remains.",
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+              });
+              console.error(error);
             });
         },
 
@@ -123,6 +132,13 @@ export default function DeliveryAddress() {
       const razorpay = new (window as any).Razorpay(options);
       razorpay.open();
     } catch (error) {
+      toast({
+        title: "Payment Failed!",
+        description: "Please try again. Contact us if the issue remains.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
       console.error(error);
     }
   };

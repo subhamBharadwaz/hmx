@@ -70,4 +70,4 @@ function Orders() {
   );
 }
 
-export default withAuth(Orders, AdminLayout);
+export default withAuth(Orders);

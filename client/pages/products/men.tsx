@@ -7,6 +7,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import FilterProducts from "../../components/FilterProducts";
 import FilteredProducts from "../../components/Product/FilteredProducts";
@@ -14,11 +16,13 @@ import { useSelector } from "react-redux";
 import { RootState, wrapper } from "../../store";
 import { getAllProducts } from "../../store/services/product/productSlice";
 import NextLink from "next/link";
+import FilterProductsMobile from "../../components/FilterProductsMobile";
 
 export default function MenProducts() {
   const { products, loading } = useSelector(
     (state: RootState) => state.productSlice
   );
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -38,12 +42,24 @@ export default function MenProducts() {
         </BreadcrumbItem>
       </Breadcrumb>
       <Flex justifyContent="space-between">
-        <Box w="20%">
+        <Box w={250} mr={10} display={["none", "none", "block"]}>
           <FilterProducts
             loading={loading}
             productGender="Men"
             productCategory={undefined}
             searchQuery={undefined}
+          />
+        </Box>
+        <Box display={["block", "block", "none"]}>
+          {" "}
+          <Button onClick={onOpen}>Filter</Button>
+          <FilterProductsMobile
+            productCategory="All"
+            productGender="Men"
+            searchQuery=""
+            onClose={onClose}
+            isOpen={isOpen}
+            action={getAllProducts}
           />
         </Box>
         <Box w="75%">

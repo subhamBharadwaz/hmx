@@ -384,9 +384,10 @@ export const updateUserDetailsHandler = BigPromise(
 const roleOptions = ['admin', 'user'];
 
 export const adminAllUsersHandler = BigPromise(async (req: Request, res: Response) => {
-	const resultPerPage = 12;
+	const resultPerPage = 10;
 
 	const {page = 1} = req.query as {page?: string};
+	const parsedPage = parseInt(page as string, 10);
 	let role = req.query.role || 'All';
 	const search = req.query.search || '';
 
@@ -404,7 +405,10 @@ export const adminAllUsersHandler = BigPromise(async (req: Request, res: Respons
 	};
 
 	const [users, total] = await Promise.all([
-		User.find(filter).lean(),
+		User.find(filter)
+			.skip((parsedPage - 1) * resultPerPage)
+			.limit(resultPerPage)
+			.lean(),
 		User.countDocuments({role: {$in: role}, name: {$regex: search, $options: 'i'}})
 	]);
 	const pageCount = Math.ceil(total / resultPerPage);

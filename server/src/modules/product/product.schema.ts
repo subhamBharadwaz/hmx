@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import {RatingType} from './product.types';
 
 const MAX_FILE_SIZE = 1000000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -42,8 +43,8 @@ export type CreateProductInput = Omit<z.TypeOf<typeof addProductSchema>, 'body'>
 
 export const addProductReview = z.object({
 	body: z.object({
-		rating: z.enum(['1', '2', '3', '4', '5']),
-		comment: z.string({required_error: 'Product review is required'}),
+		rating: z.number({required_error: 'Rating is required'}).min(1).max(5),
+		comment: z.string().optional(),
 		productId: z.string({required_error: 'Product Id is required'})
 	})
 });

@@ -37,6 +37,7 @@ import {
   getSingleProduct,
   updateProduct,
 } from "../../../store/services/admin/adminProductSlice";
+import ImageUpload from "../../ImageUpload";
 
 interface Product {
   product: IProduct;
@@ -74,6 +75,7 @@ export default function UpdateProductDetails({ product }: Product) {
 
   const {
     register,
+    setValue,
     formState: { errors },
     handleSubmit,
     control,
@@ -336,21 +338,20 @@ export default function UpdateProductDetails({ product }: Product) {
 
           <Stack spacing={5} mt={10}>
             <FormControl mt={7} isInvalid={!!errors.photos}>
-              <HStack>
+              <Stack>
                 <Text as="b" fontSize={20} mr={10}>
                   Product Images
                 </Text>
-                {/* //TODO */}
-                <Input
-                  accept="image/*"
-                  id="photos"
-                  colorScheme="linkedin"
-                  type="file"
-                  multiple
+
+                <ImageUpload
                   {...register("photos")}
-                  w="auto"
+                  isMultiple={true}
+                  files={[]}
+                  onChange={(files: File[]) => {
+                    setValue("photos", files);
+                  }}
                 />
-              </HStack>
+              </Stack>
               <FormErrorMessage>
                 {errors.photos && (errors.photos as any).message}
               </FormErrorMessage>

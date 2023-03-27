@@ -47,9 +47,9 @@ const ProductImageModel = ({ isOpen, onClose, photos }) => {
   const slideIndex = wrap(0, photos?.length, page);
 
   return (
-    <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
+    <Modal size="full" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent height="100vh" overflow="hidden">
+      <ModalContent overflow="hidden">
         <ModalCloseButton zIndex={100} />
         <ModalBody>
           <AnimatePresence initial={false} custom={direction}>
