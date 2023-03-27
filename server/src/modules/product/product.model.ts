@@ -96,8 +96,7 @@ const ProductSchema = new Schema<IProductDocument>(
 					}
 				},
 				comment: {
-					type: String,
-					required: true
+					type: String
 				},
 				date: {
 					type: Date,

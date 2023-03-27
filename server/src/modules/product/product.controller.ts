@@ -16,6 +16,7 @@ import {
 	getTopSellingProducts
 } from './product.service';
 import Product from './product.model';
+import {RatingType} from './product.types';
 
 const categoryOptions: string[] = [
 	'Twill Jogger',
@@ -167,7 +168,7 @@ export const addReviewHandler = BigPromise(
 			user: req.user._id,
 			userInfo,
 			rating: Number(rating),
-			comment,
+			comment: comment && comment,
 			date: new Date()
 		};
 		// check for if the given id is an valid objectId or not
@@ -183,7 +184,7 @@ export const addReviewHandler = BigPromise(
 			product?.reviews.forEach(rev => {
 				if (rev.user.toString() === req.user._id.toString()) {
 					rev.userInfo = userInfo;
-					rev.comment = comment;
+					rev.comment = comment && comment;
 					rev.rating = rating;
 					rev.date = new Date();
 				}
@@ -195,9 +196,10 @@ export const addReviewHandler = BigPromise(
 
 		// adjust ratings
 		if (product) {
-			product.ratings =
-				product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-				product.reviews.length;
+			const ratingsSum = product.reviews.reduce((acc, item) => item.rating + acc, 0);
+			const ratingsCount = product.reviews.length;
+			const ratingsAverage = (ratingsSum / ratingsCount).toFixed(1);
+			product.ratings = parseFloat(ratingsAverage) as RatingType;
 		}
 
 		await product?.save({validateBeforeSave: false});
@@ -237,7 +239,7 @@ export const deleteReviewHandler = BigPromise(
 		// update the product
 		await updateProductById(productId, {
 			reviews,
-			ratings,
+			ratings: parseFloat(ratings.toFixed(1)) as RatingType,
 			name: req.user.name,
 			numberOfReviews
 		});

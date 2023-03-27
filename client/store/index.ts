@@ -11,6 +11,7 @@ import adminProductSlice from "./services/admin/adminProductSlice";
 import adminOrderSlice from "./services/admin/adminOrderSlice";
 import adminSalesSlice from "./services/admin/adminSalesSlice";
 import productSlice from "./services/product/productSlice";
+import reviewSlice from "./services/review/reviewSlice";
 import bagSlice from "./services/bag/bagSlice";
 import wishlistSlice from "./services/wishlist/wishlistSlice";
 import addressSlice from "./services/address/addressSlice";
@@ -29,6 +30,7 @@ const combinedReducer = combineReducers({
   adminOrderSlice,
   adminSalesSlice,
   productSlice,
+  reviewSlice,
   bagSlice,
   wishlistSlice,
   addressSlice,
@@ -175,7 +177,7 @@ const makeStore = () => {
 export type Store = ReturnType<typeof makeStore>;
 
 export type AppDispatch = Store["dispatch"];
-export type RootState = ReturnType<Store["getState"]>;
+export type RootState = ReturnType<typeof combinedReducer>;
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,

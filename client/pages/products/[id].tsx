@@ -11,7 +11,6 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import ProductImageModel from "../../components/Product/ProductImageModel";
 
 const Product = () => {
   const { loading, product, error } = useSelector(

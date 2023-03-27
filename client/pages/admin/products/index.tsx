@@ -134,7 +134,7 @@ function Products() {
 
                     <Text fontWeight="semibold">{product.name}</Text>
                     <Text color="blackAlpha.600">{product.category}</Text>
-                    <Text>{`₹ ${product.price}`}</Text>
+                    <Text fontWeight="semibold">{`₹ ${product.price}`}</Text>
                     <HStack justifyContent="space-between">
                       <NextLink
                         href="/admin/products/[id]"
@@ -142,8 +142,9 @@ function Products() {
                       >
                         <Button
                           leftIcon={<AiFillEdit />}
-                          colorScheme="telegram"
+                          colorScheme="blue"
                           variant="outline"
+                          size="sm"
                         >
                           Edit
                         </Button>
@@ -152,6 +153,7 @@ function Products() {
                         leftIcon={<AiFillDelete />}
                         colorScheme="red"
                         variant="outline"
+                        size="sm"
                         onClick={() => dispatch(deleteProduct(product._id))}
                       >
                         Delete

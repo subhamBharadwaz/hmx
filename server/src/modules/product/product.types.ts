@@ -48,7 +48,6 @@ export interface IProductDocument extends Document {
 	numberOfReviews: number;
 	reviews: {
 		user: Types.ObjectId;
-
 		userInfo: {
 			firstName: string;
 			lastName: string;
@@ -56,7 +55,7 @@ export interface IProductDocument extends Document {
 			photo: string;
 		};
 		rating: number;
-		comment: string;
+		comment?: string;
 		date: Date;
 	}[];
 	user: Types.ObjectId;
