@@ -31,6 +31,7 @@ import {
 } from "../../../store/services/wishlist/wishlistSlice";
 import SizeGuide from "../SizeGuide";
 import ProductImageModel from "../ProductImageModel";
+import Reviews from "../Reviews";
 
 interface Product {
   product: IProduct;
@@ -241,6 +242,10 @@ const SingleProduct = ({ product }: Product) => {
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
+        {/* Reviews Section*/}
+        <Stack>
+          <Reviews product={product} />
+        </Stack>
       </Stack>
     </Flex>
   );
