@@ -4,14 +4,17 @@ import {
   Box,
   Flex,
   Text,
-  Button,
   Stack,
   HStack,
   Divider,
   Badge,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
-import AddReview from "../../../Product/Reviews/AddReview";
+
+import { AiFillStar } from "react-icons/ai";
+import { BsChevronRight } from "react-icons/bs";
+
+import NextLink from "next/link";
 
 interface IOrderDetails {
   order: IOrder;
@@ -87,6 +90,40 @@ const SingleOrderDetails = ({ order }: IOrderDetails) => {
               </Box>
             ))}
           </Box>
+          <Stack
+            spacing={6}
+            border="1px"
+            borderColor="blackAlpha.300"
+            cursor="pointer"
+            px={10}
+            py={15}
+          >
+            <Text fontSize="md" fontWeight="bold" color="blackAlpha.300">
+              NEED HELP WITH YOUR ORDER?
+            </Text>
+            <NextLink href="/review-your-purchases">
+              <HStack justifyContent="space-between" alignItems="center">
+                <HStack>
+                  <Text fontSize="md" color="messenger.700">
+                    Write a Product review{" "}
+                  </Text>
+                  <HStack>
+                    <AiFillStar color="orange" />
+                    <AiFillStar color="orange" />
+                    <AiFillStar color="orange" />
+                    <AiFillStar color="orange" />
+                  </HStack>
+                </HStack>
+                <BsChevronRight />
+              </HStack>
+            </NextLink>
+            <Divider />
+            <NextLink href="#">
+              <Text fontSize="md" color="messenger.700">
+                Help and Support
+              </Text>
+            </NextLink>
+          </Stack>
         </Box>
         <Box minW="30%">
           <Box
@@ -98,7 +135,7 @@ const SingleOrderDetails = ({ order }: IOrderDetails) => {
             pos="relative"
           >
             <Stack spacing={3}>
-              <Text fontSize="sm" fontWeight="bold" color="blackAlpha.500">
+              <Text fontSize="md" fontWeight="bold" color="blackAlpha.500">
                 SHIPPING DETAILS
               </Text>
               <HStack justifyContent="space-between">
@@ -125,7 +162,7 @@ const SingleOrderDetails = ({ order }: IOrderDetails) => {
           </Box>
           <Box mx="auto" border="1px" borderColor="gray.300" pos="relative">
             <Stack p={5}>
-              <Text fontSize="sm" fontWeight="bold" color="blackAlpha.500">
+              <Text fontSize="md" fontWeight="bold" color="blackAlpha.500">
                 PAYMENT SUMMARY
               </Text>
               <HStack justifyContent="space-between">
@@ -157,7 +194,6 @@ const SingleOrderDetails = ({ order }: IOrderDetails) => {
           </Box>
         </Box>
       </Flex>
-      <AddReview orderItems={order?.orderItems} />
     </>
   );
 };

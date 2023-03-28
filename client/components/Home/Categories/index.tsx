@@ -83,7 +83,13 @@ const productCategories: IProductCategory[] = [
 const Categories = () => {
   return (
     <Box>
-      <Heading as="h2" mb={10} textTransform="uppercase" color="blackAlpha.800">
+      <Heading
+        fontSize={["xl", "xl", "4xl"]}
+        as="h2"
+        mb={10}
+        textTransform="uppercase"
+        color="blackAlpha.800"
+      >
         Categories
       </Heading>
       <SimpleGrid

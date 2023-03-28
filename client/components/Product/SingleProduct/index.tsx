@@ -87,16 +87,26 @@ const SingleProduct = ({ product }: Product) => {
   };
 
   return (
-    <Flex w="100%" justifyContent="space-between">
-      <Box w="45%">
-        <SimpleGrid minChildWidth={250} gap={5}>
+    <Flex
+      w="100%"
+      justifyContent="space-between"
+      direction={["column", "column", "row"]}
+    >
+      <Box w={["100%", "100%", "45%"]}>
+        <SimpleGrid minChildWidth={[200, 200, 250]} gap={5}>
           {product?.photos?.map((photo) => (
-            <Box key={photo?.id} onClick={onOpen} cursor="zoom-in">
+            <Box
+              key={photo?.id}
+              onClick={onOpen}
+              pos="relative"
+              cursor="zoom-in"
+              w="100%"
+              h={[250, 250, 300]}
+            >
               <NextImage
                 src={photo?.secure_url}
                 alt={product?.name}
-                width={250}
-                height={300}
+                layout="fill"
                 objectFit="cover"
               />
             </Box>
@@ -110,9 +120,9 @@ const SingleProduct = ({ product }: Product) => {
           />
         </Box>
       </Box>
-      <Stack w="50%" spacing={5}>
+      <Stack w={["100%", "100%", "50%"]} spacing={5}>
         <Stack my={5}>
-          <Text fontSize="3xl" as="b">
+          <Text fontSize={["2xl", "2xl", "3xl"]} as="b">
             {product?.name}
           </Text>
           <Text fontSize="md" fontWeight="medium" color="blackAlpha.500">

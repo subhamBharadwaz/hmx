@@ -86,9 +86,9 @@ export default function Bag() {
             mb={[10, 10, 0]}
             mr={[0, 0, "2em"]}
             display="flex"
+            flexDir="column"
             justifyContent="center"
             alignItems="center"
-            flexDir="column"
           >
             <Box position="relative" w={300} h={300}>
               <NextImage
@@ -118,10 +118,12 @@ export default function Bag() {
                 justifyContent="space-between"
                 as={motion.div}
                 variants={container}
+                direction={["column", "column", "row"]}
                 initial="hidden"
                 animate="show"
+                mb={30}
               >
-                <Box w="60%">
+                <Box w={["100%", "100%", "60%"]}>
                   {bagData?.products?.map((product) => (
                     <SingleBagItemCard
                       key={product.productId}
@@ -130,7 +132,11 @@ export default function Bag() {
                     />
                   ))}
                 </Box>
-                <Box w="35%" as={motion.div} variants={amountAnim}>
+                <Box
+                  w={["100%", "100%", " 35%"]}
+                  as={motion.div}
+                  variants={amountAnim}
+                >
                   <TotalPrice totalPrice={bagData?.totalPrice} />
                 </Box>
               </Flex>

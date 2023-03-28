@@ -4,10 +4,23 @@ import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
 
+interface ITopSellingProps {
+  quantitySold: number;
+  totalRevenue: number;
+  productId: string;
+  name: string;
+  photos: {
+    id: string;
+    secure_url: string;
+  }[];
+  price: string;
+  category: string;
+}
+
 interface IProducts {
   loading: boolean;
   products: { products: IProduct[] };
-  topSellingProducts: IProduct[];
+  topSellingProducts: ITopSellingProps[];
   product: IProduct;
   error: string | null;
 }

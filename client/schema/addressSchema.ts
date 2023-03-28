@@ -13,7 +13,7 @@ export const createAddressSchema = object({
   landMark: string().nonempty({ message: "Landmark is required" }),
   postalCode: string().nonempty({ message: "Postal Code is required" }),
   city: string().nonempty({ message: "City / District name is required" }),
-  country: string().nonempty({ message: "Country name is required" }),
+  country: string().default("India"),
   state: string().nonempty({ message: "State name is required" }),
   phoneNumber: string().nonempty({ message: "Phone Number  is required" }),
 });

@@ -66,7 +66,7 @@ export default function Wishlist() {
           <BreadcrumbLink>Wishlist</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
-      <Box my="5%">
+      <Box mb={[40, 40, 10]}>
         {loading ? (
           <Box padding="6" boxShadow="lg" bg="white">
             <SkeletonCircle size="10" />
@@ -77,7 +77,7 @@ export default function Wishlist() {
             w="100%"
             h="100%"
             mb={[10, 10, 0]}
-            mr={[0, 0, "2em"]}
+            mr={[0, 0, 2]}
             display="flex"
             justifyContent="center"
             alignItems="center"
