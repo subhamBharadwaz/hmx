@@ -128,6 +128,15 @@ form {
   font-size: 30px;
   z-index: 2;
 }
+@media only screen and (max-width: 48rem) {
+  .next,
+  .prev {
+    width: 30px;
+    height: 30px;
+
+    font-size: 15px;
+  }
+}
 
 .next {
   right: 10px;

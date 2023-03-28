@@ -93,7 +93,7 @@ const SingleBagItemCard = ({ productData, variants }: IProductData) => {
   const chakraStyles: ChakraStylesConfig = {
     input: (provided, state) => ({
       ...provided,
-      px: 3,
+      px: [0, 0, 3],
     }),
   };
 
@@ -110,14 +110,18 @@ const SingleBagItemCard = ({ productData, variants }: IProductData) => {
       <Box>
         <Flex justifyContent="space-between">
           <Box>
-            <Text fontSize="xl">{productData?.name}</Text>
-            <Text fontSize="xl" as="b">{`₹ ${productData?.price}`}</Text>
+            <Text fontSize={["lg", "lg", "xl"]}>{productData?.name}</Text>
+            <Text
+              fontSize={["lg", "lg", "xl"]}
+              as="b"
+            >{`₹ ${productData?.price}`}</Text>
             <Stack direction="row" spacing={5} mt={5}>
               <HStack>
                 <Text fontWeight="bold" fontSize="md">
                   Size:
                 </Text>
                 <RSelect
+                  size="sm"
                   chakraStyles={chakraStyles}
                   name="size"
                   placeholder="Size:"
@@ -142,11 +146,12 @@ const SingleBagItemCard = ({ productData, variants }: IProductData) => {
                   }}
                 />
               </HStack>
-              <HStack>
+              <HStack pos="relative">
                 <Text fontWeight="bold" fontSize="md">
                   Quantity:
                 </Text>
                 <RSelect
+                  size="sm"
                   chakraStyles={chakraStyles}
                   name="quantity"
                   placeholder="Quantity:"
@@ -179,13 +184,13 @@ const SingleBagItemCard = ({ productData, variants }: IProductData) => {
           </Box>
         </Flex>
       </Box>
-      <Box>
+      <Box mt={[5, 5, 0]}>
         <HStack align="center" spacing={10}>
           <Button
             variant="outline"
             fontSize="sm"
-            fontWeight="bold"
-            size="lg"
+            fontWeight="semibold"
+            size={["sm", "sm", "lg"]}
             onClick={() => dispatch(deleteBagItem(productData.productId))}
           >
             REMOVE
@@ -193,8 +198,8 @@ const SingleBagItemCard = ({ productData, variants }: IProductData) => {
           <Button
             variant="outline"
             fontSize="sm"
-            fontWeight="bold"
-            size="lg"
+            fontWeight="semibold"
+            size={["sm", "sm", "lg"]}
             onClick={onOpen}
           >
             MOVE TO WISHLIST

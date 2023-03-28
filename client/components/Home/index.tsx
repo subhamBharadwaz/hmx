@@ -17,23 +17,23 @@ const Home = () => {
   return (
     <>
       <Box
-        h={["20vh", "50vh", "70vh"]}
-        mt="-5%"
-        mb={40}
+        minH={["30vh", "30vh", "75vh"]}
+        overflow="hidden"
+        mt={[0, 0, "-5%"]}
+        mb={[20, 20, 40]}
         w="100%"
         pos="relative"
-        overflow="hidden"
         display="flex"
         justifyContent="center"
         alignItems="center"
       >
         <SlideShow />
       </Box>
-      <Box mb={40}>
+      <Box mb={[20, 20, 40]}>
         <Categories />
       </Box>
 
-      <Box mb={40}>
+      <Box mb={[20, 20, 40]}>
         <TopSellingProducts />
       </Box>
     </>

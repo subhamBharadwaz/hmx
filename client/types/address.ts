@@ -1,6 +1,5 @@
 import { TypeOf } from "zod";
 import { createAddressSchema } from "../schema/addressSchema";
-import { createBagSchema } from "../schema/bagSchema";
 
 export interface IAddress {
   firstName: string;
@@ -10,7 +9,7 @@ export interface IAddress {
   landMark: string;
   postalCode: string;
   city: string;
-  country: string;
+  country?: string;
   state: string;
   phoneNumber: string;
 }

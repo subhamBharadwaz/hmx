@@ -55,16 +55,16 @@ export default function DeliveryAddress() {
 
   const orderDetails: IOrder = {
     shippingInfo: {
-      firstName: shippingAddress.firstName,
-      lastName: shippingAddress.lastName,
-      houseNo: shippingAddress.houseNo,
-      streetName: shippingAddress.streetName,
-      landMark: shippingAddress.landMark,
-      postalCode: shippingAddress.postalCode,
-      city: shippingAddress.city,
-      country: shippingAddress.country,
-      state: shippingAddress.state,
-      phoneNumber: shippingAddress.phoneNumber,
+      firstName: shippingAddress?.firstName,
+      lastName: shippingAddress?.lastName,
+      houseNo: shippingAddress?.houseNo,
+      streetName: shippingAddress?.streetName,
+      landMark: shippingAddress?.landMark,
+      postalCode: shippingAddress?.postalCode,
+      city: shippingAddress?.city,
+      country: shippingAddress?.country,
+      state: shippingAddress?.state,
+      phoneNumber: shippingAddress?.phoneNumber,
     },
     orderItems: items,
 

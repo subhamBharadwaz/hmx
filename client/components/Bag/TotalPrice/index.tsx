@@ -34,7 +34,7 @@ const TotalPrice = ({ totalPrice }) => {
           <Text size="lg" fontWeight="bold">
             Total {`₹ ${totalPrice}`}
           </Text>
-          <Button size="lg" colorScheme="messenger">
+          <Button size={["md", "md", "lg"]} colorScheme="messenger">
             <NextLink href="/checkout">PLACE ORDER</NextLink>
           </Button>
         </Flex>

@@ -54,11 +54,8 @@ const AddAddress = ({ isOpen, onClose }) => {
 
   async function onSubmit(values: CreateAddressInput) {
     dispatch(createShippingAddress(values));
-  }
-
-  function handleOnCloseButton(onClose) {
-    if (shippingAddress !== null) {
-      onClose;
+    if (!Object.keys(errors).length) {
+      onClose();
     }
   }
 
@@ -166,6 +163,8 @@ const AddAddress = ({ isOpen, onClose }) => {
                     id="country"
                     type="text"
                     rounded={5}
+                    disabled
+                    defaultValue="India"
                     placeholder="Country *"
                     {...register("country")}
                   />

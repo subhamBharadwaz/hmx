@@ -4,8 +4,8 @@ import { RootState } from "../../store";
 import { useEffect } from "react";
 
 /**
- * * The withAuth function takes two arguments: WrappedComponent and LayoutComponent.
- * * The WrappedComponent is the component that needs to be protected with authentication, and the LayoutComponent is the layout component to be used.
+ * * The withAuth function takes an argument: WrappedComponent.
+ * * The WrappedComponent is the component that needs to be protected with authentication.
  * * The withAuth function returns a function that takes props as an argument.
  */
 

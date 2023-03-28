@@ -45,7 +45,13 @@ const TopSellingProducts = () => {
 
   return (
     <>
-      <Heading as="h2" mb={10} textTransform="uppercase" color="blackAlpha.800">
+      <Heading
+        as="h2"
+        mb={10}
+        fontSize={["xl", "xl", "4xl"]}
+        textTransform="uppercase"
+        color="blackAlpha.800"
+      >
         Top Selling Products
       </Heading>
       <Box

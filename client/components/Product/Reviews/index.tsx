@@ -54,7 +54,7 @@ const Reviews = ({ product }: IProductDetails) => {
   const ratingsValues = [1, 2, 3, 4, 5];
 
   return (
-    <Box minH="100vh">
+    <Box minH="100vh" my={20}>
       <Text fontWeight="bold" fontSize="xl">
         Rating & Reviews
       </Text>
@@ -88,7 +88,7 @@ const Reviews = ({ product }: IProductDetails) => {
                       max={100}
                       colorScheme="green"
                       size="sm"
-                      width={["full", "full", "xl"]}
+                      width="full"
                     />
                     <Text color="blackAlpha.600" fontSize="sm">
                       {count}
