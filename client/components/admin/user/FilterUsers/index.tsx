@@ -44,6 +44,16 @@ const FilterUsers = () => {
     );
   };
 
+  const handleClearFilters = () => {
+    dispatch(
+      getAllUsers({
+        role: [],
+        page: "1",
+      })
+    );
+    setSelectedUserRoles([]);
+  };
+
   const handleRole = (e) => {
     const value: string = e.target.value;
     const isChecked: boolean = e.target.checked;
@@ -80,14 +90,20 @@ const FilterUsers = () => {
           <MenuDivider />
 
           <MenuItem>
-            <Button
-              size="sm"
-              colorScheme="messenger"
-              w="100%"
-              onClick={handleApplyFilters}
-            >
-              Apply Filters
-            </Button>
+            <Stack>
+              <ButtonGroup size="sm" w="100%">
+                <Button
+                  onClick={handleClearFilters}
+                  colorScheme="gray"
+                  variant="outline"
+                >
+                  Clear Filters
+                </Button>
+                <Button onClick={handleApplyFilters} colorScheme="messenger">
+                  Apply Filters
+                </Button>
+              </ButtonGroup>
+            </Stack>
           </MenuItem>
         </MenuList>
       </Menu>

@@ -8,8 +8,9 @@ import SingleOrderDetails from "../../../components/MyAccount/Order/SingleOrderD
 import { Box, HStack, Text, Button } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { BsChevronLeft } from "react-icons/bs";
+import withAuth from "../../../components/HOC/withAuth";
 
-export default function Order() {
+function Order() {
   const { loading, order } = useSelector(
     (state: RootState) => state.orderSlice
   );
@@ -30,6 +31,8 @@ export default function Order() {
     </Box>
   );
 }
+
+export default withAuth(Order);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

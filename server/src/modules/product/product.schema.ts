@@ -13,6 +13,9 @@ export const addProductSchema = z.object({
 			.string({required_error: 'Product price is required'})
 			.max(6, 'Product price should not be more than 6 digits'),
 
+		detail: z
+			.string({required_error: 'Product detail is required'})
+			.max(1000, {message: 'Do not exceed 1000 characters'}),
 		description: z
 			.string({required_error: 'Product description is required'})
 			.max(1000, {message: 'Do not exceed 1000 characters'}),

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../../store";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +26,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   HStack,
+  useToast,
   Select,
   Text,
   Stack,
@@ -33,10 +34,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { ChakraStylesConfig, Select as RSelect } from "chakra-react-select";
-import {
-  getSingleProduct,
-  updateProduct,
-} from "../../../store/services/admin/adminProductSlice";
+import "react-quill/dist/quill.snow.css";
+import { updateProduct } from "../../../store/services/admin/adminProductSlice";
 import ImageUpload from "../../ImageUpload";
 
 interface Product {
@@ -57,10 +56,17 @@ const productSizeOptions: IProductSize[] = [
   { value: "XXL", label: "XXL" },
 ];
 
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false, // Set ssr to false to make sure this component is only rendered on the client-side
+});
+
 export default function UpdateProductDetails({ product }: Product) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { loading } = useSelector(
+  const [quillDetailValue, setQuillDetailValue] = useState("");
+  const [quillDescriptionValue, setQuillDescriptionValue] = useState("");
+
+  const { loading, error, updateSuccess } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
 
@@ -73,6 +79,30 @@ export default function UpdateProductDetails({ product }: Product) {
     }),
   };
 
+  const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      toast({
+        title: "Product Updated.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [updateSuccess, toast]);
+
   const {
     register,
     setValue,
@@ -84,6 +114,7 @@ export default function UpdateProductDetails({ product }: Product) {
     defaultValues: {
       name: product.name,
       price: product.price,
+      detail: product.detail,
       description: product.description,
       category: product.category,
       gender: product.gender,
@@ -91,6 +122,11 @@ export default function UpdateProductDetails({ product }: Product) {
       stock: product.stock,
     },
   });
+
+  useEffect(() => {
+    setQuillDescriptionValue(product.description || ""); // set default value for description
+    setQuillDetailValue(product.detail || ""); // set default value for detail
+  }, [product.description, product.detail]);
 
   async function onSubmit(values: CreateProductInput) {
     const data = new FormData();
@@ -105,7 +141,8 @@ export default function UpdateProductDetails({ product }: Product) {
     data.append("brand", values.brand);
     data.append("price", values.price);
     data.append("category", values.category);
-    data.append("description", values.description);
+    data.append("detail", quillDetailValue);
+    data.append("description", quillDescriptionValue);
     data.append("gender", values.gender);
     for (const s of values.size) {
       data.append("size", s);
@@ -279,6 +316,7 @@ export default function UpdateProductDetails({ product }: Product) {
               <Controller
                 control={control}
                 name="size"
+                defaultValue={product.size}
                 render={({ field: { onChange, onBlur, value, name, ref } }) => (
                   <RSelect
                     instanceId="admin-product-size-select"
@@ -315,20 +353,80 @@ export default function UpdateProductDetails({ product }: Product) {
 
           <Stack spacing={5} mt={10}>
             <Text as="b" fontSize={20}>
+              Product Detail
+            </Text>
+
+            <FormControl mt={7} isInvalid={Boolean(errors.description)}>
+              <Controller
+                name="detail"
+                control={control}
+                rules={{ required: "Detail is required" }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <ReactQuill
+                    value={value}
+                    onBlur={onBlur}
+                    defaultValue={product.detail}
+                    onChange={(newValue) => {
+                      setQuillDetailValue(newValue);
+                      onChange(newValue);
+                    }}
+                    modules={{
+                      toolbar: [
+                        [{ header: "1" }, { header: "2" }, { font: [] }],
+                        [{ size: [] }],
+                        ["bold", "italic", "underline", "strike", "blockquote"],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        ["link", "image", "video"],
+                        ["clean"],
+                      ],
+                    }}
+                  />
+                )}
+              />
+              <FormHelperText>
+                Enter the product detail using markdown syntax. Do not exceed
+                500 characters.
+              </FormHelperText>
+              <FormErrorMessage>
+                {errors.detail && errors.detail.message}
+              </FormErrorMessage>
+            </FormControl>
+          </Stack>
+
+          <Stack spacing={5} mt={10}>
+            <Text as="b" fontSize={20}>
               Product Description
             </Text>
 
             <FormControl mt={7} isInvalid={Boolean(errors.description)}>
-              <Textarea
-                h={44}
-                size="lg"
-                {...register("description")}
-                placeholder="Write a description about the product"
-                resize="none"
+              <Controller
+                name="description"
+                control={control}
+                rules={{ required: "Description is required" }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <ReactQuill
+                    value={value}
+                    onBlur={onBlur}
+                    onChange={(newValue) => {
+                      setQuillDescriptionValue(newValue);
+                      onChange(newValue);
+                    }}
+                    modules={{
+                      toolbar: [
+                        [{ header: "1" }, { header: "2" }, { font: [] }],
+                        [{ size: [] }],
+                        ["bold", "italic", "underline", "strike", "blockquote"],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        ["link", "image", "video"],
+                        ["clean"],
+                      ],
+                    }}
+                  />
+                )}
               />
               <FormHelperText>
-                Do not exceed 500 characters when entering the product
-                description
+                Enter the product description using markdown syntax. Do not
+                exceed 500 characters.
               </FormHelperText>
               <FormErrorMessage>
                 {errors.description && errors.description.message}
@@ -347,6 +445,9 @@ export default function UpdateProductDetails({ product }: Product) {
                   {...register("photos")}
                   isMultiple={true}
                   files={[]}
+                  defaultFiles={product?.photos.map(
+                    (photo) => photo?.secure_url
+                  )}
                   onChange={(files: File[]) => {
                     setValue("photos", files);
                   }}

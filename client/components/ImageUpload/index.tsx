@@ -16,12 +16,14 @@ import NextImage from "next/image";
 interface Props {
   isMultiple: boolean;
   files?: File[];
+  defaultFiles?: string[];
   onChange: (files: File[]) => void;
 }
 
 export default function ImageUpload({
   isMultiple,
   files,
+  defaultFiles,
   onChange,
   ...props
 }: Props) {
@@ -31,6 +33,23 @@ export default function ImageUpload({
   useEffect(() => {
     setUploadedFiles(files);
   }, [files]);
+
+  useEffect(() => {
+    if (defaultFiles) {
+      const fetchAndAddDefaultFiles = async () => {
+        const defaultFileObjects = await Promise.all(
+          defaultFiles.map(async (url) => {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return new File([blob], "default-image", { type: blob.type });
+          })
+        );
+        setUploadedFiles(defaultFileObjects);
+        onChange(defaultFileObjects);
+      };
+      fetchAndAddDefaultFiles();
+    }
+  }, [defaultFiles, onChange]);
 
   const onDrop = useCallback(
     (acceptedFiles) => {

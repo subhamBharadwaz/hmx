@@ -18,6 +18,7 @@ import {
   Select,
   useToast,
   IconButton,
+  FormLabel,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -75,8 +76,6 @@ const UpdateUserDetails = ({ user }: User) => {
   });
 
   function submitHandler(values: UpdateUser) {
-    // TODO
-    // const formData = { ...values, photo: values.photo[0] };
     dispatch(updateUserDetails({ values, id: user._id }));
     if (success) {
       toast({
@@ -92,38 +91,36 @@ const UpdateUserDetails = ({ user }: User) => {
     <>
       {user && (
         <Box
-          w="80%"
-          maxH="100%"
+          w="100%"
           boxShadow="0 4px 12px rgba(0,0,0,0.05)"
           mx="auto"
           position="relative"
+          my={10}
         >
-          <Flex p="2rem">
-            <Box w="35%">
-              <WrapItem>
-                <VStack>
-                  <Avatar
-                    size="2xl"
-                    name={user.firstName}
-                    src={user.photo.secure_url}
-                  />
+          <Stack p="1em">
+            <Box w="100%" mx="auto">
+              <VStack>
+                <Avatar
+                  size="2xl"
+                  name={user.firstName}
+                  src={user.photo.secure_url}
+                />
 
-                  <Text fontSize={18} as="b">{`${capitalizeFirstLetter(
-                    user.firstName
-                  )} ${capitalizeFirstLetter(user.lastName)}`}</Text>
-                </VStack>
-              </WrapItem>
+                <Text fontSize={18} as="b">{`${capitalizeFirstLetter(
+                  user.firstName
+                )} ${capitalizeFirstLetter(user.lastName)}`}</Text>
+              </VStack>
             </Box>
 
-            <Box w="65%">
+            <Box w="100%" mt={6}>
               <form onSubmit={handleSubmit(submitHandler)}>
                 <Stack spacing={5}>
-                  <Text as="b" fontSize={18}>
+                  <Text fontSize={[16, 16, 18]} as="b">
                     Personal Information
                   </Text>
-
                   <HStack>
                     <FormControl isInvalid={Boolean(errors.firstName)}>
+                      <FormLabel>First Name</FormLabel>
                       <Input
                         id="firstName"
                         rounded={5}
@@ -137,6 +134,7 @@ const UpdateUserDetails = ({ user }: User) => {
                     </FormControl>
 
                     <FormControl mt={7} isInvalid={Boolean(errors.lastName)}>
+                      <FormLabel>Last Name</FormLabel>
                       <Input
                         id="lastName"
                         placeholder="Last Name *"
@@ -152,11 +150,8 @@ const UpdateUserDetails = ({ user }: User) => {
                 </Stack>
 
                 <Stack spacing={5} mt={10}>
-                  <Text as="b" fontSize={18}>
-                    Email Address
-                  </Text>
-
                   <FormControl mt={7} isInvalid={Boolean(errors.email)}>
+                    <FormLabel>Email Address</FormLabel>
                     <Input
                       id="email"
                       type="email"
@@ -172,11 +167,8 @@ const UpdateUserDetails = ({ user }: User) => {
                 </Stack>
 
                 <Stack spacing={5} mt={10}>
-                  <Text as="b" fontSize={18}>
-                    Mobile Number
-                  </Text>
-
                   <FormControl mt={7} isInvalid={Boolean(errors.phoneNumber)}>
+                    <FormLabel>Mobile Number</FormLabel>
                     <InputGroup>
                       <InputLeftAddon children="+91" />
                       <Input
@@ -195,11 +187,8 @@ const UpdateUserDetails = ({ user }: User) => {
                   </FormControl>
                 </Stack>
                 <Stack spacing={5} mt={10}>
-                  <Text as="b" fontSize={18}>
-                    Account Role
-                  </Text>
-
                   <FormControl mt={7} isInvalid={Boolean(errors.role)}>
+                    <FormLabel>Account Role</FormLabel>
                     <Select
                       placeholder="Select User Role"
                       fontWeight="semibold"
@@ -219,7 +208,7 @@ const UpdateUserDetails = ({ user }: User) => {
                 </Button>
               </form>
             </Box>
-          </Flex>
+          </Stack>
         </Box>
       )}
     </>

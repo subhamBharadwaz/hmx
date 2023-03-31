@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { RootState, wrapper } from "../../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState, wrapper } from "../../../store";
 
 import { getCookie } from "cookies-next";
 
@@ -29,6 +29,7 @@ function SingleProductDetails() {
   const { loading, product, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
+  const dispatch = useDispatch<AppDispatch>();
 
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth

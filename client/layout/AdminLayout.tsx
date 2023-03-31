@@ -45,9 +45,12 @@ const AdminLayout = ({ children }) => {
           alignItems="center"
           justifyContent="space-between"
         >
-          <Text fontSize="2xl" ml="8" fontWeight="bold">
-            HMX
-          </Text>
+          <NextLink href="/">
+            <Text fontSize="2xl" ml="8" fontWeight="bold" cursor="pointer">
+              HMX
+            </Text>
+          </NextLink>
+
           <HStack spacing={{ base: "0", md: "6" }}>
             <Flex alignItems={"center"}>
               <Menu>

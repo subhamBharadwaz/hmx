@@ -24,7 +24,6 @@ function Users() {
   const { loading, users, error } = useSelector(
     (state: RootState) => state.adminUserSlice
   );
-  const dispatch = useDispatch<AppDispatch>();
 
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth

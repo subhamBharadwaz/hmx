@@ -50,7 +50,7 @@ const UpdateOrder = ({ order }: IOrderData) => {
   };
 
   return (
-    <>
+    <Box my={10}>
       <Box>
         <Text
           display="inline-block"
@@ -74,8 +74,12 @@ const UpdateOrder = ({ order }: IOrderData) => {
           </span>
         </Text>
       </Box>
-      <Flex justifyContent="space-between" alignItems="flex-start">
-        <Box minW="60%">
+      <Flex
+        justifyContent="space-between"
+        direction={["column", "column", "row"]}
+        alignItems="flex-start"
+      >
+        <Box minW={["100%", "100%", "60%"]}>
           <Box border="1px" borderColor="gray.300" my={4} pos="relative">
             {order?.orderItems?.map((item, idx) => (
               <Box
@@ -144,7 +148,7 @@ const UpdateOrder = ({ order }: IOrderData) => {
             ))}
           </Box>
         </Box>
-        <Box minW="30%">
+        <Box minW={["100%", "100%", "35%"]}>
           <Box
             mx="auto"
             border="1px"
@@ -213,7 +217,7 @@ const UpdateOrder = ({ order }: IOrderData) => {
           </Box>
         </Box>
       </Flex>
-    </>
+    </Box>
   );
 };
 

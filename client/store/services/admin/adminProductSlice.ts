@@ -233,18 +233,23 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = state.products;
       state.product = null;
+      state.updateSuccess = false;
     });
     builder.addCase(getSingleProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
       if (payload.error) {
         state.error = payload.error;
       }
+      state.updateSuccess = false;
+
       state.products = state.products;
       state.product = { ...payload };
     });
     builder.addCase(getSingleProduct.rejected, (state) => {
       state.loading = true;
       state.products = state.products;
+      state.updateSuccess = false;
+
       state.product = null;
     });
 
@@ -280,9 +285,7 @@ const adminProductSlice = createSlice({
     });
     builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+
       state.products.products = state.products.products.map((product) =>
         product._id === payload.id ? payload : product
       );

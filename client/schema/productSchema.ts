@@ -15,6 +15,10 @@ export const addProductSchema = z.object({
     .string()
     .nonempty({ message: "Product price is required" })
     .max(6, "Product price should not be more than 6 digits"),
+  detail: z
+    .string()
+    .max(1000, { message: "Do not exceed 1000 characters" })
+    .nonempty({ message: "Product detail is required" }),
   description: z
     .string()
     .max(1000, { message: "Do not exceed 1000 characters" })
@@ -24,7 +28,7 @@ export const addProductSchema = z.object({
 
   stock: z.number().default(0),
   brand: z.string().nonempty({ message: "Product brand is required" }),
-  size: z.array(z.string()).nonempty({ message: "Product size is required" }),
+  size: z.array(z.string()).min(1, { message: "Product size is required" }),
   // TODO
   photos: z.any(),
   // .refine(

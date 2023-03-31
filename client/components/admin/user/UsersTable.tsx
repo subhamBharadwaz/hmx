@@ -1,4 +1,4 @@
-import React  from "react";
+import React from "react";
 import {
   TableContainer,
   Table,
@@ -16,13 +16,12 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  
 } from "@chakra-ui/react";
 
 import Link from "next/link";
 import { BsChevronDown } from "react-icons/bs";
 import { IUser } from "../../../types/user";
-import { useDispatch  } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../store";
 import { capitalizeFirstLetter } from "../../../utils/utilFunctions";
 import { deleteUser } from "../../../store/services/admin/adminUserSlice";
@@ -40,7 +39,7 @@ const UsersTable = ({ users }: Users) => {
         <Table
           variant="simple"
           size="lg"
-          fontSize={18}
+          fontSize={[16, 16, 18]}
           fontWeight="medium"
           color="black"
         >

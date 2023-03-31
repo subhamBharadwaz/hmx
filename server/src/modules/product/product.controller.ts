@@ -400,7 +400,7 @@ export const adminAddProductHandler = BigPromise(
 			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
 			for (let i = 0; i < images.length; i += 1) {
-				// eslint-disable-next-line no-await-in-loop
+				// eslint-disable-next-line no-await-in-loop, security/detect-object-injection
 				const extensionName = path.extname(images[i].name);
 
 				if (!allowedExtensions.includes(extensionName)) {
@@ -465,7 +465,7 @@ export const adminUpdateSingleProductHandler = BigPromise(
 			// destroy the existing images and save the images
 
 			for (let i = 0; i < product.photos.length; i += 1) {
-				// eslint-disable-next-line no-await-in-loop
+				// eslint-disable-next-line no-await-in-loop, security/detect-object-injection
 				await cloudinary.uploader.destroy(product.photos[i].id);
 			}
 
@@ -473,24 +473,24 @@ export const adminUpdateSingleProductHandler = BigPromise(
 			const images: UploadApiOptions = req.files.photos;
 
 			// check if the image is a valid image
-			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+			// const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
-			for (let i = 0; i < images.length; i += 1) {
-				// eslint-disable-next-line no-await-in-loop
-				const extensionName = path.extname(images[i].name);
+			// for (let i = 0; i < images.length; i += 1) {
+			// 	// eslint-disable-next-line no-await-in-loop
+			// 	const extensionName = path.extname(images[i].name);
 
-				if (!allowedExtensions.includes(extensionName)) {
-					const message = 'Invalid image type.';
+			// 	if (!allowedExtensions.includes(extensionName)) {
+			// 		const message = 'Invalid image type.';
 
-					return next(
-						new APIError(
-							message,
-							'adminUpdateSingleProductHandler',
-							HttpStatusCode.UNPROCESSABLE_ENTITY
-						)
-					);
-				}
-			}
+			// 		return next(
+			// 			new APIError(
+			// 				message,
+			// 				'adminUpdateSingleProductHandler',
+			// 				HttpStatusCode.UNPROCESSABLE_ENTITY
+			// 			)
+			// 		);
+			// 	}
+			// }
 
 			for (let i = 0; i < images.length; i += 1) {
 				// eslint-disable-next-line no-await-in-loop

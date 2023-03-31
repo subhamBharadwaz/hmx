@@ -13,6 +13,7 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  Stack,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { BsBag, BsHeart } from "react-icons/bs";
@@ -60,13 +61,14 @@ const Nav = () => {
       background="whiteAlpha.400"
       boxShadow="rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;"
     >
-      <Flex
+      <Stack
+        direction="row"
         w={["95%", "95%", "90%"]}
         mx="auto"
         alignItems="center"
         justifyContent="space-between"
       >
-        <HStack>
+        <HStack spacing={3}>
           <Text fontSize="3xl" cursor="pointer" ref={menuRef} onClick={onOpen}>
             <HiMenuAlt1 />
           </Text>
@@ -81,20 +83,18 @@ const Nav = () => {
           fontWeight="semibold"
           display={["none", "none", "block"]}
         >
-          <HStack spacing={10}>
+          <HStack spacing={5}>
             <NextLink href="/products/men">Men</NextLink>
             <NextLink href="/products/women">Women</NextLink>
           </HStack>
         </List>
-        <HStack>
-          <List fontSize={18} fontWeight="semibold">
+        <HStack spacing={3}>
+          <List fontWeight="semibold">
             <HStack spacing={[1, 1, 5]}>
               {user?.role === "admin" && (
                 <ListItem display={["none", "none", "block"]}>
                   <NextLink href="/admin/">
-                    <Button fontSize={18} colorScheme="messenger">
-                      Admin Dashboard
-                    </Button>
+                    <Button colorScheme="messenger">Admin Dashboard</Button>
                   </NextLink>
                 </ListItem>
               )}
@@ -142,7 +142,7 @@ const Nav = () => {
                     </MenuList>
                   </Menu>
                 ) : (
-                  <Button>
+                  <Button mr={5} colorScheme="messenger">
                     <NextLink href="/auth/login">Login</NextLink>
                   </Button>
                 )}
@@ -184,7 +184,7 @@ const Nav = () => {
             </HStack>
           </List>
         </HStack>
-      </Flex>
+      </Stack>
     </Box>
   );
 };

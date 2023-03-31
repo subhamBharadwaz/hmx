@@ -36,6 +36,8 @@ import {
 } from "@chakra-ui/react";
 
 import { ChakraStylesConfig, Select as RSelect } from "chakra-react-select";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import { addProductSchema } from "../../../schema/productSchema";
 import { CreateProductInput, Gender, Category } from "../../../types/product";
@@ -65,6 +67,9 @@ const productSizeOptions: IProductSize[] = [
 
 function CreateProduct() {
   const dispatch = useDispatch<AppDispatch>();
+
+  const [quillDetailValue, setQuillDetailValue] = useState("");
+  const [quillDescriptionValue, setQuillDescriptionValue] = useState("");
 
   const { loading, createSuccess, error } = useSelector(
     (state: RootState) => state.adminProductSlice
@@ -135,7 +140,8 @@ function CreateProduct() {
     data.append("brand", values.brand);
     data.append("price", values.price);
     data.append("category", values.category);
-    data.append("description", values.description);
+    data.append("detail", quillDetailValue);
+    data.append("description", quillDescriptionValue);
     data.append("gender", values.gender);
     for (const s of values.size) {
       data.append("size", s);
@@ -145,18 +151,6 @@ function CreateProduct() {
 
     dispatch(createProduct(data as CreateProductInput));
   }
-
-  // async function onSubmit(values: CreateProductInput) {
-  //   const data = new FormData();
-  //   for (let [key, value] of Object.entries(values)) {
-  //     if (Array.isArray(value)) {
-  //       return value.forEach((v) => data.append(key, v));
-  //     }
-  //     data.append(key, value);
-  //   }
-
-  //   dispatch(createProduct(data));
-  // }
 
   return (
     <>
@@ -366,19 +360,61 @@ function CreateProduct() {
         </Stack>
         <Stack spacing={5} mt={10}>
           <Text as="b" fontSize={20}>
+            Product Detail
+          </Text>
+
+          <FormControl mt={7} isInvalid={Boolean(errors.description)}>
+            <Controller
+              name="detail"
+              control={control}
+              rules={{ required: "Product Detail is required" }}
+              defaultValue=""
+              render={({ field: { onChange, onBlur, value } }) => (
+                <ReactQuill
+                  value={value}
+                  onBlur={onBlur}
+                  onChange={(newValue) => {
+                    setQuillDetailValue(newValue);
+                    onChange(newValue);
+                  }}
+                />
+              )}
+            />
+            <FormHelperText>
+              Enter the product details using markdown syntax. Do not exceed 500
+              characters.
+            </FormHelperText>
+            <FormErrorMessage>
+              {errors.description && errors.description.message}
+            </FormErrorMessage>
+          </FormControl>
+        </Stack>
+
+        <Stack spacing={5} mt={10}>
+          <Text as="b" fontSize={20}>
             Product Description
           </Text>
 
           <FormControl mt={7} isInvalid={Boolean(errors.description)}>
-            <Textarea
-              h={44}
-              size="lg"
-              {...register("description")}
-              placeholder="Write a description about the product"
-              resize="none"
+            <Controller
+              name="description"
+              control={control}
+              rules={{ required: "Description is required" }}
+              defaultValue=""
+              render={({ field: { onChange, onBlur, value } }) => (
+                <ReactQuill
+                  value={value}
+                  onBlur={onBlur}
+                  onChange={(newValue) => {
+                    setQuillDescriptionValue(newValue);
+                    onChange(newValue);
+                  }}
+                />
+              )}
             />
             <FormHelperText>
-              Do not exceed 500 characters when entering the product description
+              Enter the product description using markdown syntax. Do not exceed
+              500 characters.
             </FormHelperText>
             <FormErrorMessage>
               {errors.description && errors.description.message}

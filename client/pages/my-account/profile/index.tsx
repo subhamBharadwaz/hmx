@@ -34,6 +34,7 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Stack,
 } from "@chakra-ui/react";
 
 import { updateUserSchema } from "../../../schema/userSchema";
@@ -42,8 +43,9 @@ import { AppDispatch, RootState } from "../../../store";
 import { BsChevronLeft } from "react-icons/bs";
 import ChangePassword from "../../../components/MyAccount/Profile/ChangePassword";
 import ImageUpload from "../../../components/ImageUpload";
+import withAuth from "../../../components/HOC/withAuth";
 
-export default function Profile() {
+function Profile() {
   const { loading, user } = useSelector((state: RootState) => state.auth);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -118,7 +120,7 @@ export default function Profile() {
           </Button>
         </NextLink>
         <Box>
-          <VStack spacing={4} align="flex-start" w="full">
+          <Stack spacing={4} align="flex-start" w="full">
             <Heading size="xl">My Profile</Heading>
 
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -264,9 +266,11 @@ export default function Profile() {
                 SAVE CHANGES
               </Button>
             </form>
-          </VStack>
+          </Stack>
         </Box>
       </Box>
     </>
   );
 }
+
+export default withAuth(Profile);

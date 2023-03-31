@@ -35,6 +35,7 @@ export interface IProduct {
   _id?: string;
   name: string;
   price: string;
+  detail: string;
   description: string;
   photos: {
     id: string;

@@ -74,14 +74,14 @@ function Products() {
       </Breadcrumb>
 
       <Flex alignItems="center" justifyContent="space-between" mb={3}>
-        <Text fontSize="3xl" fontWeight="semibold">
+        <Text fontSize={["xl", "xl", "3xl"]} fontWeight="semibold">
           Product List
         </Text>
 
         <Flex gap={5}>
           <NextLink href="/admin/products/create">
             <Button
-              fontSize={18}
+              size={["sm", "sm", "md"]}
               colorScheme="messenger"
               leftIcon={<AiOutlinePlus />}
             >
@@ -91,15 +91,17 @@ function Products() {
         </Flex>
       </Flex>
       <Box mb={6}>
-        <Stack direction="row" alignItems="center" spacing={5}>
-          <Text fontSize={16} fontWeight="semibold">
+        <Stack alignItems="center" spacing={[2, 2, 5]}>
+          <Text fontSize={16} fontWeight="semibold" alignSelf="flex-start">
             Filter by
           </Text>
-          <FilterProducts
-            productCategory="All"
-            productGender="All"
-            searchQuery=""
-          />
+          <Box alignSelf="flex-start">
+            <FilterProducts
+              productCategory="All"
+              productGender="All"
+              searchQuery=""
+            />
+          </Box>
         </Stack>
       </Box>
       {loading ? (

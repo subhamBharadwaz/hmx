@@ -13,6 +13,10 @@ const ProductSchema = new Schema<IProductDocument>(
 			type: String,
 			required: [true, 'Please provide price of the product']
 		},
+		detail: {
+			type: String,
+			required: [true, 'Please provide  details of the product']
+		},
 		description: {
 			type: String,
 			required: [true, 'Please provide a description of the product']
