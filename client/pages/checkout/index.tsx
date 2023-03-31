@@ -8,6 +8,7 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   useToast,
+  Stack,
 } from "@chakra-ui/react";
 import Script from "next/script";
 import { useSelector, useDispatch } from "react-redux";
@@ -177,8 +178,12 @@ export default function DeliveryAddress() {
         </BreadcrumbItem>
       </Breadcrumb>
       <Box>
-        <Flex justifyContent="space-between">
-          <Box>
+        <Stack
+          justifyContent="space-between"
+          direction={["column", "column", "row"]}
+          spacing={5}
+        >
+          <Box minW="50%">
             <Text fontSize="lg" fontWeight="bold" mb={5}>
               Delivered To
             </Text>
@@ -200,14 +205,14 @@ export default function DeliveryAddress() {
             )}
             <AddAddressForm isOpen={isOpen} onClose={onClose} />
           </Box>
-          <Box>
+          <Box minW="40%">
             <BillingDetails
               shippingAddress={shippingAddress}
               makePayment={makePayment}
               totalPrice={bagData?.totalPrice}
             />
           </Box>
-        </Flex>
+        </Stack>
       </Box>
     </>
   );

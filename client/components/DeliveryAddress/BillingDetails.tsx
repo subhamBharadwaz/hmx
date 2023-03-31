@@ -5,7 +5,7 @@ const BillingDetails = ({ totalPrice, makePayment, shippingAddress }) => {
   const toast = useToast();
   const id = "address-toast";
   return (
-    <Box border="1px" borderColor="gray.200" py={2} minW={400}>
+    <Box border="1px" borderColor="gray.200" py={2}>
       <Box p={5} bg="blackAlpha.200" mt={-2}>
         <Text fontSize="sm" fontWeight="bold">
           BILLING DETAILS

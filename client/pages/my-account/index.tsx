@@ -12,8 +12,9 @@ import { BsChevronRight } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../store/services/auth/auth-slice";
 import { AppDispatch } from "../../store";
+import withAuth from "../../components/HOC/withAuth";
 
-export default function MyAccount() {
+function MyAccount() {
   const dispatch = useDispatch<AppDispatch>();
   return (
     <>
@@ -81,3 +82,5 @@ export default function MyAccount() {
     </>
   );
 }
+
+export default withAuth(MyAccount);

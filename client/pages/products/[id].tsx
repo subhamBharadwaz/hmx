@@ -11,6 +11,7 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useEffect } from "react";
 
 const Product = () => {
   const { loading, product, error } = useSelector(

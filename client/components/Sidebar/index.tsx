@@ -13,6 +13,7 @@ import {
   HStack,
   Box,
   useColorModeValue,
+  VStack,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../store";
@@ -40,7 +41,9 @@ const item = {
 
 const Sidebar = ({ isOpen, onClose, menuRef }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const ScrollableBox = styled(Stack)`
     /* Customize scrollbar */
@@ -72,17 +75,32 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader fontWeight="bold">
-          <HStack>
-            <Text> Hello {`${user?.firstName} ${user?.lastName}`}</Text>
-            <Avatar
-              size="md"
-              name={user?.firstName}
-              src={user?.photo?.secure_url}
-            />
-          </HStack>
+          {!isAuthenticated ? (
+            <Stack>
+              <Text>Welcome Guest</Text>
+              <Button
+                variant="unstyled"
+                alignSelf="flex-start"
+                size="lg"
+                color="blackAlpha.600"
+                onClick={onClose}
+              >
+                <NextLink href="/auth/login">Login / Register</NextLink>
+              </Button>
+            </Stack>
+          ) : (
+            <HStack>
+              <Text> Hello {`${user?.firstName} ${user?.lastName}`}</Text>
+              <Avatar
+                size="md"
+                name={user?.firstName}
+                src={user?.photo?.secure_url}
+              />
+            </HStack>
+          )}
         </DrawerHeader>
         <Divider />
-        <DrawerBody mt={5}>
+        <DrawerBody>
           <ScrollableBox
             spacing={5}
             as={motion.div}

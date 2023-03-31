@@ -13,8 +13,9 @@ import { AppDispatch, RootState } from "../../../store";
 import { getAllOrders } from "../../../store/services/order/orderSlice";
 import NextLink from "next/link";
 import { BsChevronLeft } from "react-icons/bs";
+import withAuth from "../../../components/HOC/withAuth";
 
-export default function Orders() {
+function Orders() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -74,3 +75,5 @@ export default function Orders() {
     </>
   );
 }
+
+export default withAuth(Orders);

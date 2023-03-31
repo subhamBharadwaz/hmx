@@ -21,6 +21,8 @@ import { AppDispatch, RootState } from "../../../store";
 import { createAndUpdateBagItems } from "../../../store/services/bag/bagSlice";
 import NextLink from "next/link";
 import NextImage from "next/image";
+import ReactHtmlParser from "react-html-parser";
+
 import SizeRadioCard from "./SizeRadioCard";
 
 import { BsBagCheck, BsSuitHeart, BsFillHeartFill } from "react-icons/bs";
@@ -225,30 +227,33 @@ const SingleProduct = ({ product }: Product) => {
                   textAlign="left"
                   color="blackAlpha.700"
                 >
-                  Product Description
+                  Product Detail
                 </Box>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
             <AccordionPanel pb={4} color="blackAlpha.700" lineHeight={1.7}>
-              {product?.description}
+              {ReactHtmlParser(product?.detail)}
             </AccordionPanel>
           </AccordionItem>
 
           <AccordionItem>
             <h2>
               <AccordionButton>
-                <Box as="span" flex="1" textAlign="left">
-                  Section 2 title
+                <Box
+                  as="b"
+                  flex="1"
+                  fontSize="lg"
+                  textAlign="left"
+                  color="blackAlpha.700"
+                >
+                  Product Description
                 </Box>
                 <AccordionIcon />
               </AccordionButton>
             </h2>
-            <AccordionPanel pb={4}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
+            <AccordionPanel pb={4} color="blackAlpha.700" lineHeight={1.7}>
+              {ReactHtmlParser(product?.description)}
             </AccordionPanel>
           </AccordionItem>
         </Accordion>

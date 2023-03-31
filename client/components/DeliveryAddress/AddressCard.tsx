@@ -7,7 +7,7 @@ import { removeShippingAddress } from "../../store/services/address/addressSlice
 const AddressCard = ({ shippingAddress, onOpen }) => {
   const dispatch = useDispatch<AppDispatch>();
   return (
-    <Box p={3} border="1px" borderColor="blue.400" borderRadius={5} minW={500}>
+    <Box p={3} border="1px" borderColor="blue.400" borderRadius={5}>
       <Text
         fontSize="lg"
         fontWeight="bold"
