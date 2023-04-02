@@ -37,6 +37,7 @@ export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const { isAuthenticated, loading, error } = useSelector(
     (state: RootState) => state.auth
@@ -47,7 +48,9 @@ export default function RegisterPage() {
   useEffect(() => {
     if (error) {
       toast({
-        title: error,
+        id: "register-toast",
+        title: "Unable to register.",
+        description: error,
         status: "error",
         duration: 9000,
         isClosable: true,
@@ -76,7 +79,12 @@ export default function RegisterPage() {
     data.append("photo", values.photo[0]);
 
     // @ts-ignore
-    dispatch(registerUser(data));
+    dispatch(registerUser(data))
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
   }
 
   // Redirect if logged in

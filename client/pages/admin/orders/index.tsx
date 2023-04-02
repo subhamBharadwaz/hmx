@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Spinner,
@@ -6,6 +6,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  useToast,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -21,18 +22,35 @@ import AdminLayout from "../../../layout/AdminLayout";
 
 function Orders() {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  useEffect(() => {
-    dispatch(adminGetAllOrders());
-  }, [dispatch]);
+  const toast = useToast();
 
-  const { orders, order, error, message, loading } = useSelector(
+  const { orders, order, error, loading } = useSelector(
     (state: RootState) => state.adminOrderSlice
   );
 
-  const { isAuthenticated, user } = useSelector(
-    (state: RootState) => state.auth
-  );
+  useEffect(() => {
+    dispatch(adminGetAllOrders())
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        id: "orders-toast",
+        title: "Order action failed.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
 
   return (
     <Box>

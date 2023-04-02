@@ -31,7 +31,7 @@ export const getRazorpayKey = createAsyncThunk(
       );
       return await res.data.razorpayApiKey;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -45,14 +45,17 @@ const checkoutSlice = createSlice({
     builder.addCase(getRazorpayKey.pending, (state) => {
       state.loading = true;
       state.razorpayKey = null;
+      state.error = null;
     });
     builder.addCase(getRazorpayKey.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.razorpayKey = payload;
+      state.error = null;
     });
-    builder.addCase(getRazorpayKey.rejected, (state) => {
+    builder.addCase(getRazorpayKey.rejected, (state, { payload }) => {
       state.loading = true;
       state.razorpayKey = null;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

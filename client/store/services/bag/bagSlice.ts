@@ -28,7 +28,7 @@ export const getBagItems = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -50,7 +50,7 @@ export const createAndUpdateBagItems = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -69,7 +69,7 @@ export const deleteBagItem = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -88,7 +88,7 @@ export const emptyBag = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -102,68 +102,66 @@ const bagSlice = createSlice({
     builder.addCase(getBagItems.pending, (state) => {
       state.loading = true;
       state.bagData = null;
+      state.error = null;
     });
     builder.addCase(getBagItems.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.bagData = { ...payload };
     });
-    builder.addCase(getBagItems.rejected, (state, payload) => {
+    builder.addCase(getBagItems.rejected, (state, { payload }) => {
       state.loading = true;
       state.bagData = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // create and update bag items
     builder.addCase(createAndUpdateBagItems.pending, (state) => {
       state.loading = true;
       state.bagData = state.bagData;
+      state.error = null;
     });
     builder.addCase(createAndUpdateBagItems.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.bagData = { ...payload };
     });
-    builder.addCase(createAndUpdateBagItems.rejected, (state) => {
+    builder.addCase(createAndUpdateBagItems.rejected, (state, { payload }) => {
       state.loading = true;
       state.bagData = state.bagData;
+      state.error = (payload as { error: string }).error;
     });
     // delete bag item
     builder.addCase(deleteBagItem.pending, (state) => {
       state.loading = true;
-
+      state.error = null;
       state.bagData = state.bagData;
     });
     builder.addCase(deleteBagItem.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.bagData = { ...payload };
     });
-    builder.addCase(deleteBagItem.rejected, (state) => {
+    builder.addCase(deleteBagItem.rejected, (state, { payload }) => {
       state.loading = true;
       state.bagData = state.bagData;
+      state.error = (payload as { error: string }).error;
     });
     // empty bag
     builder.addCase(emptyBag.pending, (state) => {
       state.loading = true;
-
+      state.error = null;
       state.bagData = state.bagData;
     });
     builder.addCase(emptyBag.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.bagData = null;
     });
-    builder.addCase(emptyBag.rejected, (state) => {
+    builder.addCase(emptyBag.rejected, (state, { payload }) => {
       state.loading = true;
       state.bagData = state.bagData;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

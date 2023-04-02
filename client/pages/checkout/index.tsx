@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -33,13 +33,33 @@ export default function DeliveryAddress() {
     (state: RootState) => state.addressSlice
   );
 
-  const { razorpayKey } = useSelector(
+  const { razorpayKey, error } = useSelector(
     (state: RootState) => state.checkoutSlice
   );
 
+  const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        id: "razorpay-toast",
+        title: "Unable to update password.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
+
   // Getting razorpay key
   useEffect(() => {
-    dispatch(getRazorpayKey());
+    dispatch(getRazorpayKey())
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
   }, [dispatch]);
 
   // Order info
@@ -76,8 +96,6 @@ export default function DeliveryAddress() {
     shippingAmount: 0,
     totalAmount: bagData?.totalPrice,
   };
-
-  const toast = useToast();
 
   // Making the payment
   const makePayment = async () => {

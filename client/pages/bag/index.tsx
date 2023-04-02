@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -10,6 +10,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  useToast,
 } from "@chakra-ui/react";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -45,6 +46,9 @@ const amountAnim = {
 
 export default function Bag() {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const toast = useToast();
 
   const { loading, bagData, error } = useSelector(
     (state: RootState) => state.bagSlice
@@ -52,7 +56,25 @@ export default function Bag() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    dispatch(getBagItems());
+    if (error) {
+      toast({
+        id: "bag-toast",
+        title: "Unable to fetch bag data.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
+
+  useEffect(() => {
+    dispatch(getBagItems())
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
   }, [dispatch]);
 
   return (

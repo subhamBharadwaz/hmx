@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Legend, Tooltip, Cell } from "recharts";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,17 +6,38 @@ import {
   adminGetSalesDataByStates,
 } from "../../../store/services/admin/adminSalesSlice";
 import { AppDispatch, RootState } from "../../../store";
-import { Text, HStack, Select, Flex, Stack } from "@chakra-ui/react";
+import { Text, HStack, Select, Flex, Stack, useToast } from "@chakra-ui/react";
 
 const SalesDataBySate = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(adminGetSalesDataByStates({}));
-  }, [dispatch]);
-
-  const { loading, salesDataByState } = useSelector(
+  const [apiError, setApiError] = useState<string | null>(null);
+  const { loading, salesDataByState, error } = useSelector(
     (state: RootState) => state.adminSalesSlice
   );
+
+  const toast = useToast();
+
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    if (error) {
+      toast({
+        id: "sales-state-toast",
+        title: "Unable to fetch sales details.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
+
+  useEffect(() => {
+    dispatch(adminGetSalesDataByStates({}))
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
+  }, [dispatch]);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 

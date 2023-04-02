@@ -39,7 +39,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async ({ req, res, params }) => {
       const token = getCookie("token", { req, res });
       const { id } = params;
-      await store.dispatch(getSingleOrder({ token, id }));
+      await store
+        .dispatch(getSingleOrder({ token, id }))
+        .unwrap()
+        .then(() => {})
+        .catch((err) => {
+          res.writeHead(302, { Location: "/404" });
+          res.end();
+        });
       return {
         props: {},
       };

@@ -8,9 +8,6 @@ interface IProducts {
   loading: boolean;
   products: { products: IProduct[] };
   product: IProduct;
-  createSuccess: boolean;
-  updateSuccess: boolean;
-  deleteSuccess: boolean;
   error: string | null;
 }
 
@@ -20,9 +17,6 @@ const initialState = {
     products: [],
   },
   product: {},
-  createSuccess: false,
-  updateSuccess: false,
-  deleteSuccess: false,
   error: null,
 } as IProducts;
 
@@ -57,7 +51,7 @@ export const getAllProducts = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -75,7 +69,7 @@ export const getAllFilteredProducts = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -101,7 +95,7 @@ export const getSingleProduct = createAsyncThunk(
       );
       return await res.data.product;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -128,7 +122,7 @@ export const createProduct = createAsyncThunk(
       );
       return await res.data.product;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -159,7 +153,7 @@ export const updateProduct = createAsyncThunk(
       );
       return await res.data.product;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -178,7 +172,7 @@ export const deleteProduct = createAsyncThunk(
       );
       return id;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -193,19 +187,18 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = null;
       state.product = null;
+      state.error = null;
     });
     builder.addCase(getAllProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
       state.products = { ...payload };
       state.product = null;
     });
-    builder.addCase(getAllProducts.rejected, (state) => {
+    builder.addCase(getAllProducts.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = null;
       state.product = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // filtered products
@@ -213,19 +206,19 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = null;
       state.product = null;
+      state.error = null;
     });
     builder.addCase(getAllFilteredProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.products = { ...payload };
       state.product = null;
     });
-    builder.addCase(getAllFilteredProducts.rejected, (state) => {
+    builder.addCase(getAllFilteredProducts.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = null;
       state.product = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // single product
@@ -233,23 +226,18 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = state.products;
       state.product = null;
-      state.updateSuccess = false;
+      state.error = null;
     });
     builder.addCase(getSingleProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
-      state.updateSuccess = false;
-
+      state.error = null;
       state.products = state.products;
       state.product = { ...payload };
     });
-    builder.addCase(getSingleProduct.rejected, (state) => {
+    builder.addCase(getSingleProduct.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = state.products;
-      state.updateSuccess = false;
-
+      state.error = (payload as { error: string }).error;
       state.product = null;
     });
 
@@ -258,22 +246,21 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = state.products;
       state.product = state.product;
-      state.createSuccess = false;
+      state.error = null;
     });
     builder.addCase(createProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+
+      state.error = null;
+
       state.products = state.products;
       state.product = { ...payload };
-      state.createSuccess = true;
     });
-    builder.addCase(createProduct.rejected, (state) => {
+    builder.addCase(createProduct.rejected, (state, payload) => {
       state.loading = true;
       state.products = state.products;
       state.product = null;
-      state.createSuccess = false;
+      state.error = (payload as { error: string }).error;
     });
 
     // update product
@@ -281,7 +268,7 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = state.products;
       state.product = state.product;
-      state.updateSuccess = false;
+      state.error = null;
     });
     builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
@@ -290,40 +277,32 @@ const adminProductSlice = createSlice({
         product._id === payload.id ? payload : product
       );
       state.product = payload;
-      state.updateSuccess = true;
     });
-    builder.addCase(updateProduct.rejected, (state) => {
+    builder.addCase(updateProduct.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = state.products;
       state.product = state.product;
-      state.updateSuccess = false;
+      state.error = (payload as { error: string }).error;
     });
 
     // delete product
     builder.addCase(deleteProduct.pending, (state) => {
       state.loading = true;
       state.products = state.products;
-
-      state.deleteSuccess = false;
+      state.error = null;
     });
     builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
-      // @ts-ignore
-      if (payload.error) {
-        // @ts-ignore
-
-        state.error = payload.error;
-      }
+      state.error = null;
       state.products.products = state.products.products.filter(
         (product) => product._id !== payload
       );
-      state.deleteSuccess = true;
     });
-    builder.addCase(deleteProduct.rejected, (state) => {
+    builder.addCase(deleteProduct.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = state.products;
 
-      state.deleteSuccess = false;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

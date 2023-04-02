@@ -28,7 +28,7 @@ export const getWishlistItems = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -47,7 +47,7 @@ export const createWishlist = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -66,7 +66,7 @@ export const deleteWishlistItem = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -80,51 +80,51 @@ const wishlistSlice = createSlice({
     builder.addCase(getWishlistItems.pending, (state) => {
       state.loading = true;
       state.wishlistData = null;
+      state.error = null;
     });
     builder.addCase(getWishlistItems.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.wishlistData = { ...payload };
     });
-    builder.addCase(getWishlistItems.rejected, (state) => {
+    builder.addCase(getWishlistItems.rejected, (state, { payload }) => {
       state.loading = true;
       state.wishlistData = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // create wishlist
     builder.addCase(createWishlist.pending, (state) => {
       state.loading = true;
       state.wishlistData = state.wishlistData;
+      state.error = null;
     });
     builder.addCase(createWishlist.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.wishlistData = { ...payload };
     });
-    builder.addCase(createWishlist.rejected, (state) => {
+    builder.addCase(createWishlist.rejected, (state, { payload }) => {
       state.loading = true;
       state.wishlistData = state.wishlistData;
+      state.error = (payload as { error: string }).error;
     });
 
     // delete wishlist Item
     builder.addCase(deleteWishlistItem.pending, (state) => {
       state.loading = true;
       state.wishlistData = state.wishlistData;
+      state.error = null;
     });
     builder.addCase(deleteWishlistItem.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.wishlistData = { ...payload };
     });
-    builder.addCase(deleteWishlistItem.rejected, (state) => {
+    builder.addCase(deleteWishlistItem.rejected, (state, { payload }) => {
       state.loading = true;
       state.wishlistData = state.wishlistData;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

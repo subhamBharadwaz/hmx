@@ -27,19 +27,38 @@ import withAuth from "../../components/HOC/withAuth";
 function ReviewPurchases() {
   const dispatch = useDispatch<AppDispatch>();
 
+  const [apiError, setApiError] = useState<string | null>(null);
   const [rating, setRating] = useState({});
   const [comment, setComment] = useState("");
   const [selectedOrderItem, setSelectedOrderItem] = useState(null);
   const [showDetails, setShowDetails] = useState({});
-
-  useEffect(() => {
-    dispatch(getAllOrders());
-  }, [dispatch]);
-
-  const { orders } = useSelector((state: RootState) => state.orderSlice);
-  const { loading } = useSelector((state: RootState) => state.reviewSlice);
+  const { orders, error } = useSelector((state: RootState) => state.orderSlice);
 
   const toast = useToast();
+
+  useEffect(() => {
+    dispatch(getAllOrders())
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        id: "error-toast",
+        title: "Unable to fetch all orders.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
+
+  const { loading } = useSelector((state: RootState) => state.reviewSlice);
 
   const handleOrderItemClick = (orderItem) => {
     if (selectedOrderItem === orderItem) {

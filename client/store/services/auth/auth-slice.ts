@@ -74,7 +74,7 @@ export const registerUser = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -96,7 +96,7 @@ export const loginUser = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -115,7 +115,7 @@ export const logoutUser = createAsyncThunk(
       localStorage.removeItem("token");
       localStorage.removeItem("auth");
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -137,7 +137,7 @@ export const updateUserDetails = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -159,7 +159,7 @@ export const updateUserPassword = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -172,60 +172,55 @@ const authSlice = createSlice({
     // get user details
     builder.addCase(userDetails.pending, (state) => {
       state.loading = true;
-
+      state.error = null;
       state.token = null;
       state.user = null;
     });
     builder.addCase(userDetails.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
-      if (payload.error) {
-        state.error = payload.error;
-        state.isAuthenticated = false;
-      }
+      state.error = null;
       state.token = tokenFromLocalStorage;
       state.user = { ...payload.user };
     });
-    builder.addCase(userDetails.rejected, (state, payload) => {
+    builder.addCase(userDetails.rejected, (state, { payload }) => {
       state.isAuthenticated = false;
       state.loading = true;
       state.token = null;
       state.user = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // update user details
     builder.addCase(updateUserDetails.pending, (state) => {
       state.loading = true;
-
-      state.user = state.user;
+      state.error = null;
     });
     builder.addCase(updateUserDetails.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
       state.user = payload.user;
+      state.error = null;
     });
-    builder.addCase(updateUserDetails.rejected, (state, payload) => {
+    builder.addCase(updateUserDetails.rejected, (state, { payload }) => {
       state.loading = true;
       state.user = state.user;
+      state.error = (payload as { error: string }).error;
     });
 
     // update user password
     builder.addCase(updateUserPassword.pending, (state) => {
       state.loading = true;
-      state.token = state.token;
+      state.error = null;
     });
     builder.addCase(updateUserPassword.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
       state.token = localStorage.setItem("token", payload.token);
+      state.error = null;
     });
-    builder.addCase(updateUserPassword.rejected, (state, payload) => {
+    builder.addCase(updateUserPassword.rejected, (state, { payload }) => {
       state.loading = true;
       state.token = state.token;
+      state.error = (payload as { error: string }).error;
     });
 
     // register
@@ -234,14 +229,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.token = tokenFromLocalStorage;
       state.user = null;
+      state.error = null;
     });
     builder.addCase(registerUser.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
-      if (payload.error) {
-        state.error = payload.error;
-        state.isAuthenticated = false;
-      }
+      state.error = null;
       state.token = localStorage.setItem("token", payload.token);
       state.user = { ...payload };
     });
@@ -250,6 +243,7 @@ const authSlice = createSlice({
       state.loading = true;
       state.token = null;
       state.user = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // login
@@ -258,22 +252,21 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.token = tokenFromLocalStorage;
       state.user = null;
+      state.error = null;
     });
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
-      if (payload.error) {
-        state.error = payload.error;
-        state.isAuthenticated = false;
-      }
+      state.error = null;
       state.token = localStorage.setItem("token", payload.token);
       state.user = { ...payload };
     });
-    builder.addCase(loginUser.rejected, (state) => {
+    builder.addCase(loginUser.rejected, (state, { payload }) => {
       state.isAuthenticated = false;
       state.loading = true;
       state.token = null;
       state.user = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // logout
@@ -282,18 +275,21 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.token = tokenFromLocalStorage;
       state.user = state.user;
+      state.error = null;
     });
     builder.addCase(logoutUser.fulfilled, (state) => {
       state.loading = false;
       state.isAuthenticated = false;
       state.token = null;
       state.user = null;
+      state.error = null;
     });
-    builder.addCase(logoutUser.rejected, (state) => {
+    builder.addCase(logoutUser.rejected, (state, { payload }) => {
       state.isAuthenticated = true;
       state.loading = true;
       state.token = null;
       state.user = state.user;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

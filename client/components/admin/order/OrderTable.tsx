@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useToast,
 } from "@chakra-ui/react";
 
 import NextLink from "next/link";
@@ -30,6 +31,8 @@ interface IOrdersData {
 
 const OrdersTable = ({ orders }: IOrdersData) => {
   const dispatch = useDispatch<AppDispatch>();
+
+  const toast = useToast();
 
   return (
     <>
@@ -114,7 +117,20 @@ const OrdersTable = ({ orders }: IOrdersData) => {
                         </NextLink>
                         <MenuItem
                           onClick={() => {
-                            dispatch(adminDeleteSingleOrder(order?._id));
+                            dispatch(adminDeleteSingleOrder(order?._id))
+                              .unwrap()
+                              .then(() => {
+                                toast({
+                                  id: "order-delete-toast",
+                                  title: "Order deleted successfully.",
+                                  status: "success",
+                                  duration: 9000,
+                                  isClosable: true,
+                                });
+                              })
+                              .catch((error: { message: string }) => {
+                                console.error(error.message);
+                              });
                           }}
                         >
                           Delete

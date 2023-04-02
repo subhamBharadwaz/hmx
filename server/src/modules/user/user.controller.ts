@@ -341,19 +341,19 @@ export const updateUserDetailsHandler = BigPromise(
 			const file: UploadApiOptions = req.files.photo;
 
 			// check if the image is a valid image
-			const extensionName = path.extname(file.name);
-			const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+			// const extensionName = path.extname(file.name);
+			// const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
-			if (!allowedExtensions.includes(extensionName)) {
-				const message = 'Invalid image type';
-				return next(
-					new APIError(
-						message,
-						'updateUserDetailsHandler',
-						HttpStatusCode.UNPROCESSABLE_ENTITY
-					)
-				);
-			}
+			// if (!allowedExtensions.includes(extensionName)) {
+			// 	const message = 'Invalid image type';
+			// 	return next(
+			// 		new APIError(
+			// 			message,
+			// 			'updateUserDetailsHandler',
+			// 			HttpStatusCode.UNPROCESSABLE_ENTITY
+			// 		)
+			// 	);
+			// }
 
 			const result = await cloudinary.uploader.upload(file.tempFilePath, {
 				folder: config.get<string>('userImageDir'),

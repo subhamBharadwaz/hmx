@@ -33,7 +33,7 @@ function LoginPage() {
     (state: RootState) => state.auth
   );
 
-  const [registerError, setRegisterError] = useState(null);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
   const toast = useToast();
@@ -41,9 +41,11 @@ function LoginPage() {
   useEffect(() => {
     if (error) {
       toast({
-        title: error,
+        id: "error-toast",
+        title: "Unable to login.",
+        description: error,
         status: "error",
-        duration: 4000,
+        duration: 9000,
         isClosable: true,
       });
     }
@@ -62,7 +64,12 @@ function LoginPage() {
   });
 
   async function onSubmit(values: CreateLoginUserInput) {
-    dispatch(loginUser(values));
+    dispatch(loginUser(values))
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
   }
 
   const handleShowPassword = () => setShowPassword(!showPassword);

@@ -10,7 +10,6 @@ interface IUsers {
     users: IUser[];
   };
   user: IUser;
-  success: boolean;
   error: string | null;
 }
 
@@ -20,7 +19,6 @@ const initialState = {
     users: [],
   },
   user: {},
-  success: false,
   error: null,
 } as IUsers;
 
@@ -43,7 +41,7 @@ export const getAllUsers = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -69,7 +67,7 @@ export const getSingleUser = createAsyncThunk(
       );
       return await res.data.user;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -96,7 +94,7 @@ export const updateUserDetails = createAsyncThunk(
       );
       return res.data.user;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -115,7 +113,7 @@ export const deleteUser = createAsyncThunk(
       );
       return id;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -130,19 +128,19 @@ const adminUserSlice = createSlice({
       state.loading = true;
       state.users = null;
       state.user = null;
+      state.error = null;
     });
     builder.addCase(getAllUsers.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.users = { ...payload };
       state.user = null;
     });
-    builder.addCase(getAllUsers.rejected, (state) => {
+    builder.addCase(getAllUsers.rejected, (state, { payload }) => {
       state.loading = true;
       state.users = null;
       state.user = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // single user
@@ -150,19 +148,19 @@ const adminUserSlice = createSlice({
       state.loading = true;
       state.users = state.users;
       state.user = null;
+      state.error = null;
     });
     builder.addCase(getSingleUser.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.users = state.users;
       state.user = { ...payload };
     });
-    builder.addCase(getSingleUser.rejected, (state) => {
+    builder.addCase(getSingleUser.rejected, (state, { payload }) => {
       state.loading = true;
       state.users = state.users;
       state.user = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // update user details
@@ -170,49 +168,41 @@ const adminUserSlice = createSlice({
       state.loading = true;
       state.users = state.users;
       state.user = state.user;
-      state.success = false;
+      state.error = null;
     });
     builder.addCase(updateUserDetails.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.users.users = state.users.users.map((user) =>
         user._id === payload.id ? payload : user
       );
       state.user = payload;
-      state.success = true;
     });
-    builder.addCase(updateUserDetails.rejected, (state) => {
+    builder.addCase(updateUserDetails.rejected, (state, { payload }) => {
       state.loading = true;
       state.users = state.users;
       state.user = state.user;
-      state.success = false;
+      state.error = (payload as { error: string }).error;
     });
 
     // delete user details
     builder.addCase(deleteUser.pending, (state) => {
       state.loading = true;
       state.users = state.users;
-      state.success = false;
+      state.error = null;
     });
     builder.addCase(deleteUser.fulfilled, (state, { payload }) => {
       state.loading = false;
-      // @ts-ignore
-      if (payload.error) {
-        // @ts-ignore
-
-        state.error = payload.error;
-      }
+      state.error = null;
       state.users.users = state.users.users.filter(
         (user) => user._id !== payload
       );
-      state.success = true;
     });
-    builder.addCase(deleteUser.rejected, (state) => {
+    builder.addCase(deleteUser.rejected, (state, { payload }) => {
       state.loading = true;
       state.users = state.users;
-      state.success = false;
+
+      state.error = (payload as { error: string }).error;
     });
   },
 });

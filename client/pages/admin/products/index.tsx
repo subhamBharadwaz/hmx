@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -33,8 +33,10 @@ import FilterProducts from "../../../components/admin/product/FilterProducts";
 
 function Products() {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
+
   const router = useRouter();
-  const { loading, products, deleteSuccess, error } = useSelector(
+  const { loading, products, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
   const { isAuthenticated, user } = useSelector(
@@ -45,15 +47,18 @@ function Products() {
   const toast = useToast();
 
   useEffect(() => {
-    if (deleteSuccess) {
+    if (error) {
       toast({
-        title: "Product deleted.",
-        status: "success",
-        duration: 3000,
+        id: "error-toast",
+        title: "Unable to delete product.",
+        description: error,
+        status: "error",
+        duration: 9000,
         isClosable: true,
       });
     }
-  }, [deleteSuccess, toast]);
+  }, [error, toast]);
+
   return (
     <Box>
       <Breadcrumb
@@ -156,7 +161,22 @@ function Products() {
                         colorScheme="red"
                         variant="outline"
                         size="sm"
-                        onClick={() => dispatch(deleteProduct(product._id))}
+                        onClick={() =>
+                          dispatch(deleteProduct(product._id))
+                            .unwrap()
+                            .then(() => {
+                              toast({
+                                id: "product-delete-toast",
+                                title: "Product deleted successfully.",
+                                status: "success",
+                                duration: 9000,
+                                isClosable: true,
+                              });
+                            })
+                            .catch((error: { message: string }) => {
+                              setApiError(error.message);
+                            })
+                        }
                       >
                         Delete
                       </Button>

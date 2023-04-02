@@ -48,6 +48,7 @@ export const reducer = (
       auth: {
         loading: state.auth.loading,
         token: state.auth.token,
+        error: action.payload.auth.error,
         isAuthenticated: state.auth.isAuthenticated,
         user: {
           ...state.auth.user,
@@ -56,7 +57,6 @@ export const reducer = (
       },
       adminUserSlice: {
         loading: state.adminUserSlice.loading,
-        success: state.adminUserSlice.success,
         error: action.payload.adminUserSlice.error,
         users: {
           ...state.adminUserSlice.users,
@@ -69,9 +69,6 @@ export const reducer = (
       },
       adminProductSlice: {
         loading: state.adminProductSlice.loading,
-        createSuccess: state.adminProductSlice.createSuccess,
-        updateSuccess: state.adminProductSlice.updateSuccess,
-        deleteSuccess: state.adminProductSlice.deleteSuccess,
         error: action.payload.adminProductSlice.error,
         products: {
           ...state.adminProductSlice.products,

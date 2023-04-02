@@ -64,7 +64,7 @@ export const getAllProducts = createAsyncThunk(
 
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -83,7 +83,7 @@ export const getTopSellingProducts = createAsyncThunk(
 
       return await res.data.products;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -101,7 +101,7 @@ export const getSingleProduct = createAsyncThunk(
       );
       return await res.data.product;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -116,54 +116,57 @@ const productSlice = createSlice({
       state.loading = true;
       state.products = null;
       state.product = state.product;
+      state.error = null;
     });
     builder.addCase(getAllProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.products = payload;
       state.product = state.product;
     });
-    builder.addCase(getAllProducts.rejected, (state) => {
+    builder.addCase(getAllProducts.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = null;
       state.product = state.product;
+      state.error = (payload as { error: string }).error;
     });
 
     // all products
     builder.addCase(getTopSellingProducts.pending, (state) => {
       state.loading = true;
       state.topSellingProducts = [];
+      state.error = null;
     });
     builder.addCase(getTopSellingProducts.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.topSellingProducts = [...payload];
     });
-    builder.addCase(getTopSellingProducts.rejected, (state) => {
+    builder.addCase(getTopSellingProducts.rejected, (state, { paylaod }) => {
       state.loading = true;
       state.products = null;
       state.topSellingProducts = [];
+      state.error = (payload as { error: string }).error;
     });
 
     // single product
     builder.addCase(getSingleProduct.pending, (state) => {
       state.loading = true;
       state.products = state.products;
+      state.error = null;
       state.product = null;
     });
     builder.addCase(getSingleProduct.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.products = state.products;
+      state.error = null;
       state.product = { ...payload };
     });
-    builder.addCase(getSingleProduct.rejected, (state) => {
+    builder.addCase(getSingleProduct.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = state.products;
       state.product = null;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

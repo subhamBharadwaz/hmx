@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    dispatch(userDetails());
+    // dispatch(userDetails());
   }, [dispatch]);
   useEffect(() => {
     dispatch(getBagItems());
