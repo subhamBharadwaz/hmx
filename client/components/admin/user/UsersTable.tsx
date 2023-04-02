@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   TableContainer,
   Table,
@@ -16,13 +16,14 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  useToast,
 } from "@chakra-ui/react";
 
 import Link from "next/link";
 import { BsChevronDown } from "react-icons/bs";
 import { IUser } from "../../../types/user";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store";
 import { capitalizeFirstLetter } from "../../../utils/utilFunctions";
 import { deleteUser } from "../../../store/services/admin/adminUserSlice";
 
@@ -32,6 +33,24 @@ interface Users {
 
 const UsersTable = ({ users }: Users) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const { error } = useSelector((state: RootState) => state.adminUserSlice);
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        id: "admin-user-delete-toast",
+        title: "Unable to delete user .",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
 
   return (
     <>
@@ -92,7 +111,20 @@ const UsersTable = ({ users }: Users) => {
                         </Link>
                         <MenuItem
                           onClick={() => {
-                            dispatch(deleteUser(user._id));
+                            dispatch(deleteUser(user._id))
+                              .unwrap()
+                              .then(() => {
+                                toast({
+                                  id: "user-delete-toast",
+                                  title: "User deleted successfully.",
+                                  status: "success",
+                                  duration: 9000,
+                                  isClosable: true,
+                                });
+                              })
+                              .catch((error: { message: string }) => {
+                                setApiError(error.message);
+                              });
                           }}
                         >
                           Delete

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-children-prop */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -41,24 +41,26 @@ interface User {
 
 const UpdateUserDetails = ({ user }: User) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  const { loading, success } = useSelector(
+  const { loading, error } = useSelector(
     (state: RootState) => state.adminUserSlice
   );
 
-  // TODO - multiple toasts are popping because of success:true
   // Toast
   const toast = useToast();
-  // useEffect(() => {
-  //   if (success) {
-  //     toast({
-  //       title: "User updated successfully.",
-  //       status: "success",
-  //       duration: 3000,
-  //       isClosable: true,
-  //     });
-  //   }
-  // }, [success]);
+  useEffect(() => {
+    if (error) {
+      toast({
+        id: "admin-user-update-toast",
+        title: "Unable to update user details.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
 
   const {
     register,
@@ -76,15 +78,20 @@ const UpdateUserDetails = ({ user }: User) => {
   });
 
   function submitHandler(values: UpdateUser) {
-    dispatch(updateUserDetails({ values, id: user._id }));
-    if (success) {
-      toast({
-        title: "User updated successfully.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
+    dispatch(updateUserDetails({ values, id: user._id }))
+      .unwrap()
+      .then(() => {
+        toast({
+          id: "user-update-toast",
+          title: "User updated successfully.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      })
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
       });
-    }
   }
 
   return (

@@ -10,7 +10,6 @@ interface IOrderData {
   orders: IOrder[];
   order: IOrder;
   error: string | null;
-  message: string;
 }
 
 const initialState = {
@@ -18,7 +17,6 @@ const initialState = {
   orders: [],
   order: null,
   error: null,
-  message: null,
 } as IOrderData;
 
 export const adminGetAllOrders = createAsyncThunk(
@@ -57,7 +55,7 @@ export const adminGetSingleOrder = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -80,7 +78,7 @@ export const adminUpdateSingleOrder = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -97,7 +95,7 @@ export const adminDeleteSingleOrder = createAsyncThunk(
       );
       return id;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -111,17 +109,17 @@ const adminOrderSlice = createSlice({
     builder.addCase(adminGetAllOrders.pending, (state) => {
       state.loading = true;
       state.orders = [];
+      state.error = null;
     });
     builder.addCase(adminGetAllOrders.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.orders = [...payload.orders];
     });
-    builder.addCase(adminGetAllOrders.rejected, (state) => {
+    builder.addCase(adminGetAllOrders.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = [];
+      state.error = (payload as { error: string }).error;
     });
 
     // get single order
@@ -129,19 +127,19 @@ const adminOrderSlice = createSlice({
       state.loading = true;
       state.orders = state.orders;
       state.order = null;
+      state.error = null;
     });
     builder.addCase(adminGetSingleOrder.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.orders = state.orders;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.order = { ...payload.order };
     });
-    builder.addCase(adminGetSingleOrder.rejected, (state) => {
+    builder.addCase(adminGetSingleOrder.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = state.orders;
       state.order = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // update order
@@ -149,36 +147,33 @@ const adminOrderSlice = createSlice({
       state.loading = true;
       state.orders = null;
       state.order = state.order;
+      state.error = null;
     });
     builder.addCase(adminUpdateSingleOrder.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.orders = state.orders;
-      if (payload.error) {
-        state.error = payload.error;
-      }
       state.order = { ...payload.order };
     });
-    builder.addCase(adminUpdateSingleOrder.rejected, (state) => {
+    builder.addCase(adminUpdateSingleOrder.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = null;
       state.order = state.order;
+      state.error = (payload as { error: string }).error;
     });
 
     // delete order
     builder.addCase(adminDeleteSingleOrder.pending, (state) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(adminDeleteSingleOrder.fulfilled, (state, { payload }) => {
       state.loading = false;
-      // @ts-ignore
-      if (payload.error) {
-        // @ts-ignore
-        state.error = payload.error;
-      }
+
       state.orders = state.orders.filter((order) => order._id !== payload);
     });
-    builder.addCase(adminDeleteSingleOrder.rejected, (state) => {
+    builder.addCase(adminDeleteSingleOrder.rejected, (state, { payload }) => {
       state.loading = false;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

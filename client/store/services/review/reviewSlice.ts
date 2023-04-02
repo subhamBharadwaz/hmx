@@ -32,7 +32,7 @@ export const getProductReviews = createAsyncThunk(
 
       return await res.data.reviews;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -52,7 +52,7 @@ export const createProductReview = createAsyncThunk(
 
       return await res.data.review;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -72,7 +72,7 @@ export const deleteProductReview = createAsyncThunk(
 
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -86,46 +86,46 @@ const reviewSlice = createSlice({
     builder.addCase(getProductReviews.pending, (state) => {
       state.loading = true;
       state.reviews = null;
+      state.error = null;
     });
     builder.addCase(getProductReviews.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.reviews = [...payload];
     });
-    builder.addCase(getProductReviews.rejected, (state) => {
+    builder.addCase(getProductReviews.rejected, (state, { payload }) => {
       state.loading = true;
       state.reviews = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // create product review
     builder.addCase(createProductReview.pending, (state) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(createProductReview.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.review = payload;
     });
-    builder.addCase(createProductReview.rejected, (state) => {
+    builder.addCase(createProductReview.rejected, (state, { payload }) => {
       state.loading = true;
+      state.error = (payload as { error: string }).error;
     });
 
     // delete product review
     builder.addCase(deleteProductReview.pending, (state) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(deleteProductReview.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
     });
-    builder.addCase(deleteProductReview.rejected, (state) => {
+    builder.addCase(deleteProductReview.rejected, (state, { payload }) => {
       state.loading = true;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

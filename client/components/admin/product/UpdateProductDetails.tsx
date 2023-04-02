@@ -26,12 +26,12 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   HStack,
-  useToast,
   Select,
   Text,
   Stack,
   Progress,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { ChakraStylesConfig, Select as RSelect } from "chakra-react-select";
 import "react-quill/dist/quill.snow.css";
@@ -62,11 +62,12 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 
 export default function UpdateProductDetails({ product }: Product) {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const [quillDetailValue, setQuillDetailValue] = useState("");
   const [quillDescriptionValue, setQuillDescriptionValue] = useState("");
 
-  const { loading, error, updateSuccess } = useSelector(
+  const { loading, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
 
@@ -84,24 +85,15 @@ export default function UpdateProductDetails({ product }: Product) {
   useEffect(() => {
     if (error) {
       toast({
-        title: error,
+        id: "product-update-toast",
+        title: "Unable to update product details.",
+        description: error,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
     }
   }, [error, toast]);
-
-  useEffect(() => {
-    if (updateSuccess) {
-      toast({
-        title: "Product Updated.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  }, [updateSuccess, toast]);
 
   const {
     register,
@@ -152,7 +144,20 @@ export default function UpdateProductDetails({ product }: Product) {
 
     dispatch(
       updateProduct({ values: data as CreateProductInput, id: product._id })
-    );
+    )
+      .unwrap()
+      .then(() => {
+        toast({
+          id: "update-product-toast",
+          title: "Product updated successfully.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      })
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
   }
 
   return (

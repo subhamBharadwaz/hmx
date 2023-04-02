@@ -24,6 +24,7 @@ interface IOrderData {
 const UpdateOrder = ({ order }: IOrderData) => {
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const { shippingInfo, shippingAmount, orderStatus, totalAmount, taxAmount } =
     order;
@@ -45,7 +46,20 @@ const UpdateOrder = ({ order }: IOrderData) => {
       // ? This fixes the bug of getting previous value on change input... so pass e.target.value also in the dispatch
       dispatch(
         adminUpdateSingleOrder({ id: order._id, orderStatus: e.target.value })
-      );
+      )
+        .unwrap()
+        .then(() => {
+          toast({
+            id: "order-update-toast",
+            title: "Order updated successfully.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        })
+        .catch((error: { message: string }) => {
+          setApiError(error.message);
+        });
     }
   };
 

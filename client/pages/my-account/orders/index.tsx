@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,6 +6,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  useToast,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import OrderCard from "../../../components/MyAccount/Order/OrderCard";
@@ -17,12 +18,33 @@ import withAuth from "../../../components/HOC/withAuth";
 
 function Orders() {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const { orders, error } = useSelector((state: RootState) => state.orderSlice);
+
+  const toast = useToast();
 
   useEffect(() => {
-    dispatch(getAllOrders());
-  }, [dispatch]);
+    if (error) {
+      toast({
+        id: "orders-toast",
+        title: "Unable to fetch orders.",
+        description: error,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [error, toast]);
 
-  const { orders } = useSelector((state: RootState) => state.orderSlice);
+  useEffect(() => {
+    dispatch(getAllOrders())
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
+  }, [dispatch]);
 
   return (
     <>

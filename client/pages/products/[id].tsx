@@ -60,7 +60,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
     async ({ req, res, params }) => {
       const { id } = params;
-      await store.dispatch(getSingleProduct(id));
+      await store
+        .dispatch(getSingleProduct(id))
+        .unwrap()
+        .then(() => {})
+        .catch((err) => {
+          res.writeHead(302, { Location: "/404" });
+          res.end();
+        });
       return {
         props: {},
       };

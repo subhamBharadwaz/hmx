@@ -67,11 +67,12 @@ const productSizeOptions: IProductSize[] = [
 
 function CreateProduct() {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const [quillDetailValue, setQuillDetailValue] = useState("");
   const [quillDescriptionValue, setQuillDescriptionValue] = useState("");
 
-  const { loading, createSuccess, error } = useSelector(
+  const { loading, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
 
@@ -96,24 +97,15 @@ function CreateProduct() {
   useEffect(() => {
     if (error) {
       toast({
-        title: error,
+        id: "product-create-toast",
+        title: "Unable to create product.",
+        description: error,
         status: "error",
         duration: 9000,
         isClosable: true,
       });
     }
   }, [error, toast]);
-
-  useEffect(() => {
-    if (createSuccess) {
-      toast({
-        title: "Product created.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  }, [createSuccess, toast]);
 
   // react-hook-form
   const {
@@ -149,7 +141,20 @@ function CreateProduct() {
 
     data.append("stock", String(values.stock));
 
-    dispatch(createProduct(data as CreateProductInput));
+    dispatch(createProduct(data as CreateProductInput))
+      .unwrap()
+      .then(() => {
+        toast({
+          id: "success-toast",
+          title: "product created successfully.",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+        });
+      })
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
   }
 
   return (

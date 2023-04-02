@@ -32,7 +32,7 @@ export const getAllOrders = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -58,7 +58,7 @@ export const getSingleOrder = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -80,7 +80,7 @@ export const createOrder = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -94,46 +94,55 @@ const orderSlice = createSlice({
     builder.addCase(getAllOrders.pending, (state) => {
       state.loading = true;
       state.orders = [];
+      state.error = null;
     });
     builder.addCase(getAllOrders.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.orders = [...payload.orders];
+      state.error = null;
     });
-    builder.addCase(getAllOrders.rejected, (state) => {
+    builder.addCase(getAllOrders.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = [];
+      state.error = (payload as { error: string }).error;
     });
     // get single orders
     builder.addCase(getSingleOrder.pending, (state) => {
       state.loading = true;
       state.orders = state.orders;
       state.order = null;
+      state.error = null;
     });
     builder.addCase(getSingleOrder.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.orders = state.orders;
       state.order = { ...payload.order };
+      state.error = null;
     });
-    builder.addCase(getSingleOrder.rejected, (state) => {
+    builder.addCase(getSingleOrder.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = state.orders;
       state.order = null;
+      state.error = (payload as { error: string }).error;
     });
 
     // create order
     builder.addCase(createOrder.pending, (state) => {
       state.loading = true;
       state.orders = null;
+      state.error = null;
     });
     builder.addCase(createOrder.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.orders = state.orders;
       state.order = payload.order;
+      state.error = null;
     });
-    builder.addCase(createOrder.rejected, (state) => {
+    builder.addCase(createOrder.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = null;
       state.order = null;
+      state.error = (payload as { error: string }).error;
     });
   },
 });

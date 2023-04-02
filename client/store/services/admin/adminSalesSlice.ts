@@ -37,7 +37,7 @@ export const adminGetSalesData = createAsyncThunk(
       );
       return await res.data.salesData;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -58,7 +58,7 @@ export const adminGetSalesDataByStates = createAsyncThunk(
       );
       return await res.data.salesData;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );
@@ -72,39 +72,41 @@ const adminSalesSlice = createSlice({
     builder.addCase(adminGetSalesData.pending, (state) => {
       state.loading = true;
       state.salesData = [];
+      state.error = null;
     });
     builder.addCase(adminGetSalesData.fulfilled, (state, { payload }) => {
       state.loading = false;
-      if (payload.error) {
-        state.error = payload.error;
-      }
+      state.error = null;
       state.salesData = [...payload];
     });
-    builder.addCase(adminGetSalesData.rejected, (state) => {
+    builder.addCase(adminGetSalesData.rejected, (state, { payload }) => {
       state.loading = false;
       state.salesData = [];
+      state.error = (payload as { error: string }).error;
     });
 
     // get sales data by states
     builder.addCase(adminGetSalesDataByStates.pending, (state) => {
       state.loading = true;
+      state.error = null;
     });
     builder.addCase(
       adminGetSalesDataByStates.fulfilled,
       (state, { payload }) => {
         state.loading = false;
-        if (payload.error) {
-          state.error = payload.error;
-        }
+        state.error = null;
 
         state.salesDataByState = [...payload];
       }
     );
-    builder.addCase(adminGetSalesDataByStates.rejected, (state) => {
-      state.loading = false;
-
-      state.salesDataByState = [];
-    });
+    builder.addCase(
+      adminGetSalesDataByStates.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.error = (payload as { error: string }).error;
+        state.salesDataByState = [];
+      }
+    );
   },
 });
 

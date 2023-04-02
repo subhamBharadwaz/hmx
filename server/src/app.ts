@@ -90,7 +90,10 @@ async function errorMiddleware(err: BaseError, req: Request, res: Response, next
 		return;
 	}
 	await errorHandler.handleError(err);
-	res.json({error: err.message, code: err.httpCode});
+	res.status(err.httpCode).json({
+		error: err.message,
+		code: err.httpCode
+	});
 }
 
 export default app;
