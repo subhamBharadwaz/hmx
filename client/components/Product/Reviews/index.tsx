@@ -54,7 +54,7 @@ const Reviews = ({ product }: IProductDetails) => {
   const ratingsValues = [1, 2, 3, 4, 5];
 
   return (
-    <Box minH="100vh" my={20}>
+    <Box my={20}>
       <Text fontWeight="bold" fontSize="xl">
         Rating & Reviews
       </Text>

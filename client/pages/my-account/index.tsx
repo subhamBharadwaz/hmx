@@ -83,4 +83,4 @@ function MyAccount() {
   );
 }
 
-export default withAuth(MyAccount);
+export default MyAccount;

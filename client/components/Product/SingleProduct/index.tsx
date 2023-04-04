@@ -35,6 +35,8 @@ import SizeGuide from "../SizeGuide";
 import ProductImageModel from "../ProductImageModel";
 import Reviews from "../Reviews";
 
+import { getSimilarProducts } from "../../../store/services/product/productSlice";
+
 interface Product {
   product: IProduct;
 }
@@ -48,6 +50,8 @@ const SingleProduct = ({ product }: Product) => {
   const [isAlreadyAddedToWishlist, setIsAlreadyAddedToWishlist] =
     useState(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  const { products } = useSelector((state: RootState) => state.productSlice);
 
   const { loading } = useSelector((state: RootState) => state.bagSlice);
   const { wishlistData } = useSelector(

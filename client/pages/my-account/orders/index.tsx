@@ -98,4 +98,4 @@ function Orders() {
   );
 }
 
-export default withAuth(Orders);
+export default withAuth(Orders, false);

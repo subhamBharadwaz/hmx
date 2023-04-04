@@ -52,6 +52,7 @@ const FilterProducts = ({
 
   const [showGenders, setShowGenders] = useState(false);
   const [selectedGenders, setSelectedGenders] = useState([productGender]);
+  const [sortDirection, setSortDirection] = useState("");
 
   const [showCategories, setShowCategories] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([
@@ -72,7 +73,10 @@ const FilterProducts = ({
         size: selectedSizes,
         page: "1",
         gender: selectedGenders,
+        minPrice: sliderValue[0],
+        maxPrice: sliderValue[1],
         search: searchQuery,
+        sortDirection,
       })
     );
   };
@@ -113,11 +117,15 @@ const FilterProducts = ({
         size: [],
         page: "1",
         gender: productGender,
+        minPrice: 499,
+        maxPrice: 3999,
+        sortDirection: null,
       })
     );
     setSelectedCategories([]);
     setSelectedGenders([]);
     setSelectedSizes([]);
+    setSliderValue([499, 3999]);
     setShowCategories(false);
     setShowGenders(false);
     setShowSizes(false);
@@ -125,6 +133,7 @@ const FilterProducts = ({
     setShowSort(false);
   };
 
+  console.log(sortDirection);
   return (
     <Box
       as={motion.div}
@@ -284,10 +293,21 @@ const FilterProducts = ({
           {showSort && (
             <RadioGroup>
               <Stack>
-                <Radio value="1">Price - High To Low</Radio>
-                <Radio value="2"> Price - Low To High</Radio>
-                <Radio value="3">Newest</Radio>
-                <Radio value="4">Popularity</Radio>
+                <Radio
+                  value="desc"
+                  checked={sortDirection === "desc"}
+                  onChange={(e) => setSortDirection(e.target.value)}
+                >
+                  Price - High To Low
+                </Radio>
+                <Radio
+                  value="asc"
+                  checked={sortDirection === "asc"}
+                  onChange={(e) => setSortDirection(e.target.value)}
+                >
+                  {" "}
+                  Price - Low To High
+                </Radio>
               </Stack>
             </RadioGroup>
           )}

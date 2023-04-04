@@ -31,7 +31,7 @@ export const adminGetAllOrders = createAsyncThunk(
       );
       return await res.data;
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data);
     }
   }
 );

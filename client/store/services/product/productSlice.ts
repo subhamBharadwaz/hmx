@@ -19,7 +19,7 @@ interface ITopSellingProps {
 
 interface IProducts {
   loading: boolean;
-  products: { products: IProduct[] };
+  products: { products: IProduct[]; total: number };
   topSellingProducts: ITopSellingProps[];
   product: IProduct;
   error: string | null;
@@ -45,24 +45,61 @@ export const getAllProducts = createAsyncThunk(
       size?: string | string[];
       page?: string;
       limit?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      sortDirection?: string;
+      sortBy?: string;
       search?: string | string[];
     },
     { rejectWithValue }
   ) => {
-    const { category, gender, size, page, limit, search } = data;
+    const {
+      category,
+      gender,
+      size,
+      page,
+      limit,
+      search,
+      minPrice,
+      maxPrice,
+      sortDirection,
+      sortBy,
+    } = data;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products?page=${
           page || "1"
-        }&limit=${limit || "6"}&category=${category || "All"}&gender=${
+        }&limit=${limit || 12}&category=${category || "All"}&gender=${
           gender || "All"
-        }&size=${size || "All"}&search=${search || ""}`,
+        }&size=${size || "All"}&minPrice=${minPrice || 499}&maxPrice=${
+          maxPrice || 3999
+        }&sortDirection=${sortDirection}&sortBy=${sortBy || "price"}&search=${
+          search || ""
+        }`,
         {
           withCredentials: true,
         }
       );
 
       return await res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+// get similar products
+export const getSimilarProducts = createAsyncThunk(
+  "/products/similarProducts",
+  async (category: string, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products?category=${category}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return await res.data.products;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -131,7 +168,27 @@ const productSlice = createSlice({
       state.error = (payload as { error: string }).error;
     });
 
-    // all products
+    // get similar products
+    builder.addCase(getSimilarProducts.pending, (state) => {
+      state.loading = true;
+      state.products = null;
+      state.product = state.product;
+      state.error = null;
+    });
+    builder.addCase(getSimilarProducts.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.error = null;
+      state.products = payload;
+      state.product = state.product;
+    });
+    builder.addCase(getSimilarProducts.rejected, (state, { payload }) => {
+      state.loading = true;
+      state.products = null;
+      state.product = state.product;
+      state.error = (payload as { error: string }).error;
+    });
+
+    // top selling products
     builder.addCase(getTopSellingProducts.pending, (state) => {
       state.loading = true;
       state.topSellingProducts = [];

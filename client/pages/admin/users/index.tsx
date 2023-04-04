@@ -69,4 +69,4 @@ function Users() {
   );
 }
 
-export default withAuth(Users);
+export default withAuth(Users, true);

@@ -108,7 +108,7 @@ const Categories = () => {
             as={`/products/category?q=${category.urlPrefix}`}
           >
             <Box cursor="pointer" as={motion.div} variants={item}>
-              <Box height={400} bg="white" overflow="hidden">
+              <Box height={[250, 250, 400]} bg="white" overflow="hidden">
                 <Box
                   pos="relative"
                   h="100%"

@@ -59,6 +59,7 @@ const FilterProductsMobile = ({
 
   const [showGenders, setShowGenders] = useState(false);
   const [selectedGenders, setSelectedGenders] = useState([productGender]);
+  const [sortDirection, setSortDirection] = useState("");
 
   const [showCategories, setShowCategories] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([
@@ -67,7 +68,6 @@ const FilterProductsMobile = ({
 
   const [showSizes, setShowSizes] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState([]);
-
   const [showPrices, setShowPrices] = useState(false);
   const [sliderValue, setSliderValue] = useState([499, 3999]);
   const [showSort, setShowSort] = useState(false);
@@ -80,6 +80,9 @@ const FilterProductsMobile = ({
         page: "1",
         gender: selectedGenders,
         search: searchQuery,
+        minPrice: sliderValue[0],
+        maxPrice: sliderValue[1],
+        sortDirection,
       })
     );
     onClose();
@@ -121,6 +124,9 @@ const FilterProductsMobile = ({
         size: [],
         page: "1",
         gender: productGender,
+        minPrice: 499,
+        maxPrice: 3999,
+        sortDirection: null,
       })
     );
     setSelectedCategories([]);
@@ -312,10 +318,21 @@ const FilterProductsMobile = ({
                 {showSort && (
                   <RadioGroup>
                     <Stack>
-                      <Radio value="1">Price - High To Low</Radio>
-                      <Radio value="2"> Price - Low To High</Radio>
-                      <Radio value="3">Newest</Radio>
-                      <Radio value="4">Popularity</Radio>
+                      <Radio
+                        value="desc"
+                        checked={sortDirection === "desc"}
+                        onChange={(e) => setSortDirection(e.target.value)}
+                      >
+                        Price - High To Low
+                      </Radio>
+                      <Radio
+                        value="asc"
+                        checked={sortDirection === "asc"}
+                        onChange={(e) => setSortDirection(e.target.value)}
+                      >
+                        {" "}
+                        Price - Low To High
+                      </Radio>
                     </Stack>
                   </RadioGroup>
                 )}

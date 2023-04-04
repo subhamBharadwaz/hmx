@@ -70,7 +70,7 @@ function SingleProductDetails() {
   );
 }
 
-export default withAuth(SingleProductDetails);
+export default withAuth(SingleProductDetails, true);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

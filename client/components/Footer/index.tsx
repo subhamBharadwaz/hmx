@@ -76,7 +76,7 @@ const productCategories: IProductCategory[] = [
 
 const Footer = () => {
   return (
-    <Box w="full" minH="30vh" bg="gray.100" mt={100} pt={50} pb={100}>
+    <Box w="full" minH="30vh" bg="gray.100" mt={300} pt={50} pb={100}>
       <Box w={["95%", "95%", "60%"]} mx="auto">
         <Text fontWeight="bold" fontSize="3xl" mb={10}>
           HMX
@@ -150,16 +150,16 @@ const Footer = () => {
             </Text>
             <HStack>
               <NextLink href="https://github.com/subhamBharadwaz">
-                <AiFillGithub size={30} />
+                <AiFillGithub size={30} style={{ cursor: "pointer" }} />
               </NextLink>
               <NextLink href="#">
-                <AiFillLinkedin size={30} />
+                <AiFillLinkedin size={30} style={{ cursor: "pointer" }} />
               </NextLink>
               <NextLink href="#">
-                <AiFillTwitterCircle size={30} />
+                <AiFillTwitterCircle size={30} style={{ cursor: "pointer" }} />
               </NextLink>
               <NextLink href="#">
-                <AiFillInstagram size={30} />
+                <AiFillInstagram size={30} style={{ cursor: "pointer" }} />
               </NextLink>
             </HStack>
           </HStack>
