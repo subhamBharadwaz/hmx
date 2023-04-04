@@ -10,7 +10,7 @@ const ProductSchema = new Schema<IProductDocument>(
 			trim: true
 		},
 		price: {
-			type: String,
+			type: Number,
 			required: [true, 'Please provide price of the product']
 		},
 		detail: {
