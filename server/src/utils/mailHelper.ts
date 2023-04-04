@@ -9,8 +9,9 @@ interface IMailOptions {
 
 const mailHelper = async (option: IMailOptions) => {
 	const transporter = nodemailer.createTransport({
-		host: config.get<string>('smtpHost'),
-		port: config.get<number>('smtpPort'),
+		// host: config.get<string>('smtpHost'),
+		// port: config.get<number>('smtpPort'),
+		service: 'gmail',
 		auth: {
 			user: config.get<string>('smtpUser'),
 			pass: config.get<string>('smtpPass')

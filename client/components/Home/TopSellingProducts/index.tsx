@@ -13,9 +13,8 @@ import {
 } from "@chakra-ui/react";
 
 import { motion, isValidMotionProp } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../store";
-import { getTopSellingProducts } from "../../../store/services/product/productSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) =>
@@ -23,7 +22,6 @@ const ChakraBox = chakra(motion.div, {
 });
 
 const TopSellingProducts = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const carousel = useRef<HTMLDivElement>(null);
   const [constraint, setConstraint] = useState(0);
 
@@ -70,31 +68,38 @@ const TopSellingProducts = () => {
             key={constraint}
           >
             <Flex>
-              {topSellingProducts.map((product) => (
-                <NextLink
+              {topSellingProducts.map((product, index) => (
+                <Box
                   key={product?.productId}
-                  href="/products/[id]"
-                  as={`/products/${product?.productId}`}
+                  p={2}
+                  minW="20rem"
+                  userSelect="none"
+                  _hover={{ cursor: "pointer" }}
                 >
-                  <Box p={2} minW="20rem" userSelect="none">
-                    <Stack>
-                      <Image
-                        draggable={false}
-                        alt={product?.name}
-                        src={product?.photos[0].secure_url}
-                        height={400}
-                        width={300}
-                        objectFit="cover"
-                      />
-                      <Text fontSize="lg" fontWeight="semibold">
-                        {product?.name}
-                      </Text>
-                      <Text fontSize="lg" fontWeight="bold">
-                        ₹ {product?.price}
-                      </Text>
-                    </Stack>
-                  </Box>
-                </NextLink>
+                  <NextLink
+                    href="/products/[id]"
+                    as={`/products/${product?.productId}`}
+                  >
+                    <Box p={2} minW="20rem" userSelect="none">
+                      <Stack>
+                        <Image
+                          draggable={false}
+                          alt={product?.name}
+                          src={product?.photos[0].secure_url}
+                          height={350}
+                          width={200}
+                          objectFit="cover"
+                        />
+                        <Text fontSize="lg" fontWeight="semibold">
+                          {product?.name}
+                        </Text>
+                        <Text fontSize="lg" fontWeight="bold">
+                          ₹ {product?.price}
+                        </Text>
+                      </Stack>
+                    </Box>
+                  </NextLink>
+                </Box>
               ))}
             </Flex>
           </ChakraBox>

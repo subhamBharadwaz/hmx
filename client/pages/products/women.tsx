@@ -85,7 +85,11 @@ export default function WomenProducts() {
               <Skeleton height="400px" />
             </SimpleGrid>
           ) : products?.products?.length !== 0 ? (
-            <FilteredProducts products={products?.products} />
+            <FilteredProducts
+              total={products?.total}
+              gender="Women"
+              products={products?.products}
+            />
           ) : (
             <Flex alignItems="center" justifyContent="center" h="100%" w="100%">
               <Text fontSize="3xl" color="blackAlpha.500">

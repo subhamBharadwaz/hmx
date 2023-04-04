@@ -1,7 +1,8 @@
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
-import path from 'path';
+// import path from 'path';
+import {nanoid} from 'nanoid';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
 import {cookieToken, mailHelper, isValidMongooseObjectId, APIError} from '../../utils';
@@ -36,24 +37,24 @@ export const registerHandler = BigPromise(
 
 		// upload photo to cloudinary
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const file: UploadApiOptions = req.files!.photo;
+		// const file: UploadApiOptions = req.files!.photo;
 
 		// check if the image is a valid image
-		const extensionName = path.extname(file.name);
-		const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+		// const extensionName = path.extname(file.name);
+		// const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 
-		if (!allowedExtensions.includes(extensionName)) {
-			const message = 'Image type is invalid';
-			return next(
-				new APIError(message, 'registerHandler', HttpStatusCode.UNPROCESSABLE_ENTITY)
-			);
-		}
+		// if (!allowedExtensions.includes(extensionName)) {
+		// const message = 'Image type is invalid';
+		// return next(
+		// new APIError(message, 'registerHandler', HttpStatusCode.UNPROCESSABLE_ENTITY)
+		// );
+		// }
 
-		const result = await cloudinary.uploader.upload(file.tempFilePath, {
-			folder: config.get<string>('userImageDir'),
-			width: 150,
-			crop: 'scale'
-		});
+		// const result = await cloudinary.uploader.upload(file.tempFilePath, {
+		// folder: config.get<string>('userImageDir'),
+		// width: 150,
+		// crop: 'scale'
+		// });
 
 		// create user
 		const user = await registerUser({
@@ -63,8 +64,9 @@ export const registerHandler = BigPromise(
 			password,
 			phoneNumber,
 			photo: {
-				id: result.public_id,
-				secure_url: result.secure_url
+				id: nanoid(),
+				secure_url:
+					'https://imgs.search.brave.com/j9eO-TTVAws2olIxF2RnYvtO_ZI4pyLYzRW3Um24lcs/rs:fit:1080:1080:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJhY2Nlc3Mu/Y29tL2Z1bGwvNDU5/NTY4Ny5qcGc'
 			}
 		});
 

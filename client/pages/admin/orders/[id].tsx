@@ -59,7 +59,7 @@ function SingleOrder() {
   );
 }
 
-export default withAuth(SingleOrder);
+export default withAuth(SingleOrder, true);
 
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>

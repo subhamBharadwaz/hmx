@@ -54,6 +54,7 @@ export interface IProduct {
     rating: number;
     comment: string;
   }[];
+
   user: string;
   createdAt: Date;
   updatedAt: Date;

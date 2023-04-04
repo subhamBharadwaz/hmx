@@ -9,7 +9,7 @@ import { useEffect } from "react";
  * * The withAuth function returns a function that takes props as an argument.
  */
 
-const withAuth = (WrappedComponent) => {
+const withAuth = (WrappedComponent, isAdminOnly = false) => {
   const Wrapper = (props) => {
     const router = useRouter();
     const { isAuthenticated, user, loading } = useSelector(
@@ -22,13 +22,16 @@ const withAuth = (WrappedComponent) => {
           router.push("/auth/login");
         }
 
-        if (isAuthenticated && user?.role !== "admin") {
+        if (isAdminOnly && isAuthenticated && user?.role !== "admin") {
           router.push("/404");
         }
       }
     }, [router, isAuthenticated, user, loading]);
 
-    if (!isAuthenticated || (isAuthenticated && user?.role !== "admin")) {
+    if (!isAuthenticated) {
+      return null;
+    }
+    if (isAdminOnly && user?.role !== "admin") {
       return null;
     }
 

@@ -193,4 +193,4 @@ function Products() {
   );
 }
 
-export default withAuth(Products);
+export default withAuth(Products, true);

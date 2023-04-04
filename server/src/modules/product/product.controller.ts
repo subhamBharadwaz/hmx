@@ -40,11 +40,15 @@ type SortOrder = 1 | -1;
 export const getAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
 	// ? Pagination:
 	// * The resultPerPage variable specifies how many results should be returned per page.
-	const resultPerPage = 6;
+	const resultPerPage = 12;
 
 	// * The page and limit variables are retrieved from the request query parameters and default to 1 and 6, respectively
 	const {page = 1} = req.query as {page?: string};
-	const {limit = 6} = req.query as {limit?: string};
+	const limit = parseInt(req.query.limit as string, 10) || 12;
+
+	// * Price range
+	const minPrice = parseInt(req.query.minPrice as string, 10) || 499;
+	const maxPrice = parseInt(req.query.maxPrice as string, 10) || 5999;
 
 	// * he skip variable calculates how many results should be skipped based on the current page and limit, so that the correct set of results is returned for the current page.
 	const skip = (Number(page) - 1) * Number(limit);
@@ -63,23 +67,6 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		: (gender = (req.query.gender as string).split(','));
 	size === 'All' ? (size = [...sizeOptions]) : (size = (req.query.size as string).split(','));
 
-	// Sorting:
-	// * If sort is not provided, the default sort order is by price
-	let sort = req.query.sort || 'price';
-
-	// * If sort is provided, it is split into an array of field and sort order pairs.
-	req.query.sort ? (sort = (req.query.sort as string).split(',')) : (sort = [sort as string]);
-
-	// * The sortOrder variable is set based on whether the sort order is ascending or descending
-	const sortOrder: SortOrder = typeof sort === 'string' && sort[1] === 'desc' ? -1 : 1;
-
-	// * The sortBy array is constructed based on the sort parameter and sort order.
-	const sortBy: [string, SortOrder][] = [];
-
-	if (typeof sort === 'string') {
-		sortBy.push([sort, sortOrder]);
-	}
-
 	// ? Filtering:
 	/**
 	 * * This section of the code sets up the filter that will be used to retrieve the products.
@@ -94,8 +81,26 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		],
 		category: {$in: category},
 		gender: {$in: gender},
-		size: {$in: size}
+		size: {$in: size},
+		price: {$gte: minPrice, $lte: maxPrice}
 	};
+
+	// ? Sorting
+	const sortDirection = req.query.sortDirection === 'asc' ? 'asc' : 'desc';
+	const sortBy = req.query.sortBy === 'price' ? 'price' : '_id';
+
+	const sort = {};
+	if (sortBy === 'price') {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		// eslint-disable-next-line dot-notation
+		sort['price'] = sortDirection;
+	} else {
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		// eslint-disable-next-line dot-notation
+		sort['_id'] = sortDirection;
+	}
 
 	// ? Retrieving addProductSchema
 	/**
@@ -105,10 +110,11 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 	 * * The Promise.all() method is used to execute both queries concurrently and return the results as an array.
 	 */
 	const [products, total] = await Promise.all([
-		Product.find(filter).sort(sortBy).skip(skip).limit(Number(limit)).lean(),
-		Product.countDocuments({category: {$in: category}, name: {$regex: search, $options: 'i'}})
+		Product.find(filter).sort(sort).limit(limit).skip(skip).lean(),
+		Product.find(filter).countDocuments()
 	]);
 	const pageCount = Math.ceil(total / resultPerPage);
+	const filteredProductCount = await Product.countDocuments(filter);
 
 	res.status(200).json({
 		success: true,
@@ -116,6 +122,7 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		total,
 		limit,
 		page,
+		filteredProductCount,
 		products,
 		pageCount
 	});

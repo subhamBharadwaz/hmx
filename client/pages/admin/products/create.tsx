@@ -462,4 +462,4 @@ function CreateProduct() {
   );
 }
 
-export default withAuth(CreateProduct);
+export default withAuth(CreateProduct, true);

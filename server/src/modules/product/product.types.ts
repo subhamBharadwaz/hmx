@@ -33,7 +33,7 @@ export enum RatingType {
 
 export interface IProductDocument extends Document {
 	name: string;
-	price: string;
+	price: number;
 	detail: string;
 	description: string;
 	photos: {
