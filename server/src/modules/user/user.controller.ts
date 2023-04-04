@@ -35,27 +35,6 @@ export const registerHandler = BigPromise(
 			return next(new APIError(message, 'registerHandler', HttpStatusCode.ALREADY_EXISTS));
 		}
 
-		// upload photo to cloudinary
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		// const file: UploadApiOptions = req.files!.photo;
-
-		// check if the image is a valid image
-		// const extensionName = path.extname(file.name);
-		// const allowedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
-
-		// if (!allowedExtensions.includes(extensionName)) {
-		// const message = 'Image type is invalid';
-		// return next(
-		// new APIError(message, 'registerHandler', HttpStatusCode.UNPROCESSABLE_ENTITY)
-		// );
-		// }
-
-		// const result = await cloudinary.uploader.upload(file.tempFilePath, {
-		// folder: config.get<string>('userImageDir'),
-		// width: 150,
-		// crop: 'scale'
-		// });
-
 		// create user
 		const user = await registerUser({
 			firstName,
@@ -66,7 +45,7 @@ export const registerHandler = BigPromise(
 			photo: {
 				id: nanoid(),
 				secure_url:
-					'https://imgs.search.brave.com/j9eO-TTVAws2olIxF2RnYvtO_ZI4pyLYzRW3Um24lcs/rs:fit:1080:1080:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJhY2Nlc3Mu/Y29tL2Z1bGwvNDU5/NTY4Ny5qcGc'
+					'https://res.cloudinary.com/dkitlfy13/image/upload/v1680626660/profile_vagfq0.webp'
 			}
 		});
 

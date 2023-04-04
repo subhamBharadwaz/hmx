@@ -24,7 +24,6 @@ export const registerUserSchema = object({
     .nonempty({ message: "Phone number is required" })
     .min(10)
     .max(10),
-  photo: any(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],

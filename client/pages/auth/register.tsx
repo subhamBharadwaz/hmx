@@ -31,7 +31,6 @@ import {
 import { registerUserSchema } from "../../schema/userSchema";
 import { CreateRegisterUserInput } from "../../types/user";
 import { AppDispatch, RootState } from "../../store";
-import ImageUpload from "../../components/ImageUpload";
 
 export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
@@ -76,7 +75,6 @@ export default function RegisterPage() {
     data.append("email", values.email);
     data.append("password", values.password);
     data.append("phoneNumber", values.phoneNumber);
-    data.append("photo", values.photo[0]);
 
     // @ts-ignore
     dispatch(registerUser(data))
@@ -230,21 +228,6 @@ export default function RegisterPage() {
                 <FormErrorMessage>
                   {errors.phoneNumber && errors.phoneNumber.message}
                 </FormErrorMessage>
-              </FormControl>
-
-              <FormControl mt={7}>
-                <Stack>
-                  <FormLabel htmlFor="photo"> Profile Picture *</FormLabel>
-
-                  <ImageUpload
-                    {...register("photo")}
-                    isMultiple={false}
-                    files={[]}
-                    onChange={(file: File[]) => {
-                      setValue("photo", file);
-                    }}
-                  />
-                </Stack>
               </FormControl>
 
               {loading && <Spinner />}
