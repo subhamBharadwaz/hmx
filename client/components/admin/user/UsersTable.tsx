@@ -18,8 +18,9 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 
-import Link from "next/link";
 import { BsChevronDown } from "react-icons/bs";
+import Link from "next/link";
+
 import { IUser } from "../../../types/user";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";

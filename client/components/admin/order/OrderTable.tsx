@@ -20,8 +20,9 @@ import {
 import NextLink from "next/link";
 import { BsChevronDown } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store";
+
 import { IOrder } from "../../../types/order";
+import { AppDispatch } from "../../../store";
 import { adminDeleteSingleOrder } from "../../../store/services/admin/adminOrderSlice";
 import { Toast } from "../../Toast";
 
@@ -135,41 +136,6 @@ const OrdersTable = ({ orders }: IOrdersData) => {
                         </MenuItem>
                       </MenuList>
                     </Menu>
-                    {/* Here the alert footer button giving the last item only */}
-                    {/* <AlertDialog
-                      isOpen={isOpen}
-                      leastDestructiveRef={cancelRef}
-                      onClose={onClose}
-                    >
-                      <AlertDialogOverlay>
-                        <AlertDialogContent>
-                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            Delete Order
-                          </AlertDialogHeader>
-
-                          <AlertDialogBody>
-                            Are you sure? You can&apos;t undo this action
-                            afterwards.
-                          </AlertDialogBody>
-
-                          <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={onClose}>
-                              Cancel
-                            </Button>
-
-                            <Button
-                              ml={3}
-                              onClick={() =>
-                                handleOrderDelete(order?.orderStatus)
-                              }
-                              colorScheme="red"
-                            >
-                              Delete
-                            </Button>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialogOverlay>
-                    </AlertDialog> */}
                   </Td>
                 </Tr>
               ))}

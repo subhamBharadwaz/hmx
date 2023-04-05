@@ -24,9 +24,10 @@ import {
   ModalCloseButton,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
 import { motion } from "framer-motion";
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+
+import { AppDispatch } from "../../store";
 
 const categories = [
   "Twill Jogger",

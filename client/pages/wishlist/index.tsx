@@ -19,7 +19,6 @@ import {
 import { motion } from "framer-motion";
 
 import { getWishlistItems } from "../../store/services/wishlist/wishlistSlice";
-import { Toast } from "../../components/Toast";
 
 // Animation
 const container = {
@@ -46,19 +45,6 @@ export default function Wishlist() {
   const { loading, wishlistData, error } = useSelector(
     (state: RootState) => state.wishlistSlice
   );
-
-  const { addToast } = Toast();
-
-  useEffect(() => {
-    if (error) {
-      addToast({
-        id: "error-toast",
-        title: "Unable to fetch wishlist items.",
-        description: error,
-        status: "error",
-      });
-    }
-  }, [error, addToast]);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   useEffect(() => {

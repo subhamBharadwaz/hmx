@@ -56,17 +56,6 @@ export default function Bag() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
-    if (error) {
-      addToast({
-        id: "bag-toast",
-        title: "Unable to fetch bag data.",
-        description: error,
-        status: "error",
-      });
-    }
-  }, [error, addToast]);
-
-  useEffect(() => {
     dispatch(getBagItems())
       .unwrap()
       .then(() => {})

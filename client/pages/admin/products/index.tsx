@@ -16,9 +16,9 @@ import Image from "next/image";
 import NextLink from "next/link";
 
 import { AiFillEdit, AiFillDelete, AiOutlinePlus } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
 
 import { AppDispatch, RootState } from "../../../store";
-import { useDispatch, useSelector } from "react-redux";
 import {
   deleteProduct,
   getAllProducts,
@@ -96,7 +96,7 @@ function Products() {
       <Box mb={6}>
         <Stack alignItems="center" spacing={[2, 2, 5]}>
           <Text fontSize={16} fontWeight="semibold" alignSelf="flex-start">
-            Filter by
+            Filter
           </Text>
           <Box alignSelf="flex-start">
             <FilterProducts
@@ -118,69 +118,72 @@ function Products() {
           />
         </Flex>
       ) : (
-        <Box
-          p={4}
-          maxH="100%"
-          boxShadow="0 4px 12px rgba(0,0,0,0.05)"
-          position="relative"
-        >
-          <SimpleGrid minChildWidth="200px" spacing={4}>
-            {products.products &&
-              products.products.map((product: IProduct) => (
-                <Box key={product._id} p={2}>
-                  <Stack>
-                    <Image
-                      alt={product.name}
-                      src={product.photos[0].secure_url}
-                      height={500}
-                      width={400}
-                      objectFit="cover"
-                    />
+        <Box p={4} maxH="100%" position="relative">
+          {products?.products?.length !== 0 ? (
+            <SimpleGrid minChildWidth="200px" spacing={4}>
+              {products.products &&
+                products.products.map((product: IProduct) => (
+                  <Box key={product._id} p={2}>
+                    <Stack>
+                      <Image
+                        alt={product.name}
+                        src={product.photos[0].secure_url}
+                        height={500}
+                        width={400}
+                        objectFit="cover"
+                      />
 
-                    <Text fontWeight="semibold">{product.name}</Text>
-                    <Text color="blackAlpha.600">{product.category}</Text>
-                    <Text fontWeight="semibold">{`₹ ${product.price}`}</Text>
-                    <HStack justifyContent="space-between">
-                      <NextLink
-                        href="/admin/products/[id]"
-                        as={`/admin/products/${product._id}`}
-                      >
+                      <Text fontWeight="semibold">{product.name}</Text>
+                      <Text color="blackAlpha.600">{product.category}</Text>
+                      <Text fontWeight="semibold">{`₹ ${product.price}`}</Text>
+                      <HStack justifyContent="space-between">
+                        <NextLink
+                          href="/admin/products/[id]"
+                          as={`/admin/products/${product._id}`}
+                        >
+                          <Button
+                            leftIcon={<AiFillEdit />}
+                            colorScheme="blue"
+                            variant="outline"
+                            size="sm"
+                          >
+                            Edit
+                          </Button>
+                        </NextLink>
                         <Button
-                          leftIcon={<AiFillEdit />}
-                          colorScheme="blue"
+                          leftIcon={<AiFillDelete />}
+                          colorScheme="red"
                           variant="outline"
                           size="sm"
+                          onClick={() =>
+                            dispatch(deleteProduct(product._id))
+                              .unwrap()
+                              .then(() => {
+                                addToast({
+                                  id: "product-delete-toast",
+                                  title: "Product deleted successfully.",
+                                  status: "success",
+                                });
+                              })
+                              .catch((error: { message: string }) => {
+                                setApiError(error.message);
+                              })
+                          }
                         >
-                          Edit
+                          Delete
                         </Button>
-                      </NextLink>
-                      <Button
-                        leftIcon={<AiFillDelete />}
-                        colorScheme="red"
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          dispatch(deleteProduct(product._id))
-                            .unwrap()
-                            .then(() => {
-                              addToast({
-                                id: "product-delete-toast",
-                                title: "Product deleted successfully.",
-                                status: "success",
-                              });
-                            })
-                            .catch((error: { message: string }) => {
-                              setApiError(error.message);
-                            })
-                        }
-                      >
-                        Delete
-                      </Button>
-                    </HStack>
-                  </Stack>
-                </Box>
-              ))}
-          </SimpleGrid>
+                      </HStack>
+                    </Stack>
+                  </Box>
+                ))}
+            </SimpleGrid>
+          ) : (
+            <Flex alignItems="center" justifyContent="center" h="50vh" w="100%">
+              <Text fontSize="3xl" color="blackAlpha.500">
+                Sorry, We couldn’t Find any matches!
+              </Text>
+            </Flex>
+          )}
         </Box>
       )}
 

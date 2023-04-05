@@ -76,11 +76,11 @@ function LoginPage() {
   if (isAuthenticated) router.push("/");
 
   return (
-    <Box p="2em">
+    <Box>
       <Flex
         justifyContent="space-around"
         flexDirection={["column", "column", "row"]}
-        alignItems={["center"]}
+        alignItems="center"
       >
         <Box
           position="relative"
@@ -97,7 +97,7 @@ function LoginPage() {
           />
         </Box>
         <Box
-          w={["md", "xl"]}
+          w={["full", "full", "2xl"]}
           p={[8, 10]}
           border={["none", "1px"]}
           borderColor={["", "gray.300"]}

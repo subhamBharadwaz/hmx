@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import dynamic from "next/dynamic";
 
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +36,7 @@ import {
 } from "@chakra-ui/react";
 
 import { ChakraStylesConfig, Select as RSelect } from "chakra-react-select";
-import ReactQuill from "react-quill";
+
 import "react-quill/dist/quill.snow.css";
 
 import { addProductSchema } from "../../../schema/productSchema";
@@ -69,9 +70,6 @@ function CreateProduct() {
   const dispatch = useDispatch<AppDispatch>();
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const [quillDetailValue, setQuillDetailValue] = useState("");
-  const [quillDescriptionValue, setQuillDescriptionValue] = useState("");
-
   const { loading, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
@@ -79,6 +77,10 @@ function CreateProduct() {
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
+
+  const ReactQuill = dynamic(() => import("react-quill"), {
+    ssr: false, // Set ssr to false to make sure this component is only rendered on the client-side
+  });
 
   const router = useRouter();
 
@@ -130,8 +132,8 @@ function CreateProduct() {
     data.append("brand", values.brand);
     data.append("price", values.price);
     data.append("category", values.category);
-    data.append("detail", quillDetailValue);
-    data.append("description", quillDescriptionValue);
+    data.append("detail", values.detail);
+    data.append("description", values.description);
     data.append("gender", values.gender);
     for (const s of values.size) {
       data.append("size", s);
@@ -374,10 +376,7 @@ function CreateProduct() {
                 <ReactQuill
                   value={value}
                   onBlur={onBlur}
-                  onChange={(newValue) => {
-                    setQuillDetailValue(newValue);
-                    onChange(newValue);
-                  }}
+                  onChange={(newValue) => onChange(newValue)}
                 />
               )}
             />
@@ -400,16 +399,11 @@ function CreateProduct() {
             <Controller
               name="description"
               control={control}
-              rules={{ required: "Description is required" }}
-              defaultValue=""
               render={({ field: { onChange, onBlur, value } }) => (
                 <ReactQuill
                   value={value}
                   onBlur={onBlur}
-                  onChange={(newValue) => {
-                    setQuillDescriptionValue(newValue);
-                    onChange(newValue);
-                  }}
+                  onChange={(newValue) => onChange(newValue)}
                 />
               )}
             />

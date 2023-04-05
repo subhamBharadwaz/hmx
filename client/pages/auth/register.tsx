@@ -62,7 +62,6 @@ export default function RegisterPage() {
   const {
     register,
     formState: { errors },
-    setValue,
     handleSubmit,
   } = useForm<CreateRegisterUserInput>({
     resolver: zodResolver(registerUserSchema),
@@ -93,7 +92,7 @@ export default function RegisterPage() {
     setShowConfirmPassword(!showConfirmPassword);
 
   return (
-    <Box p="2em">
+    <Box>
       <Flex
         justifyContent="space-around"
         flexDirection={["column", "column", "row"]}
@@ -114,7 +113,7 @@ export default function RegisterPage() {
           />
         </Box>
         <Box
-          w={["md", "xl"]}
+          w={["full", "full", "2xl"]}
           p={[8, 10]}
           border={["none", "1px"]}
           borderColor={["", "gray.300"]}

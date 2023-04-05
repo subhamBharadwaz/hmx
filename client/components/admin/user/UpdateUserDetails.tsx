@@ -20,6 +20,8 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import { AiOutlineCloudUpload } from "react-icons/ai";
+
 import {
   CreateAdminUpdateUserInput,
   IUser,
@@ -32,7 +34,6 @@ import { useForm } from "react-hook-form";
 import { adminUpdateUserSchema } from "../../../schema/adminSchema";
 import { AppDispatch, RootState } from "../../../store";
 import { updateUserDetails } from "../../../store/services/admin/adminUserSlice";
-import { AiOutlineCloudUpload } from "react-icons/ai";
 import { Toast } from "../../Toast";
 
 interface User {

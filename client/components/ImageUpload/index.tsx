@@ -20,14 +20,7 @@ interface Props {
   onChange: (files: File[]) => void;
 }
 
-function ImageUpload({
-  isMultiple,
-  files,
-  defaultFiles,
-  onChange,
-  ...props
-}: Props) {
-  const toast = useToast();
+function ImageUpload({ isMultiple, files, defaultFiles, onChange }: Props) {
   const [uploadedFiles, setUploadedFiles] = useState(files);
 
   const { addToast } = Toast();

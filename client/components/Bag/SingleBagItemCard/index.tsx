@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -15,17 +15,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
+import { motion } from "framer-motion";
+
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../store";
 import { Select as RSelect, ChakraStylesConfig } from "chakra-react-select";
 import {
   createAndUpdateBagItems,
   deleteBagItem,
 } from "../../../store/services/bag/bagSlice";
-import { useEffect } from "react";
+import { AppDispatch, RootState } from "../../../store";
 import { getSingleProduct } from "../../../store/services/product/productSlice";
 import { createWishlist } from "../../../store/services/wishlist/wishlistSlice";
-import { motion } from "framer-motion";
 interface IProductData {
   productData: {
     productId: string;

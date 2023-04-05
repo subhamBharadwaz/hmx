@@ -17,11 +17,12 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store";
-import { getAllProducts } from "../../store/services/product/productSlice";
 import { motion } from "framer-motion";
-import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
 import { useRouter } from "next/router";
+import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai";
+
+import { getAllProducts } from "../../store/services/product/productSlice";
+import { AppDispatch } from "../../store";
 
 const categories = [
   "Twill Jogger",

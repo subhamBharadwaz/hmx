@@ -8,11 +8,12 @@ import {
   BreadcrumbLink,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+
 import UsersTable from "../../../components/admin/user/UsersTable";
 import { AppDispatch, RootState } from "../../../store";
 import { getAllUsers } from "../../../store/services/admin/adminUserSlice";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
 import Pagination from "../../../components/Pagination";
 import withAuth from "../../../components/HOC/withAuth";
 
