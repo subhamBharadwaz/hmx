@@ -6,7 +6,8 @@ import {
   adminGetSalesDataByStates,
 } from "../../../store/services/admin/adminSalesSlice";
 import { AppDispatch, RootState } from "../../../store";
-import { Text, HStack, Select, Flex, Stack, useToast } from "@chakra-ui/react";
+import { Text, HStack, Select, Flex, Stack } from "@chakra-ui/react";
+import { Toast } from "../../Toast";
 
 const SalesDataBySate = () => {
   const [apiError, setApiError] = useState<string | null>(null);
@@ -14,21 +15,19 @@ const SalesDataBySate = () => {
     (state: RootState) => state.adminSalesSlice
   );
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "sales-state-toast",
         title: "Unable to fetch sales details.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   useEffect(() => {
     dispatch(adminGetSalesDataByStates({}))

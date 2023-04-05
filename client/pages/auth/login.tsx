@@ -19,7 +19,6 @@ import {
   Spinner,
   InputGroup,
   InputRightElement,
-  useToast,
 } from "@chakra-ui/react";
 
 import { AppDispatch, RootState } from "../../store";
@@ -27,6 +26,7 @@ import { loginUserSchema } from "../../schema/userSchema";
 import { CreateLoginUserInput } from "../../types/user";
 import { loginUser, userDetails } from "../../store/services/auth/auth-slice";
 import withAuth from "../../components/HOC/withAuth";
+import { Toast } from "../../components/Toast";
 
 function LoginPage() {
   const { isAuthenticated, loading, error } = useSelector(
@@ -36,20 +36,18 @@ function LoginPage() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "error-toast",
         title: "Unable to login.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const router = useRouter();
 

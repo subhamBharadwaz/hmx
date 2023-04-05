@@ -13,7 +13,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { adminGetSalesData } from "../../../store/services/admin/adminSalesSlice";
 import { AppDispatch, RootState } from "../../../store";
-import { Text, HStack, Select, Flex, Stack, useToast } from "@chakra-ui/react";
+import { Text, HStack, Select, Flex, Stack } from "@chakra-ui/react";
+import { Toast } from "../../Toast";
 
 const SalesDataChart = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,20 +25,18 @@ const SalesDataChart = () => {
     (state: RootState) => state.adminSalesSlice
   );
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "sales-state-chart-toast",
         title: "Unable to fetch sales details.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   useEffect(() => {
     dispatch(adminGetSalesData({ year: "2023", month: "03" }))

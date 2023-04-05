@@ -15,10 +15,11 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  useToast,
 } from "@chakra-ui/react";
-import { getWishlistItems } from "../../store/services/wishlist/wishlistSlice";
 import { motion } from "framer-motion";
+
+import { getWishlistItems } from "../../store/services/wishlist/wishlistSlice";
+import { Toast } from "../../components/Toast";
 
 // Animation
 const container = {
@@ -45,20 +46,19 @@ export default function Wishlist() {
   const { loading, wishlistData, error } = useSelector(
     (state: RootState) => state.wishlistSlice
   );
-  const toast = useToast();
+
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "error-toast",
         title: "Unable to fetch wishlist items.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   useEffect(() => {

@@ -11,35 +11,35 @@ import {
   Badge,
   Select,
   VStack,
-  useToast,
 } from "@chakra-ui/react";
 import NextImage from "next/image";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../store";
 import { adminUpdateSingleOrder } from "../../../store/services/admin/adminOrderSlice";
+import { Toast } from "../../Toast";
 interface IOrderData {
   order: IOrder;
 }
 
 const UpdateOrder = ({ order }: IOrderData) => {
   const dispatch = useDispatch<AppDispatch>();
-  const toast = useToast();
   const [apiError, setApiError] = useState<string | null>(null);
 
   const { shippingInfo, shippingAmount, orderStatus, totalAmount, taxAmount } =
     order;
   const [status, setStatus] = useState(orderStatus as string);
 
+  const { addToast } = Toast();
+
   const handleOrderStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (status === "Delivered") {
-      toast({
-        position: "top-right",
+      addToast({
+        id: "order-toast",
         title: "Order is already marked for delivered",
         description: "Can't change the order status after being delivered.",
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
+
       return;
     } else {
       setStatus(e.target.value);
@@ -49,12 +49,10 @@ const UpdateOrder = ({ order }: IOrderData) => {
       )
         .unwrap()
         .then(() => {
-          toast({
+          addToast({
             id: "order-update-toast",
             title: "Order updated successfully.",
             status: "success",
-            duration: 9000,
-            isClosable: true,
           });
         })
         .catch((error: { message: string }) => {

@@ -6,7 +6,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  useToast,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,12 +18,13 @@ import { adminGetAllOrders } from "../../../store/services/admin/adminOrderSlice
 import OrdersTable from "../../../components/admin/order/OrderTable";
 import withAuth from "../../../components/HOC/withAuth";
 import AdminLayout from "../../../layout/AdminLayout";
+import { Toast } from "../../../components/Toast";
 
 function Orders() {
   const dispatch = useDispatch<AppDispatch>();
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   const { orders, order, error, loading } = useSelector(
     (state: RootState) => state.adminOrderSlice
@@ -41,16 +41,14 @@ function Orders() {
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "orders-toast",
         title: "Order action failed.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   return (
     <Box>

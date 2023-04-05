@@ -7,23 +7,24 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  useToast,
   Stack,
 } from "@chakra-ui/react";
 import Script from "next/script";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../../store";
-import BillingDetails from "../../components/DeliveryAddress/BillingDetails";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import AddAddressForm from "../../components/DeliveryAddress/AddAddressForm";
-import { IOrder, OrderStatusType } from "../../types/order";
-import { getRazorpayKey } from "../../store/services/checkout/checkoutSlice";
 import axios from "axios";
-import { createOrder } from "../../store/services/order/orderSlice";
-import { useRouter } from "next/router";
-import AddressCard from "../../components/DeliveryAddress/AddressCard";
-import { emptyBag } from "../../store/services/bag/bagSlice";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+
+import { IOrder, OrderStatusType } from "../../types/order";
+import { RootState, AppDispatch } from "../../store";
+import { emptyBag } from "../../store/services/bag/bagSlice";
+import { createOrder } from "../../store/services/order/orderSlice";
+import { getRazorpayKey } from "../../store/services/checkout/checkoutSlice";
+import BillingDetails from "../../components/DeliveryAddress/BillingDetails";
+import AddAddressForm from "../../components/DeliveryAddress/AddAddressForm";
+import AddressCard from "../../components/DeliveryAddress/AddressCard";
+import { Toast } from "../../components/Toast";
 
 export default function DeliveryAddress() {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,20 +38,18 @@ export default function DeliveryAddress() {
     (state: RootState) => state.checkoutSlice
   );
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "razorpay-toast",
         title: "Unable to update password.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   // Getting razorpay key
   useEffect(() => {
@@ -132,13 +131,12 @@ export default function DeliveryAddress() {
               router.push(`/checkout/success`);
             })
             .catch((error) => {
-              toast({
+              addToast({
+                id: "payment-failed",
                 title: "Payment Failed!",
                 description:
                   "Please try again. Contact us if the issue remains.",
                 status: "error",
-                duration: 9000,
-                isClosable: true,
               });
               console.error(error);
             });
@@ -151,12 +149,11 @@ export default function DeliveryAddress() {
       const razorpay = new (window as any).Razorpay(options);
       razorpay.open();
     } catch (error) {
-      toast({
+      addToast({
+        id: "payment-failed-2",
         title: "Payment Failed!",
         description: "Please try again. Contact us if the issue remains.",
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
       console.error(error);
     }

@@ -29,7 +29,6 @@ import {
   InputGroup,
   Icon,
   InputLeftElement,
-  useToast,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -49,6 +48,7 @@ import { useRouter } from "next/router";
 import { FiFile } from "react-icons/fi";
 import withAuth from "../../../components/HOC/withAuth";
 
+import { Toast } from "../../../components/Toast";
 import ImageUpload from "../../../components/ImageUpload";
 
 interface IProductSize {
@@ -92,20 +92,18 @@ function CreateProduct() {
   };
 
   // Toast
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "product-create-toast",
         title: "Unable to create product.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   // react-hook-form
   const {
@@ -144,12 +142,10 @@ function CreateProduct() {
     dispatch(createProduct(data as CreateProductInput))
       .unwrap()
       .then(() => {
-        toast({
+        addToast({
           id: "success-toast",
           title: "product created successfully.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         });
       })
       .catch((error: { message: string }) => {

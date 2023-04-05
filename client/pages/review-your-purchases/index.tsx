@@ -6,7 +6,6 @@ import {
   IconButton,
   Textarea,
   Stack,
-  useToast,
   Flex,
   Badge,
   Divider,
@@ -23,6 +22,7 @@ import {
 } from "../../store/services/review/reviewSlice";
 import { getAllOrders } from "../../store/services/order/orderSlice";
 import withAuth from "../../components/HOC/withAuth";
+import { Toast } from "../../components/Toast";
 
 function ReviewPurchases() {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,7 +34,7 @@ function ReviewPurchases() {
   const [showDetails, setShowDetails] = useState({});
   const { orders, error } = useSelector((state: RootState) => state.orderSlice);
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     dispatch(getAllOrders())
@@ -47,16 +47,14 @@ function ReviewPurchases() {
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "error-toast",
         title: "Unable to fetch all orders.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const { loading } = useSelector((state: RootState) => state.reviewSlice);
 
@@ -82,17 +80,11 @@ function ReviewPurchases() {
     if (rating) {
       dispatch(createProductReview({ productId, rating, comment }));
     } else {
-      const id = "test-toast";
-      if (!toast.isActive(id)) {
-        toast({
-          id,
-          title: "Please give a rating.",
-          status: "error",
-          position: "top-right",
-          duration: 9000,
-          isClosable: true,
-        });
-      }
+      addToast({
+        id: "rating-error",
+        title: "Please give a rating.",
+        status: "error",
+      });
     }
   }
 
@@ -194,37 +186,3 @@ function ReviewPurchases() {
 }
 
 export default withAuth(ReviewPurchases);
-
-/**
- * <Stack key={orderItem?._id}>
-            <HStack>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <IconButton
-                  key={value}
-                  aria-label={`${value} star rating`}
-                  variant="unstyled"
-                  icon={
-                    <AiFillStar
-                      color={value <= rating ? "orange" : "gray"}
-                      size={25}
-                    />
-                  }
-                  onClick={() => handleRatingClick(value)}
-                />
-              ))}
-            </HStack>
-            <Text>Write a comment</Text>
-            <Input value={comment} onChange={handleCommentChange} />
-            <Button
-              colorScheme="messenger"
-              onClick={() =>
-                submitReviewHandler(orderItem?.product, rating, comment)
-              }
-            >
-              Submit
-            </Button>
-            <Button variant="solid" colorScheme="gray" mr={3}>
-              Cancel
-            </Button>
-          </Stack>
- */

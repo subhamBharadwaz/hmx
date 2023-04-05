@@ -31,12 +31,12 @@ import {
   Stack,
   Progress,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { ChakraStylesConfig, Select as RSelect } from "chakra-react-select";
 import "react-quill/dist/quill.snow.css";
 import { updateProduct } from "../../../store/services/admin/adminProductSlice";
 import ImageUpload from "../../ImageUpload";
+import { Toast } from "../../Toast";
 
 interface Product {
   product: IProduct;
@@ -80,20 +80,18 @@ export default function UpdateProductDetails({ product }: Product) {
     }),
   };
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "product-update-toast",
         title: "Unable to update product details.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const {
     register,
@@ -147,12 +145,10 @@ export default function UpdateProductDetails({ product }: Product) {
     )
       .unwrap()
       .then(() => {
-        toast({
+        addToast({
           id: "update-product-toast",
           title: "Product updated successfully.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         });
       })
       .catch((error: { message: string }) => {

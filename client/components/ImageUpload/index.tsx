@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import {
   Center,
@@ -8,10 +8,10 @@ import {
   Grid,
   GridItem,
   Box,
-  useToast,
 } from "@chakra-ui/react";
 import { AiFillFileAdd, AiOutlineClose } from "react-icons/ai";
 import NextImage from "next/image";
+import { Toast } from "../Toast";
 
 interface Props {
   isMultiple: boolean;
@@ -20,7 +20,7 @@ interface Props {
   onChange: (files: File[]) => void;
 }
 
-export default function ImageUpload({
+function ImageUpload({
   isMultiple,
   files,
   defaultFiles,
@@ -29,6 +29,8 @@ export default function ImageUpload({
 }: Props) {
   const toast = useToast();
   const [uploadedFiles, setUploadedFiles] = useState(files);
+
+  const { addToast } = Toast();
 
   useEffect(() => {
     setUploadedFiles(files);
@@ -58,13 +60,12 @@ export default function ImageUpload({
         (isMultiple && uploadedFiles.length + acceptedFiles.length > 4)
       ) {
         // reject the selection
-        toast({
+        addToast({
+          id: "image-upload-toast",
           title: `Only ${isMultiple ? "4" : "1"} image${
             isMultiple ? "s" : ""
           } can be uploaded.`,
           status: "warning",
-          duration: 9000,
-          isClosable: true,
         });
         return;
       }
@@ -74,7 +75,7 @@ export default function ImageUpload({
       setUploadedFiles(newFiles);
       onChange(newFiles);
     },
-    [isMultiple, toast, uploadedFiles, onChange]
+    [isMultiple, addToast, uploadedFiles, onChange]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -153,3 +154,5 @@ export default function ImageUpload({
     </Center>
   );
 }
+
+export default React.memo(ImageUpload);

@@ -16,7 +16,6 @@ import {
   InputLeftAddon,
   Button,
   Select,
-  useToast,
   IconButton,
   FormLabel,
 } from "@chakra-ui/react";
@@ -34,6 +33,7 @@ import { adminUpdateUserSchema } from "../../../schema/adminSchema";
 import { AppDispatch, RootState } from "../../../store";
 import { updateUserDetails } from "../../../store/services/admin/adminUserSlice";
 import { AiOutlineCloudUpload } from "react-icons/ai";
+import { Toast } from "../../Toast";
 
 interface User {
   user: IUser;
@@ -48,19 +48,18 @@ const UpdateUserDetails = ({ user }: User) => {
   );
 
   // Toast
-  const toast = useToast();
+  const { addToast } = Toast();
+
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "admin-user-update-toast",
         title: "Unable to update user details.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const {
     register,
@@ -81,12 +80,10 @@ const UpdateUserDetails = ({ user }: User) => {
     dispatch(updateUserDetails({ values, id: user._id }))
       .unwrap()
       .then(() => {
-        toast({
+        addToast({
           id: "user-update-toast",
           title: "User updated successfully.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         });
       })
       .catch((error: { message: string }) => {

@@ -16,7 +16,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  useToast,
 } from "@chakra-ui/react";
 
 import Link from "next/link";
@@ -26,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store";
 import { capitalizeFirstLetter } from "../../../utils/utilFunctions";
 import { deleteUser } from "../../../store/services/admin/adminUserSlice";
+import { Toast } from "../../Toast";
 
 interface Users {
   users: IUser[];
@@ -37,20 +37,18 @@ const UsersTable = ({ users }: Users) => {
 
   const { error } = useSelector((state: RootState) => state.adminUserSlice);
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "admin-user-delete-toast",
         title: "Unable to delete user .",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   return (
     <>
@@ -114,12 +112,10 @@ const UsersTable = ({ users }: Users) => {
                             dispatch(deleteUser(user._id))
                               .unwrap()
                               .then(() => {
-                                toast({
+                                addToast({
                                   id: "user-delete-toast",
                                   title: "User deleted successfully.",
                                   status: "success",
-                                  duration: 9000,
-                                  isClosable: true,
                                 });
                               })
                               .catch((error: { message: string }) => {

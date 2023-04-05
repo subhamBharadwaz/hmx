@@ -11,7 +11,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  useToast,
 } from "@chakra-ui/react";
 import Image from "next/image";
 import NextLink from "next/link";
@@ -30,6 +29,7 @@ import Pagination from "../../../components/Pagination";
 import withAuth from "../../../components/HOC/withAuth";
 
 import FilterProducts from "../../../components/admin/product/FilterProducts";
+import { Toast } from "../../../components/Toast";
 
 function Products() {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,20 +44,18 @@ function Products() {
   );
 
   // toast
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "error-toast",
         title: "Unable to delete product.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   return (
     <Box>
@@ -165,12 +163,10 @@ function Products() {
                           dispatch(deleteProduct(product._id))
                             .unwrap()
                             .then(() => {
-                              toast({
+                              addToast({
                                 id: "product-delete-toast",
                                 title: "Product deleted successfully.",
                                 status: "success",
-                                duration: 9000,
-                                isClosable: true,
                               });
                             })
                             .catch((error: { message: string }) => {
