@@ -25,8 +25,6 @@ function SingleUserDetails() {
     (state: RootState) => state.adminUserSlice
   );
 
-  const auth = useSelector((state: RootState) => state.auth);
-
   return (
     <Box>
       <Breadcrumb
