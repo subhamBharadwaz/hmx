@@ -260,7 +260,7 @@ const adminProductSlice = createSlice({
       state.loading = true;
       state.products = state.products;
       state.product = null;
-      state.error = (payload as { error: string }).error;
+      state.error = (payload as unknown as { error: string }).error;
     });
 
     // update product
