@@ -3,7 +3,7 @@ export default {
 	dbUrl: '',
 	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
 	jwtExpiry: '3d',
-	origin: 'http://localhost:3000',
+	origin: 'https://hmx-e6tu01j2i-subhambharadwaz.vercel.app',
 	redisUrl: 'redis://localhost:6379',
 	cloudinaryName: '',
 	cloudinaryApiKey: '',
