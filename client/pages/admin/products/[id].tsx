@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState, wrapper } from "../../../store";
 
-import { getCookie } from "cookies-next";
-
 interface IProductSize {
   value: string;
   label: string;
@@ -26,10 +24,18 @@ import withAuth from "../../../components/HOC/withAuth";
 import AdminLayout from "../../../layout/AdminLayout";
 
 function SingleProductDetails() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const router = useRouter();
+  const { id } = router.query;
+
+  useEffect(() => {
+    dispatch(getSingleProduct({ id }));
+  }, [dispatch, id]);
+
   const { loading, product, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
-  const dispatch = useDispatch<AppDispatch>();
 
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
@@ -71,22 +77,3 @@ function SingleProductDetails() {
 }
 
 export default withAuth(SingleProductDetails, true);
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ req, res, params }) => {
-      const token = getCookie("token", { req, res });
-      const { id } = params;
-      await store
-        .dispatch(getSingleProduct({ token, id }))
-        .unwrap()
-        .then(() => {})
-        .catch((err) => {
-          res.writeHead(302, { Location: "/404" });
-          res.end();
-        });
-      return {
-        props: {},
-      };
-    }
-);

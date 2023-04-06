@@ -4,7 +4,6 @@ import { AppDispatch, RootState, wrapper } from "../../../store";
 
 import UpdateUserDetails from "../../../components/admin/user/UpdateUserDetails";
 import { getSingleUser } from "../../../store/services/admin/adminUserSlice";
-import { getCookie } from "cookies-next";
 
 import {
   Box,
@@ -74,23 +73,3 @@ function SingleUserDetails() {
 }
 
 export default withAuth(SingleUserDetails, true);
-
-// export const getServerSideProps = wrapper.getServerSideProps(
-//   (store) =>
-//     async ({ req, res, params }) => {
-//       const token = getCookie("token", { req, res });
-//       const { id } = params;
-//       await store
-//         .dispatch(getSingleUser({ token, id }))
-//         .unwrap()
-//         .then(() => {})
-//         .catch((err) => {
-//           res.writeHead(302, { Location: "/404" });
-//           res.end();
-//         });
-
-//       return {
-//         props: {},
-//       };
-//     }
-// );
