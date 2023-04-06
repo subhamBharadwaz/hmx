@@ -51,10 +51,7 @@ export const getAllUsers = createAsyncThunk(
 // get single user details with id
 export const getSingleUser = createAsyncThunk(
   "admin/user",
-  async (
-    data: { req: NextApiRequest; id: string | string[] },
-    { rejectWithValue }
-  ) => {
+  async (data: { req: any; id: string | string[] }, { rejectWithValue }) => {
     const { req, id } = data;
 
     try {
