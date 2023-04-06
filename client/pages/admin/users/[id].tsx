@@ -78,6 +78,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
           res.writeHead(302, { Location: "/404" });
           res.end();
         });
+
       return {
         props: {},
       };

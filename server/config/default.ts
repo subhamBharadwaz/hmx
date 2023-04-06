@@ -1,9 +1,9 @@
 export default {
-	port: '',
+	port: 4000,
 	dbUrl: '',
 	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
 	jwtExpiry: '3d',
-	origin: 'http://localhost:3000',
+	origin: 'https://hmx.vercel.app',
 	redisUrl: 'redis://localhost:6379',
 	cloudinaryName: '',
 	cloudinaryApiKey: '',
