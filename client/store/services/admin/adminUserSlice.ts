@@ -3,6 +3,8 @@ import { IUser, UpdateUser } from "../../../types/user";
 import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
+import { NextRequest } from "next/server";
+import { NextApiRequest } from "next";
 
 interface IUsers {
   loading: boolean;
@@ -49,8 +51,8 @@ export const getAllUsers = createAsyncThunk(
 // get single user details with id
 export const getSingleUser = createAsyncThunk(
   "admin/user",
-  async (data: { id: string | string[] }, { rejectWithValue }) => {
-    const { id } = data;
+  async (data: { req: any; id: string | string[] }, { rejectWithValue }) => {
+    const { req, id } = data;
 
     try {
       const res = await axios.get(
