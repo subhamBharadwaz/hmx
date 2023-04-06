@@ -62,6 +62,7 @@ export const getSingleUser = createAsyncThunk(
           withCredentials: true,
           headers: {
             Authorization: `Bearer ${token}`,
+            "Access-Control-Allow-Origin": `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`,
           },
         }
       );
