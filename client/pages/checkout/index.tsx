@@ -28,6 +28,7 @@ import { Toast } from "../../components/Toast";
 
 export default function DeliveryAddress() {
   const dispatch = useDispatch<AppDispatch>();
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const { bagData } = useSelector((state: RootState) => state.bagSlice);
   const { shippingAddress } = useSelector(
