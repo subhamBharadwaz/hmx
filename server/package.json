@@ -11,7 +11,7 @@
 		"dev": "nodemon -r tsconfig-paths/register ./src/index.ts",
 		"test": "jest",
 		"start": "node -r tsconfig-paths/register ./build/src/index.js",
-		"build": "yarn clean && tsc && copyfiles -f  src/swagger.yaml build/src/",
+		"build": "yarn && tsc && copyfiles -f  src/swagger.yaml build/src/",
 		"clean": "rm -rf build/*.js build/*.map build/*",
 		"format": "prettier --write \"./**/*.ts\"",
 		"prepare": "cd .. && husky install server/.husky",
