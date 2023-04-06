@@ -46,6 +46,9 @@ export const userDetails = createAsyncThunk(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/userdetails`,
 
         {
+          headers: {
+            "Access-Control-Allow-Origin": `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`,
+          },
           withCredentials: true,
         }
       );
