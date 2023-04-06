@@ -19,7 +19,7 @@ cloudinary.config({
 	api_secret: config.get<string>('cloudinaryApiSecret')
 });
 
-const PORT = config.get<number>('port');
+const PORT = config.get<number>('port') || 4000;
 
 const server = app.listen(PORT, () => {
 	logger.info(`Server is running at http://localhost:${PORT}`);
