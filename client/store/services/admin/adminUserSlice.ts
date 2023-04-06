@@ -49,23 +49,17 @@ export const getAllUsers = createAsyncThunk(
 // get single user details with id
 export const getSingleUser = createAsyncThunk(
   "admin/user",
-  async (
-    data: { token: CookieValueTypes; id: string | string[] },
-    { rejectWithValue }
-  ) => {
-    const { token, id } = data;
+  async (data: { id: string | string[] }, { rejectWithValue }) => {
+    const { id } = data;
 
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/user/${id}`,
         {
           withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
-      console.log({ token });
+
       return await res.data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
