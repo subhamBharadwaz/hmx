@@ -1,5 +1,5 @@
 export default {
-	port: 4000,
+	port: '',
 	dbUrl: '',
 	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
 	jwtExpiry: '3d',

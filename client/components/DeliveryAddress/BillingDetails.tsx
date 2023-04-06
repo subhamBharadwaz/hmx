@@ -1,8 +1,10 @@
-import { Box, Button, Flex, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { Toast } from "../Toast";
 
 const BillingDetails = ({ totalPrice, makePayment, shippingAddress }) => {
-  const toast = useToast();
+  const { addToast } = Toast();
+
   const id = "address-toast";
   return (
     <Box border="1px" borderColor="gray.200" py={2}>
@@ -40,18 +42,13 @@ const BillingDetails = ({ totalPrice, makePayment, shippingAddress }) => {
         borderRadius={0}
         onClick={() => {
           if (shippingAddress === null) {
-            if (!toast.isActive(id)) {
-              toast({
-                id,
-                title: "Please add your address.",
-                description:
-                  "You must add your address to proceed to payment section.",
-                status: "error",
-                position: "top-right",
-                duration: 9000,
-                isClosable: true,
-              });
-            }
+            addToast({
+              id: "address-toast",
+              title: "Please add your address.",
+              description:
+                "You must add your address to proceed to payment section.",
+              status: "error",
+            });
           } else {
             makePayment();
           }

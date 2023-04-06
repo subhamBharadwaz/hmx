@@ -24,7 +24,6 @@ import {
   ModalCloseButton,
   useDisclosure,
   Stack,
-  useToast,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
@@ -36,6 +35,8 @@ import { CreateChangePasswordInput } from "../../../types/user";
 import { changePasswordSchema } from "../../../schema/userSchema";
 import { updateUserPassword } from "../../../store/services/auth/auth-slice";
 
+import { Toast } from "../../Toast";
+
 const ChangePassword = ({ onClose, isOpen }) => {
   const [apiError, setApiError] = useState<string | null>(null);
   const { loading, user, error } = useSelector(
@@ -44,20 +45,18 @@ const ChangePassword = ({ onClose, isOpen }) => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "error-toast",
         title: "Unable to update password.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const {
     register,
@@ -74,12 +73,10 @@ const ChangePassword = ({ onClose, isOpen }) => {
     dispatch(updateUserPassword(values))
       .unwrap()
       .then(() => {
-        toast({
+        addToast({
           id: "success-toast",
           title: "Password updated successfully.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         });
       })
       .catch((error: { message: string }) => {

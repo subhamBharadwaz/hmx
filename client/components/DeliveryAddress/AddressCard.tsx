@@ -1,6 +1,6 @@
-import React from "react";
 import { Box, Text, Flex, Button, ButtonGroup } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
+
 import { AppDispatch } from "../../store";
 import { removeShippingAddress } from "../../store/services/address/addressSlice";
 

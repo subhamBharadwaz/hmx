@@ -25,8 +25,8 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 
 // Icons
 import { FiMenu, FiChevronDown, FiBell } from "react-icons/fi";
@@ -47,6 +47,7 @@ import {
 import { BiUserCircle } from "react-icons/bi";
 import { IconType } from "react-icons";
 import { BsChevronDown } from "react-icons/bs";
+import { logoutUser } from "../../store/services/auth/auth-slice";
 
 interface LinkItemProps {
   name: string;
@@ -109,7 +110,6 @@ const LinkItems: Array<LinkItemProps> = [
     icon: BiUserCircle,
     path: "/admin/profile",
   },
-  { name: "Logout", icon: AiOutlineLogout, path: "/" },
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
@@ -147,6 +147,8 @@ interface SidebarProps extends BoxProps {
 }
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const ScrollableBox = styled(Box)`
     /* Customize scrollbar */
     ::-webkit-scrollbar {
@@ -200,6 +202,16 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
             {link.name}
           </NavItem>
         ))}
+        <NavItem
+          path="/"
+          icon={AiOutlineLogout}
+          onClick={() => {
+            dispatch(logoutUser());
+            onClose();
+          }}
+        >
+          Logout
+        </NavItem>
       </Box>
     </ScrollableBox>
   );
@@ -259,6 +271,7 @@ interface MobileProps extends FlexProps {
 
 export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -278,14 +291,18 @@ export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         icon={<FiMenu />}
       />
 
-      <Text
-        display={{ base: "flex", md: "none" }}
-        fontSize="2xl"
-        ml="8"
-        fontWeight="bold"
-      >
-        HMX Admin
-      </Text>
+      <NextLink href="/">
+        <Text
+          display={{ base: "flex", md: "none" }}
+          fontSize="2xl"
+          ml="8"
+          fontWeight="bold"
+          cursor="pointer"
+        >
+          HMX
+        </Text>
+      </NextLink>
+
       <HStack spacing={{ base: "0", md: "6" }}>
         <IconButton
           size="lg"
@@ -328,10 +345,11 @@ export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               <MenuItem>
                 <NextLink href="/my-account/profile">Profile</NextLink>
               </MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
+
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={() => dispatch(logoutUser())}>
+                Log out
+              </MenuItem>
             </MenuList>
           </Menu>
         </Flex>

@@ -122,20 +122,18 @@ const Nav = () => {
                       variant="unstyled"
                     />
                     <MenuList fontSize="md" zIndex={100}>
-                      <MenuItem>
-                        <NextLink href="/my-account">My Account</NextLink>
-                      </MenuItem>
-                      <MenuItem>
-                        <NextLink href="/my-account/orders">My Orders</NextLink>
-                      </MenuItem>
-                      <MenuItem>
-                        <NextLink href="/wishlist">My Wishlist</NextLink>
-                      </MenuItem>
-                      <MenuItem>
-                        <NextLink href="/my-account/profile">
-                          My Profile
-                        </NextLink>
-                      </MenuItem>
+                      <NextLink href="/my-account">
+                        <MenuItem>My Account</MenuItem>
+                      </NextLink>
+                      <NextLink href="/my-account/orders">
+                        <MenuItem>My Orders</MenuItem>
+                      </NextLink>
+                      <NextLink href="/wishlist">
+                        <MenuItem>My Wishlist</MenuItem>
+                      </NextLink>
+                      <NextLink href="/my-account/profile">
+                        <MenuItem>My Profile</MenuItem>
+                      </NextLink>
                       <MenuItem onClick={() => dispatch(logoutUser())}>
                         Logout
                       </MenuItem>

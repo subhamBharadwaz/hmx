@@ -265,8 +265,8 @@ const Sidebar = ({ isOpen, onClose, menuRef }) => {
                 as={motion.div}
                 variants={item}
                 onClick={() => {
-                  onClose;
                   dispatch(logoutUser());
+                  onClose();
                 }}
               >
                 Logout

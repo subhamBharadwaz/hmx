@@ -35,7 +35,6 @@ import {
   ModalCloseButton,
   useDisclosure,
   Stack,
-  useToast,
 } from "@chakra-ui/react";
 
 import { updateUserSchema } from "../../../schema/userSchema";
@@ -45,6 +44,7 @@ import { BsChevronLeft } from "react-icons/bs";
 import ChangePassword from "../../../components/MyAccount/Profile/ChangePassword";
 import ImageUpload from "../../../components/ImageUpload";
 import withAuth from "../../../components/HOC/withAuth";
+import { Toast } from "../../../components/Toast";
 
 function Profile() {
   const { loading, user, error } = useSelector(
@@ -56,20 +56,18 @@ function Profile() {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "profile-toast",
         title: "Unable to update profile details.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const {
     register,
@@ -105,12 +103,10 @@ function Profile() {
     dispatch(updateUserDetails(data as CreateUpdateUserInput))
       .unwrap()
       .then(() => {
-        toast({
+        addToast({
           id: "success-toast",
           title: "Profile updated successfully.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         });
       })
       .catch((error: { message: string }) => {

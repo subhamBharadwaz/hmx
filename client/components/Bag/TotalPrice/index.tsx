@@ -1,6 +1,6 @@
-import React from "react";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
+
 const TotalPrice = ({ totalPrice }) => {
   return (
     <Box border="1px" borderColor="gray.200" py={2}>

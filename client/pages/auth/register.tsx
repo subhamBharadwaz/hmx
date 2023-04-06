@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import NextImage from "next/image";
 import NextLink from "next/link";
-import { registerUser } from "../../store/services/auth/auth-slice";
+
 import {
   Box,
   Flex,
@@ -25,12 +25,14 @@ import {
   Text,
   Spinner,
   InputRightElement,
-  useToast,
 } from "@chakra-ui/react";
 
 import { registerUserSchema } from "../../schema/userSchema";
 import { CreateRegisterUserInput } from "../../types/user";
 import { AppDispatch, RootState } from "../../store";
+import { registerUser } from "../../store/services/auth/auth-slice";
+
+import { Toast } from "../../components/Toast";
 
 export default function RegisterPage() {
   const [registerError, setRegisterError] = useState(null);
@@ -42,27 +44,24 @@ export default function RegisterPage() {
     (state: RootState) => state.auth
   );
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "register-toast",
         title: "Unable to register.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const {
     register,
     formState: { errors },
-    setValue,
     handleSubmit,
   } = useForm<CreateRegisterUserInput>({
     resolver: zodResolver(registerUserSchema),
@@ -93,7 +92,7 @@ export default function RegisterPage() {
     setShowConfirmPassword(!showConfirmPassword);
 
   return (
-    <Box p="2em">
+    <Box>
       <Flex
         justifyContent="space-around"
         flexDirection={["column", "column", "row"]}
@@ -114,7 +113,7 @@ export default function RegisterPage() {
           />
         </Box>
         <Box
-          w={["md", "xl"]}
+          w={["full", "full", "2xl"]}
           p={[8, 10]}
           border={["none", "1px"]}
           borderColor={["", "gray.300"]}

@@ -25,9 +25,10 @@ import {
   MenuDivider,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
+import { BsChevronDown } from "react-icons/bs";
+
 import { AppDispatch } from "../../../../store";
 import { getAllUsers } from "../../../../store/services/admin/adminUserSlice";
-import { BsChevronDown } from "react-icons/bs";
 
 const roles = ["user", "admin"];
 

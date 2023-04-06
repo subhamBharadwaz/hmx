@@ -25,18 +25,17 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  HStack,
   Select,
   Text,
   Stack,
   Progress,
-  Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { ChakraStylesConfig, Select as RSelect } from "chakra-react-select";
 import "react-quill/dist/quill.snow.css";
+
 import { updateProduct } from "../../../store/services/admin/adminProductSlice";
 import ImageUpload from "../../ImageUpload";
+import { Toast } from "../../Toast";
 
 interface Product {
   product: IProduct;
@@ -64,9 +63,6 @@ export default function UpdateProductDetails({ product }: Product) {
   const dispatch = useDispatch<AppDispatch>();
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const [quillDetailValue, setQuillDetailValue] = useState("");
-  const [quillDescriptionValue, setQuillDescriptionValue] = useState("");
-
   const { loading, error } = useSelector(
     (state: RootState) => state.adminProductSlice
   );
@@ -80,20 +76,18 @@ export default function UpdateProductDetails({ product }: Product) {
     }),
   };
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   useEffect(() => {
     if (error) {
-      toast({
+      addToast({
         id: "product-update-toast",
         title: "Unable to update product details.",
         description: error,
         status: "error",
-        duration: 9000,
-        isClosable: true,
       });
     }
-  }, [error, toast]);
+  }, [error, addToast]);
 
   const {
     register,
@@ -115,11 +109,6 @@ export default function UpdateProductDetails({ product }: Product) {
     },
   });
 
-  useEffect(() => {
-    setQuillDescriptionValue(product.description || ""); // set default value for description
-    setQuillDetailValue(product.detail || ""); // set default value for detail
-  }, [product.description, product.detail]);
-
   async function onSubmit(values: CreateProductInput) {
     const data = new FormData();
 
@@ -133,8 +122,8 @@ export default function UpdateProductDetails({ product }: Product) {
     data.append("brand", values.brand);
     data.append("price", values.price);
     data.append("category", values.category);
-    data.append("detail", quillDetailValue);
-    data.append("description", quillDescriptionValue);
+    data.append("detail", values.detail);
+    data.append("description", values.description);
     data.append("gender", values.gender);
     for (const s of values.size) {
       data.append("size", s);
@@ -147,12 +136,10 @@ export default function UpdateProductDetails({ product }: Product) {
     )
       .unwrap()
       .then(() => {
-        toast({
+        addToast({
           id: "update-product-toast",
           title: "Product updated successfully.",
           status: "success",
-          duration: 9000,
-          isClosable: true,
         });
       })
       .catch((error: { message: string }) => {
@@ -372,7 +359,6 @@ export default function UpdateProductDetails({ product }: Product) {
                     onBlur={onBlur}
                     defaultValue={product.detail}
                     onChange={(newValue) => {
-                      setQuillDetailValue(newValue);
                       onChange(newValue);
                     }}
                     modules={{
@@ -413,7 +399,6 @@ export default function UpdateProductDetails({ product }: Product) {
                     value={value}
                     onBlur={onBlur}
                     onChange={(newValue) => {
-                      setQuillDescriptionValue(newValue);
                       onChange(newValue);
                     }}
                     modules={{

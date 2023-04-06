@@ -13,9 +13,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
+import { BsChevronDown } from "react-icons/bs";
+import { AiOutlineFilter } from "react-icons/ai";
+
 import { AppDispatch } from "../../../../store";
 import { getAllProducts } from "../../../../store/services/admin/adminProductSlice";
-import { BsChevronDown } from "react-icons/bs";
 import FilterProductsMobile from "../../../FilterProductsMobile";
 
 const categories = [
@@ -47,7 +49,6 @@ const FilterProducts = ({ productGender, productCategory, searchQuery }) => {
     productCategory,
   ]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [sliderValue, setSliderValue] = useState([499, 3999]);
 
   useEffect(() => {
     dispatch(
@@ -204,7 +205,14 @@ const FilterProducts = ({ productGender, productCategory, searchQuery }) => {
       </Stack>
       <Box display={["block", "block", "none"]}>
         {" "}
-        <Button onClick={onOpen}>Filter</Button>
+        <Button
+          colorScheme="messenger"
+          variant="outline"
+          onClick={onOpen}
+          leftIcon={<AiOutlineFilter />}
+        >
+          Filter
+        </Button>
         <FilterProductsMobile
           productCategory="All"
           productGender="All"

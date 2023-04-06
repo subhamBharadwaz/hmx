@@ -15,15 +15,16 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  useToast,
 } from "@chakra-ui/react";
 
 import NextLink from "next/link";
 import { BsChevronDown } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store";
+
 import { IOrder } from "../../../types/order";
+import { AppDispatch } from "../../../store";
 import { adminDeleteSingleOrder } from "../../../store/services/admin/adminOrderSlice";
+import { Toast } from "../../Toast";
 
 interface IOrdersData {
   orders: IOrder[];
@@ -32,7 +33,7 @@ interface IOrdersData {
 const OrdersTable = ({ orders }: IOrdersData) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const toast = useToast();
+  const { addToast } = Toast();
 
   return (
     <>
@@ -120,12 +121,10 @@ const OrdersTable = ({ orders }: IOrdersData) => {
                             dispatch(adminDeleteSingleOrder(order?._id))
                               .unwrap()
                               .then(() => {
-                                toast({
+                                addToast({
                                   id: "order-delete-toast",
                                   title: "Order deleted successfully.",
                                   status: "success",
-                                  duration: 9000,
-                                  isClosable: true,
                                 });
                               })
                               .catch((error: { message: string }) => {
@@ -137,41 +136,6 @@ const OrdersTable = ({ orders }: IOrdersData) => {
                         </MenuItem>
                       </MenuList>
                     </Menu>
-                    {/* Here the alert footer button giving the last item only */}
-                    {/* <AlertDialog
-                      isOpen={isOpen}
-                      leastDestructiveRef={cancelRef}
-                      onClose={onClose}
-                    >
-                      <AlertDialogOverlay>
-                        <AlertDialogContent>
-                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            Delete Order
-                          </AlertDialogHeader>
-
-                          <AlertDialogBody>
-                            Are you sure? You can&apos;t undo this action
-                            afterwards.
-                          </AlertDialogBody>
-
-                          <AlertDialogFooter>
-                            <Button ref={cancelRef} onClick={onClose}>
-                              Cancel
-                            </Button>
-
-                            <Button
-                              ml={3}
-                              onClick={() =>
-                                handleOrderDelete(order?.orderStatus)
-                              }
-                              colorScheme="red"
-                            >
-                              Delete
-                            </Button>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialogOverlay>
-                    </AlertDialog> */}
                   </Td>
                 </Tr>
               ))}
