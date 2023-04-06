@@ -69,11 +69,11 @@ const UpdateUserDetails = ({ user }: User) => {
   } = useForm<CreateAdminUpdateUserInput>({
     resolver: zodResolver(adminUpdateUserSchema),
     defaultValues: {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      phoneNumber: user?.phoneNumber,
+      role: user?.role,
     },
   });
 
@@ -107,8 +107,8 @@ const UpdateUserDetails = ({ user }: User) => {
               <VStack>
                 <Avatar
                   size="2xl"
-                  name={user.firstName}
-                  src={user.photo.secure_url}
+                  name={user?.firstName}
+                  src={user?.photo?.secure_url}
                 />
 
                 <Text fontSize={18} as="b">{`${capitalizeFirstLetter(
