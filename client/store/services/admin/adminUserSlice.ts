@@ -3,8 +3,6 @@ import { IUser, UpdateUser } from "../../../types/user";
 import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
-import { NextRequest } from "next/server";
-import { NextApiRequest } from "next";
 
 interface IUsers {
   loading: boolean;
@@ -51,8 +49,11 @@ export const getAllUsers = createAsyncThunk(
 // get single user details with id
 export const getSingleUser = createAsyncThunk(
   "admin/user",
-  async (data: { req: any; id: string | string[] }, { rejectWithValue }) => {
-    const { req, id } = data;
+  async (
+    data: { token: CookieValueTypes; id: string | string[] },
+    { rejectWithValue }
+  ) => {
+    const { token, id } = data;
 
     try {
       const res = await axios.get(
@@ -60,11 +61,11 @@ export const getSingleUser = createAsyncThunk(
         {
           withCredentials: true,
           headers: {
-            Cookie: req.headers.cookie,
-            "Access-Control-Allow-Origin": `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
+      console.log(token);
       return await res.data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
