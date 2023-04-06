@@ -60,7 +60,7 @@ export const getSingleUser = createAsyncThunk(
         }
       );
 
-      return await res.data.user;
+      return await res.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -149,7 +149,7 @@ const adminUserSlice = createSlice({
       state.loading = false;
       state.error = null;
       state.users = state.users;
-      state.user = { ...payload };
+      state.user = { ...payload.user };
     });
     builder.addCase(getSingleUser.rejected, (state, { payload }) => {
       state.loading = true;
