@@ -68,9 +68,10 @@ export default withAuth(SingleUserDetails, true);
 export const getServerSideProps = wrapper.getServerSideProps(
   (store) =>
     async ({ req, res, params }) => {
+      const token = getCookie("token", { req, res });
       const { id } = params;
       await store
-        .dispatch(getSingleUser({ req, id }))
+        .dispatch(getSingleUser({ token, id }))
         .unwrap()
         .then(() => {})
         .catch((err) => {
