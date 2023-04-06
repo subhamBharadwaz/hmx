@@ -105,11 +105,11 @@ const UpdateUserDetails = ({ user }: User) => {
           <Stack p="1em">
             <Box w="100%" mx="auto">
               <VStack>
-                <Avatar
+                {/* <Avatar
                   size="2xl"
                   name={user?.firstName}
                   src={user?.photo?.secure_url}
-                />
+                /> */}
 
                 <Text fontSize={18} as="b">{`${capitalizeFirstLetter(
                   user.firstName
