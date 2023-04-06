@@ -78,7 +78,7 @@ const UpdateUserDetails = ({ user }: User) => {
   });
 
   function submitHandler(values: UpdateUser) {
-    dispatch(updateUserDetails({ values, id: user._id }))
+    dispatch(updateUserDetails({ values, id: user?._id }))
       .unwrap()
       .then(() => {
         addToast({
@@ -112,7 +112,7 @@ const UpdateUserDetails = ({ user }: User) => {
                 />
 
                 <Text fontSize={18} as="b">{`${capitalizeFirstLetter(
-                  user.firstName
+                  user?.firstName
                 )} ${capitalizeFirstLetter(user?.lastName)}`}</Text>
               </VStack>
             </Box>
