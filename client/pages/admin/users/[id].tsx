@@ -70,7 +70,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async ({ req, res, params }) => {
       const { id } = params;
       await store
-        .dispatch(getSingleUser({ id }))
+        .dispatch(getSingleUser({ req, id }))
         .unwrap()
         .then(() => {})
         .catch((err) => {
