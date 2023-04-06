@@ -40,20 +40,14 @@ export const getAllOrders = createAsyncThunk(
 // Get single order
 export const getSingleOrder = createAsyncThunk(
   "/order/get-one-orders",
-  async (
-    data: { id: string | string[]; token: CookieValueTypes },
-    { rejectWithValue }
-  ) => {
-    const { id, token } = data;
+  async (data: { id: string | string[] }, { rejectWithValue }) => {
+    const { id } = data;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/order/${id}`,
 
         {
           withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
       return await res.data;

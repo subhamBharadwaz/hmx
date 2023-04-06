@@ -1,16 +1,26 @@
-import React from "react";
-import { wrapper } from "../../../store";
-import { getCookie } from "cookies-next";
-import { getSingleOrder } from "../../../store/services/order/orderSlice";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
-import SingleOrderDetails from "../../../components/MyAccount/Order/SingleOrderDetails";
-import { Box, HStack, Text, Button } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { BsChevronLeft } from "react-icons/bs";
+import { Box, HStack, Text, Button } from "@chakra-ui/react";
+
+import { wrapper } from "../../../store";
+import { getSingleOrder } from "../../../store/services/order/orderSlice";
+import { RootState, AppDispatch } from "../../../store";
+import SingleOrderDetails from "../../../components/MyAccount/Order/SingleOrderDetails";
 import withAuth from "../../../components/HOC/withAuth";
 
 function Order() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const router = useRouter();
+  const { id } = router.query;
+
+  useEffect(() => {
+    dispatch(getSingleOrder({ id }));
+  }, [dispatch, id]);
+
   const { loading, order } = useSelector(
     (state: RootState) => state.orderSlice
   );
@@ -33,22 +43,3 @@ function Order() {
 }
 
 export default withAuth(Order);
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ req, res, params }) => {
-      const token = getCookie("token", { req, res });
-      const { id } = params;
-      await store
-        .dispatch(getSingleOrder({ token, id }))
-        .unwrap()
-        .then(() => {})
-        .catch((err) => {
-          res.writeHead(302, { Location: "/404" });
-          res.end();
-        });
-      return {
-        props: {},
-      };
-    }
-);

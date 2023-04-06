@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
-import { RootState, wrapper } from "../../../store";
-
-import { getCookie } from "cookies-next";
-
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, wrapper, AppDispatch } from "../../../store";
+import { useRouter } from "next/router";
 import {
   Box,
   SkeletonCircle,
@@ -20,6 +19,15 @@ import withAuth from "../../../components/HOC/withAuth";
 import AdminLayout from "../../../layout/AdminLayout";
 
 function SingleOrder() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const router = useRouter();
+  const { id } = router.query;
+
+  useEffect(() => {
+    dispatch(adminGetSingleOrder({ id }));
+  }, [dispatch, id]);
+
   const { loading, order, error } = useSelector(
     (state: RootState) => state.adminOrderSlice
   );
@@ -60,22 +68,3 @@ function SingleOrder() {
 }
 
 export default withAuth(SingleOrder, true);
-
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ req, res, params }) => {
-      const token = getCookie("token", { req, res });
-      const { id } = params;
-      await store
-        .dispatch(adminGetSingleOrder({ token, id }))
-        .unwrap()
-        .then(() => {})
-        .catch((err) => {
-          res.writeHead(302, { Location: "/404" });
-          res.end();
-        });
-      return {
-        props: {},
-      };
-    }
-);
