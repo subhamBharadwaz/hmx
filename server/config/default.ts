@@ -3,7 +3,7 @@ export default {
 	dbUrl: '',
 	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
 	jwtExpiry: '3d',
-	origin: 'http://lcoalhost:3000',
+	origin: 'http://localhost:3000',
 	redisUrl: 'redis://localhost:6379',
 	cloudinaryName: '',
 	cloudinaryApiKey: '',
