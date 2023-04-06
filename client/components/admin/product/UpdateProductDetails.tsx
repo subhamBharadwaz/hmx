@@ -314,7 +314,7 @@ export default function UpdateProductDetails({ product }: Product) {
                     instanceId="admin-product-size-select"
                     isClearable
                     isMulti
-                    defaultValue={product.size.map((s) => {
+                    defaultValue={product?.size?.map((s) => {
                       return {
                         value: s,
                         label: s,
