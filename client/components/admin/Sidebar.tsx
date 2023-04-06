@@ -271,7 +271,9 @@ interface MobileProps extends FlexProps {
 
 export const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
