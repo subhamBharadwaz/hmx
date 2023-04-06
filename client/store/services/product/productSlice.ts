@@ -199,7 +199,7 @@ const productSlice = createSlice({
       state.error = null;
       state.topSellingProducts = [...payload];
     });
-    builder.addCase(getTopSellingProducts.rejected, (state, { paylaod }) => {
+    builder.addCase(getTopSellingProducts.rejected, (state, { payload }) => {
       state.loading = true;
       state.products = null;
       state.topSellingProducts = [];
