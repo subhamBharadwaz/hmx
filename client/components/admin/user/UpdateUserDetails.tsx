@@ -113,7 +113,7 @@ const UpdateUserDetails = ({ user }: User) => {
 
                 <Text fontSize={18} as="b">{`${capitalizeFirstLetter(
                   user.firstName
-                )} ${capitalizeFirstLetter(user.lastName)}`}</Text>
+                )} ${capitalizeFirstLetter(user?.lastName)}`}</Text>
               </VStack>
             </Box>
 

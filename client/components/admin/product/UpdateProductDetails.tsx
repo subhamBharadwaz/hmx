@@ -98,14 +98,14 @@ export default function UpdateProductDetails({ product }: Product) {
   } = useForm<CreateProductInput>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
-      name: product.name,
-      price: product.price,
-      detail: product.detail,
-      description: product.description,
-      category: product.category,
-      gender: product.gender,
-      brand: product.brand,
-      stock: product.stock,
+      name: product?.name,
+      price: product?.price,
+      detail: product?.detail,
+      description: product?.description,
+      category: product?.category,
+      gender: product?.gender,
+      brand: product?.brand,
+      stock: product?.stock,
     },
   });
 
@@ -435,7 +435,7 @@ export default function UpdateProductDetails({ product }: Product) {
                   {...register("photos")}
                   isMultiple={true}
                   files={[]}
-                  defaultFiles={product?.photos.map(
+                  defaultFiles={product?.photos?.map(
                     (photo) => photo?.secure_url
                   )}
                   onChange={(files: File[]) => {
