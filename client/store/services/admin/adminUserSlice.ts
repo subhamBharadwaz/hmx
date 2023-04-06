@@ -65,7 +65,7 @@ export const getSingleUser = createAsyncThunk(
           },
         }
       );
-      console.log(token);
+      console.log({ token });
       return await res.data.user;
     } catch (err) {
       return rejectWithValue(err.response.data);
