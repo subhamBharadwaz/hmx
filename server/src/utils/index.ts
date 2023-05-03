@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable import/prefer-default-export */
-export {default as cookieToken} from './cookieToken';
+export {signAccessToken, signRefreshToken} from './jwt_helpers';
 export {default as CustomError} from './customError';
 export {default as connectToDB} from './db';
 export {default as logger} from './logger';
