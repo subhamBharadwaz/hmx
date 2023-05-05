@@ -99,7 +99,7 @@ export default function UpdateProductDetails({ product }: Product) {
     resolver: zodResolver(addProductSchema),
     defaultValues: {
       name: product?.name,
-      price: product?.price,
+      price: String(product?.price),
       detail: product?.detail,
       description: product?.description,
       category: product?.category,
@@ -180,7 +180,7 @@ export default function UpdateProductDetails({ product }: Product) {
 
             <FormControl mt={7} isInvalid={!!errors.price}>
               <Input
-                type="text"
+                type="number"
                 fontSize={18}
                 h={16}
                 rounded={5}

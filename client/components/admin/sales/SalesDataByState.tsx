@@ -6,15 +6,34 @@ import {
   adminGetSalesDataByStates,
 } from "../../../store/services/admin/adminSalesSlice";
 import { AppDispatch, RootState } from "../../../store";
-import { Text, HStack, Select, Flex, Stack } from "@chakra-ui/react";
+import { Text, HStack, Select, Flex, Stack, Box } from "@chakra-ui/react";
 import { Toast } from "../../Toast";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const SalesDataBySate = () => {
   const [apiError, setApiError] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState(new Date());
+
   const { loading, salesDataByState, error } = useSelector(
     (state: RootState) => state.adminSalesSlice
   );
 
+  const handleDateChange = (date) => {
+    setStartDate(date);
+
+    dispatch(
+      adminGetSalesDataByStates({
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+      })
+    )
+      .unwrap()
+      .then(() => {})
+      .catch((error: { message: string }) => {
+        setApiError(error.message);
+      });
+  };
   const { addToast } = Toast();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -28,15 +47,6 @@ const SalesDataBySate = () => {
       });
     }
   }, [error, addToast]);
-
-  useEffect(() => {
-    dispatch(adminGetSalesDataByStates({}))
-      .unwrap()
-      .then(() => {})
-      .catch((error: { message: string }) => {
-        setApiError(error.message);
-      });
-  }, [dispatch]);
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -54,13 +64,17 @@ const SalesDataBySate = () => {
         <Text fontWeight="semibold" fontSize="lg">
           Sales By States
         </Text>
-        <Select placeholder="Select option" w="20%">
-          <option value="option1">Option 1</option>
-          <option value="option2">Option 2</option>
-          <option value="option3">Option 3</option>
-        </Select>
+        <Box
+          border="1px"
+          borderColor="blackAlpha.200"
+          rounded="md"
+          px={3}
+          py={2}
+        >
+          <DatePicker selected={startDate} onChange={handleDateChange} />
+        </Box>
       </HStack>
-      {!loading && (
+      {!loading && salesDataByState?.length > 0 ? (
         <PieChart width={400} height={400}>
           <Pie
             data={salesDataByState}
@@ -82,6 +96,11 @@ const SalesDataBySate = () => {
           <Tooltip />
           <Legend />
         </PieChart>
+      ) : (
+        <Text fontSize="lg">
+          There is no data to show at during this month/year. Please change the
+          date.
+        </Text>
       )}
     </Stack>
   );

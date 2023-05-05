@@ -57,8 +57,8 @@ export const registerHandler = BigPromise(
 			}
 		});
 
-		const accessToken = await signAccessToken(user.id);
-		const refreshToken = await signRefreshToken(user.id);
+		const accessToken = signAccessToken({id: user._id});
+		const refreshToken = signRefreshToken({id: user._id});
 
 		res.cookie('token', refreshToken, {
 			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
