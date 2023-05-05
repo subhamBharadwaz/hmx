@@ -115,7 +115,7 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "auth/login",
-  async (values: CreateLoginUserInput, { rejectWithValue }) => {
+  async (values: CreateLoginUserInput, { dispatch, rejectWithValue }) => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/login`,
@@ -128,6 +128,7 @@ export const loginUser = createAsyncThunk(
           withCredentials: true,
         }
       );
+
       return await res.data.accessToken;
     } catch (err) {
       return rejectWithValue(err.response.data);

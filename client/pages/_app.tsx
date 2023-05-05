@@ -19,6 +19,11 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { ReactReduxContext } from "react-redux";
 let tokenFromLocalStorage: string;
+
+if (typeof window !== "undefined") {
+  // Perform localStorage action
+  tokenFromLocalStorage = localStorage.getItem("token");
+}
 let shippingAddress;
 
 function MyApp({ Component, pageProps }: AppProps) {
