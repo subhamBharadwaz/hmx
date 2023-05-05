@@ -3,6 +3,7 @@ import { CreateReviewInput, IProductReview } from "../../../types/review";
 import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
+import { RootState } from "../../index";
 
 interface IReviews {
   loading: boolean;
@@ -21,11 +22,16 @@ const initialState = {
 // get product reviews
 export const getProductReviews = createAsyncThunk(
   "/reviews",
-  async (productId: string | string[], { rejectWithValue }) => {
+  async (productId: string | string[], { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/reviews?id=${productId}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -40,12 +46,17 @@ export const getProductReviews = createAsyncThunk(
 // create product review
 export const createProductReview = createAsyncThunk(
   "/reviews/create",
-  async (values: CreateReviewInput, { rejectWithValue }) => {
+  async (values: CreateReviewInput, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/review`,
         values,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -60,12 +71,17 @@ export const createProductReview = createAsyncThunk(
 // delete product review
 export const deleteProductReview = createAsyncThunk(
   "/reviews/delete",
-  async (values: CreateReviewInput, { rejectWithValue }) => {
+  async (values: CreateReviewInput, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/review`,
         values,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

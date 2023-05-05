@@ -1,4 +1,5 @@
 export default {
+	env: 'production',
 	port: '',
 	dbUrl: '',
 	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',

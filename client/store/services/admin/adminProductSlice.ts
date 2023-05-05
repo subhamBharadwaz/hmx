@@ -3,6 +3,7 @@ import { CreateProductInput, IProduct } from "../../../types/product";
 import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
+import { RootState } from "../../index";
 
 interface IProducts {
   loading: boolean;
@@ -32,9 +33,10 @@ export const getAllProducts = createAsyncThunk(
       limit?: string;
       search?: string | string[];
     },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
     try {
+      const { token } = (getState() as RootState).auth;
       const { category, gender, size, page, limit, search } = data;
 
       const res = await axios.get(
@@ -46,6 +48,9 @@ export const getAllProducts = createAsyncThunk(
           search || ""
         }`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -58,12 +63,19 @@ export const getAllProducts = createAsyncThunk(
 
 export const getAllFilteredProducts = createAsyncThunk(
   "admin/products/filtered",
-  async (query: { section: string; size: string }, { rejectWithValue }) => {
+  async (
+    query: { section: string; size: string },
+    { getState, rejectWithValue }
+  ) => {
     const { section, size } = query;
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/products?section=${section}&size=${size}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -77,13 +89,17 @@ export const getAllFilteredProducts = createAsyncThunk(
 // get single product details with id
 export const getSingleProduct = createAsyncThunk(
   "admin/product",
-  async (data: { id: string | string[] }, { rejectWithValue }) => {
+  async (data: { id: string | string[] }, { getState, rejectWithValue }) => {
     const { id } = data;
 
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/product/${id}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -97,8 +113,9 @@ export const getSingleProduct = createAsyncThunk(
 // add a new product
 export const createProduct = createAsyncThunk(
   "admin/product/create",
-  async (values: CreateProductInput, { rejectWithValue }) => {
+  async (values: CreateProductInput, { getState, rejectWithValue }) => {
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/product/add`,
         values,
@@ -111,6 +128,7 @@ export const createProduct = createAsyncThunk(
           withCredentials: true,
           headers: {
             "content-type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -126,10 +144,11 @@ export const updateProduct = createAsyncThunk(
   "admin/product/update",
   async (
     data: { values: CreateProductInput; id: string | string[] },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
     const { values, id } = data;
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/product/${id}`,
         values,
@@ -142,6 +161,7 @@ export const updateProduct = createAsyncThunk(
           withCredentials: true,
           headers: {
             "content-type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -155,12 +175,16 @@ export const updateProduct = createAsyncThunk(
 // admin delete single product
 export const deleteProduct = createAsyncThunk(
   "admin/product/delete",
-  async (id: string | string[], { rejectWithValue }) => {
+  async (id: string | string[], { getState, rejectWithValue }) => {
     try {
+      const { token } = (getState() as RootState).auth;
       await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/product/${id}`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

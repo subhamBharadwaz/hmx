@@ -6,9 +6,10 @@ import {
   IUser,
 } from "../../../types/user";
 import axios from "axios";
-import { CookieValueTypes } from "cookies-next";
+import { CookieValueTypes, setCookie } from "cookies-next";
 import { CreateRegisterUserInput } from "../../../types/user";
 import setAuthToken from "../../../utils/setAuthToken";
+import { RootState } from "../../index";
 
 let tokenFromLocalStorage: string;
 
@@ -36,10 +37,8 @@ const initialState = {
 // Logged in user details
 export const userDetails = createAsyncThunk(
   "auth/userdetails",
-  async (_, { rejectWithValue }) => {
-    if (tokenFromLocalStorage) {
-      setAuthToken(tokenFromLocalStorage);
-    }
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
 
     try {
       const res = await axios.get(
@@ -47,14 +46,46 @@ export const userDetails = createAsyncThunk(
 
         {
           headers: {
-            "Access-Control-Allow-Origin": `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}`,
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         }
       );
 
-      return res.data;
+      return res.data.user;
     } catch (err) {
+      if (err.response.status === 401) {
+        // If the access token is expired, try refreshing it and retry the request
+        console.log("sending refresh token req");
+        try {
+          const refreshResult = await axios.get<{ accessToken: string }>(
+            `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/refresh`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              withCredentials: true,
+            }
+          );
+          const newAccessToken = refreshResult.data.accessToken;
+          if (newAccessToken) {
+            const response = await axios.get(
+              `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/userdetails`,
+              {
+                headers: {
+                  Authorization: `Bearer ${newAccessToken}`,
+                },
+                withCredentials: true,
+              }
+            );
+            return response.data.user;
+          }
+        } catch (error) {
+          // If refreshing the access token fails, log the user out
+          // Or, you can redirect them to the login page
+          return rejectWithValue({ error: "Failed to refresh access token" });
+        }
+      }
       return rejectWithValue(err.response.data);
     }
   }
@@ -75,7 +106,7 @@ export const registerUser = createAsyncThunk(
           withCredentials: true,
         }
       );
-      return await res.data;
+      return await res.data.accessToken;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -97,7 +128,7 @@ export const loginUser = createAsyncThunk(
           withCredentials: true,
         }
       );
-      return await res.data;
+      return await res.data.accessToken;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -109,7 +140,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      await axios.get(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/logout`,
         {
           withCredentials: true,
@@ -126,7 +157,8 @@ export const logoutUser = createAsyncThunk(
 // update user dashboard
 export const updateUserDetails = createAsyncThunk(
   "auth/update-user-details",
-  async (values: CreateUpdateUserInput, { rejectWithValue }) => {
+  async (values: CreateUpdateUserInput, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/userdashboard/update`,
@@ -134,6 +166,7 @@ export const updateUserDetails = createAsyncThunk(
         {
           headers: {
             "Content-Type": "Multipart/Form-Data",
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         }
@@ -148,7 +181,8 @@ export const updateUserDetails = createAsyncThunk(
 // update user password
 export const updateUserPassword = createAsyncThunk(
   "auth/update-user-details/password",
-  async (values: CreateChangePasswordInput, { rejectWithValue }) => {
+  async (values: CreateChangePasswordInput, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/password/update`,
@@ -156,6 +190,7 @@ export const updateUserPassword = createAsyncThunk(
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         }
@@ -176,20 +211,17 @@ const authSlice = createSlice({
     builder.addCase(userDetails.pending, (state) => {
       state.loading = true;
       state.error = null;
-      state.token = null;
       state.user = null;
     });
     builder.addCase(userDetails.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
-      state.token = tokenFromLocalStorage;
-      state.user = { ...payload.user };
+      state.user = { ...payload };
     });
     builder.addCase(userDetails.rejected, (state, { payload }) => {
       state.isAuthenticated = false;
-      state.loading = true;
-      state.token = null;
+      state.loading = false;
       state.user = null;
       state.error = (payload as { error: string }).error;
     });
@@ -205,7 +237,7 @@ const authSlice = createSlice({
       state.error = null;
     });
     builder.addCase(updateUserDetails.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.user = state.user;
       state.error = (payload as { error: string }).error;
     });
@@ -217,11 +249,11 @@ const authSlice = createSlice({
     });
     builder.addCase(updateUserPassword.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.token = localStorage.setItem("token", payload.token);
+      state.token = payload.accessToken;
       state.error = null;
     });
     builder.addCase(updateUserPassword.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.token = state.token;
       state.error = (payload as { error: string }).error;
     });
@@ -230,7 +262,6 @@ const authSlice = createSlice({
     builder.addCase(registerUser.pending, (state) => {
       state.loading = true;
       state.isAuthenticated = false;
-      state.token = tokenFromLocalStorage;
       state.user = null;
       state.error = null;
     });
@@ -238,14 +269,14 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
-      state.token = localStorage.setItem("token", payload.token);
-      state.user = { ...payload };
+      state.token = payload.accessToken;
+      localStorage.setItem("token", payload.accessToken);
     });
     builder.addCase(registerUser.rejected, (state, { payload }) => {
       state.isAuthenticated = false;
-      state.loading = true;
+      state.loading = false;
       state.token = null;
-      state.user = null;
+
       state.error = (payload as { error: string }).error;
     });
 
@@ -253,22 +284,21 @@ const authSlice = createSlice({
     builder.addCase(loginUser.pending, (state) => {
       state.loading = true;
       state.isAuthenticated = false;
-      state.token = tokenFromLocalStorage;
-      state.user = null;
+
       state.error = null;
     });
     builder.addCase(loginUser.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
-      state.token = localStorage.setItem("token", payload.token);
-      state.user = { ...payload };
+      state.token = payload;
+      localStorage.setItem("token", payload);
     });
     builder.addCase(loginUser.rejected, (state, { payload }) => {
       state.isAuthenticated = false;
-      state.loading = true;
+      state.loading = false;
       state.token = null;
-      state.user = null;
+
       state.error = (payload as { error: string }).error;
     });
 
@@ -276,7 +306,6 @@ const authSlice = createSlice({
     builder.addCase(logoutUser.pending, (state) => {
       state.loading = true;
       state.isAuthenticated = true;
-      state.token = tokenFromLocalStorage;
       state.user = state.user;
       state.error = null;
     });
@@ -284,12 +313,14 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = false;
       state.token = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
       state.user = null;
       state.error = null;
     });
     builder.addCase(logoutUser.rejected, (state, { payload }) => {
       state.isAuthenticated = true;
-      state.loading = true;
+      state.loading = false;
       state.token = null;
       state.user = state.user;
       state.error = (payload as { error: string }).error;

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { IBag } from "../../../types/bag";
-
+import { RootState } from "../../index";
 interface IBagData {
   loading: boolean;
   bagData: IBag;
@@ -18,11 +18,15 @@ const initialState = {
 // get all bag items
 export const getBagItems = createAsyncThunk(
   "/bag",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -38,13 +42,17 @@ export const createAndUpdateBagItems = createAsyncThunk(
   "bag/createAndUpdate",
   async (
     values: { productId: string; size: string; quantity: number },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag`,
         values,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -58,12 +66,16 @@ export const createAndUpdateBagItems = createAsyncThunk(
 // delete bag item
 export const deleteBagItem = createAsyncThunk(
   "bag/delete",
-  async (productId: string, { rejectWithValue }) => {
+  async (productId: string, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag/${productId}`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -77,12 +89,16 @@ export const deleteBagItem = createAsyncThunk(
 // empty bag
 export const emptyBag = createAsyncThunk(
   "bag/emptybag",
-  async (bagId: string, { rejectWithValue }) => {
+  async (bagId: string, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/bag/emptybag/${bagId}`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -110,7 +126,7 @@ const bagSlice = createSlice({
       state.bagData = { ...payload };
     });
     builder.addCase(getBagItems.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.bagData = null;
       state.error = (payload as { error: string }).error;
     });
@@ -127,7 +143,7 @@ const bagSlice = createSlice({
       state.bagData = { ...payload };
     });
     builder.addCase(createAndUpdateBagItems.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.bagData = state.bagData;
       state.error = (payload as { error: string }).error;
     });
@@ -143,7 +159,7 @@ const bagSlice = createSlice({
       state.bagData = { ...payload };
     });
     builder.addCase(deleteBagItem.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.bagData = state.bagData;
       state.error = (payload as { error: string }).error;
     });
@@ -159,7 +175,7 @@ const bagSlice = createSlice({
       state.bagData = null;
     });
     builder.addCase(emptyBag.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.bagData = state.bagData;
       state.error = (payload as { error: string }).error;
     });

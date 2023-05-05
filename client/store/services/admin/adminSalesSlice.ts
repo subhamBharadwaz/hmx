@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
+import { RootState } from "../../index";
 
 interface ISales {
   loading: boolean;
@@ -26,12 +27,20 @@ const initialState = {
 // Get Admin sales data
 export const adminGetSalesData = createAsyncThunk(
   "admin/sales",
-  async (data: { year: string; month: string }, { rejectWithValue }) => {
+  async (
+    data: { year: string; month: string },
+    { getState, rejectWithValue }
+  ) => {
+    const { token } = (getState() as RootState).auth;
     const { year, month } = data;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/sales/${year}/${month}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+
           withCredentials: true,
         }
       );
@@ -47,12 +56,16 @@ export const adminGetSalesDataByStates = createAsyncThunk(
   "admin/sales/state",
   async (
     { year = "", month = "" }: { year?: string; month?: string },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/sales/state?year=${year}&month=${month}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

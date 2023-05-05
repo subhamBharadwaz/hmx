@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { IOrder } from "../../../types/order";
 import { CookieValueTypes } from "cookies-next";
-
+import { RootState } from "../../index";
 interface ICheckout {
   loading: boolean;
   orders: IOrder[];
@@ -21,12 +21,17 @@ const initialState = {
 // Get logged in users orders
 export const getAllOrders = createAsyncThunk(
   "/order/get-all-orders",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/myorder`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -40,13 +45,18 @@ export const getAllOrders = createAsyncThunk(
 // Get single order
 export const getSingleOrder = createAsyncThunk(
   "/order/get-one-orders",
-  async (data: { id: string | string[] }, { rejectWithValue }) => {
+  async (data: { id: string | string[] }, { getState, rejectWithValue }) => {
     const { id } = data;
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/order/${id}`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -60,7 +70,9 @@ export const getSingleOrder = createAsyncThunk(
 // create Order
 export const createOrder = createAsyncThunk(
   "/order/create-order",
-  async (orderDetails: IOrder, { rejectWithValue }) => {
+  async (orderDetails: IOrder, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/order/create`,
@@ -68,6 +80,7 @@ export const createOrder = createAsyncThunk(
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         }

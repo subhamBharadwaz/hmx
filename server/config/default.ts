@@ -1,8 +1,9 @@
 export default {
+	env: 'development',
 	port: '',
 	dbUrl: '',
 	accessTokenSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
-	accessTokenExpiry: '1h',
+	accessTokenExpiry: '10s',
 	refreshTokenSecret: 'daDSBSJDBJSBD324542NKDNKSNDKNDdsdsdsdsd#dsdsdsd',
 	refreshTokenExpiry: '7d',
 	// origin: 'https://hmx-subhambharadwaz.vercel.app',

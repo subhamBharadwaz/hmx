@@ -20,14 +20,6 @@ import { persistStore } from "redux-persist";
 import { ReactReduxContext } from "react-redux";
 let tokenFromLocalStorage: string;
 let shippingAddress;
-if (typeof window !== "undefined") {
-  // Perform localStorage action
-  tokenFromLocalStorage = localStorage.getItem("token");
-}
-
-if (tokenFromLocalStorage) {
-  setAuthToken(tokenFromLocalStorage);
-}
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -36,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    // dispatch(userDetails());
+    dispatch(userDetails());
   }, [dispatch]);
   useEffect(() => {
     dispatch(getBagItems());

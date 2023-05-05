@@ -63,7 +63,7 @@ export const registerHandler = BigPromise(
 		res.cookie('token', refreshToken, {
 			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 			httpOnly: true,
-			secure: true,
+			secure: config.get<string>('env') !== 'development',
 			// @ts-ignore
 			sameSite: 'None'
 		});
@@ -109,7 +109,7 @@ export const loginHandler = BigPromise(
 		res.cookie('token', refreshToken, {
 			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
 			httpOnly: true,
-			secure: true,
+			secure: config.get<string>('env') !== 'development',
 			// @ts-ignore
 			sameSite: 'None'
 		});

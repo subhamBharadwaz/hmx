@@ -15,7 +15,7 @@ const isLoggedIn = (req: IGetUserAuthInfoRequest, res: Response, next: NextFunct
 	const token = (authHeader as string).split(' ')[1];
 
 	jwt.verify(token, config.get<string>('accessTokenSecret'), async (err, decoded) => {
-		if (err) return res.status(403).json({message: 'Login first to access'});
+		if (err) return res.status(403).json({message: 'Login first to access', err});
 		// @ts-ignore
 		req.user = await User.findById({_id: decoded?.id});
 

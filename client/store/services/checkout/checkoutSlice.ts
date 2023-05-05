@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
 import { IOrder } from "../../../types/order";
-
+import { RootState } from "../../index";
 interface ICheckout {
   loading: boolean;
   razorpayKey: null | string;
@@ -21,11 +21,15 @@ const initialState = {
 // get razorpay key
 export const getRazorpayKey = createAsyncThunk(
   "/razorpay-key",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/razorpaykey`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
