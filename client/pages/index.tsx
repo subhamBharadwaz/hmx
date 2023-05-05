@@ -10,11 +10,9 @@ import NextLink from "next/link";
 
 export default function Index() {
   const dispatch = useDispatch<AppDispatch>();
-  useEffect(() => {
-    dispatch(userDetails());
-  }, [dispatch]);
 
   useEffect(() => {
+    dispatch(userDetails());
     dispatch(getTopSellingProducts());
   }, [dispatch]);
 

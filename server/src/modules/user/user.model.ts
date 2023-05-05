@@ -1,9 +1,9 @@
 /* eslint-disable func-names */
 import {Schema, model} from 'mongoose';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+
 import crypto from 'crypto';
-import config from 'config';
+
 import {IUserDocument, ROLE} from './user.types';
 
 const UserSchema = new Schema<IUserDocument>(
@@ -66,17 +66,6 @@ UserSchema.pre<IUserDocument>('save', async function (next) {
 UserSchema.methods.comparePassword = async function (userPassword: string): Promise<boolean> {
 	const comparedPassword = await bcrypt.compare(userPassword, this.password);
 	return comparedPassword;
-};
-
-// create and return jwt token
-UserSchema.methods.getJwtToken = function (): string {
-	const jwtSecret = config.get<string>('jwtSecret');
-	const jwtExpiry = config.get<string>('jwtExpiry');
-
-	// eslint-disable-next-line no-underscore-dangle
-	return jwt.sign({id: this._id}, jwtSecret, {
-		expiresIn: jwtExpiry
-	});
 };
 
 // generate forgot password token

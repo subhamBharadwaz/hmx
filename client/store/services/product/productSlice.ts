@@ -3,7 +3,7 @@ import { CreateProductInput, IProduct } from "../../../types/product";
 import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
-
+import { RootState } from "../../index";
 interface ITopSellingProps {
   quantitySold: number;
   totalRevenue: number;
@@ -51,8 +51,9 @@ export const getAllProducts = createAsyncThunk(
       sortBy?: string;
       search?: string | string[];
     },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
+    const { token } = (getState() as RootState).auth;
     const {
       category,
       gender,
@@ -77,6 +78,9 @@ export const getAllProducts = createAsyncThunk(
           search || ""
         }`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -91,11 +95,15 @@ export const getAllProducts = createAsyncThunk(
 // get similar products
 export const getSimilarProducts = createAsyncThunk(
   "/products/similarProducts",
-  async (category: string, { rejectWithValue }) => {
+  async (category: string, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/products?category=${category}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -109,11 +117,15 @@ export const getSimilarProducts = createAsyncThunk(
 // get top-selling products
 export const getTopSellingProducts = createAsyncThunk(
   "/products/top-selling",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/top-selling`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -128,11 +140,15 @@ export const getTopSellingProducts = createAsyncThunk(
 // get single product details with id
 export const getSingleProduct = createAsyncThunk(
   "/product/id",
-  async (id: string | string[], { rejectWithValue }) => {
+  async (id: string | string[], { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/product/${id}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

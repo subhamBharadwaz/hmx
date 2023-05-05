@@ -1,11 +1,19 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {Request, Response, NextFunction} from 'express';
 import {v2 as cloudinary, UploadApiOptions} from 'cloudinary';
 import crypto from 'crypto';
 // import path from 'path';
+import jwt from 'jsonwebtoken';
 import {nanoid} from 'nanoid';
 import config from 'config';
 import {BigPromise} from '../../middlewares';
-import {cookieToken, mailHelper, isValidMongooseObjectId, APIError} from '../../utils';
+import {
+	signAccessToken,
+	mailHelper,
+	isValidMongooseObjectId,
+	APIError,
+	signRefreshToken
+} from '../../utils';
 import {HttpStatusCode} from '../../types/http.model';
 import {IUser, IGetUserAuthInfoRequest} from './user.types';
 import {CreateLoginUserInput} from './user.schema';
@@ -49,7 +57,18 @@ export const registerHandler = BigPromise(
 			}
 		});
 
-		cookieToken(user, res);
+		const accessToken = await signAccessToken(user.id);
+		const refreshToken = await signRefreshToken(user.id);
+
+		res.cookie('token', refreshToken, {
+			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+			httpOnly: true,
+			secure: config.get<string>('env') !== 'development',
+			// @ts-ignore
+			sameSite: 'None'
+		});
+
+		res.status(200).json({success: true, accessToken});
 	}
 );
 
@@ -84,7 +103,18 @@ export const loginHandler = BigPromise(
 			return next(new APIError(message, 'loginHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
-		cookieToken(user, res);
+		const accessToken = signAccessToken({id: user._id});
+		const refreshToken = signRefreshToken({id: user._id});
+
+		res.cookie('token', refreshToken, {
+			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+			httpOnly: true,
+			secure: config.get<string>('env') !== 'development',
+			// @ts-ignore
+			sameSite: 'None'
+		});
+
+		res.status(200).json({success: true, accessToken});
 	}
 );
 
@@ -93,18 +123,17 @@ export const loginHandler = BigPromise(
 @route   GET /api/v1/logout
 @access  Private
 */
-export const logoutHandler = BigPromise(async (req: Request, res: Response) => {
-	// delete the cookie
-	res.cookie('token', null, {
-		expires: new Date(Date.now()),
-		httpOnly: true
-	});
+export const logoutHandler = (req: Request, res: Response) => {
+	const {cookies} = req;
+	if (!cookies?.token) return res.sendStatus(204);
+	// @ts-ignore
+	res.clearCookie('token', {httpOnly: true, sameSite: 'None', secure: true});
 
 	res.status(200).json({
 		success: true,
 		message: 'Logout Success'
 	});
-});
+};
 
 /** 
 @desc    Forgot Password
@@ -241,8 +270,18 @@ export const passwordResetHandler = BigPromise(
 				new APIError(errorMessage, 'passwordResetHandler', HttpStatusCode.INTERNAL_SERVER)
 			);
 		}
+		const accessToken = await signAccessToken(user.id);
+		const refreshToken = await signRefreshToken(user.id);
 
-		cookieToken(user, res);
+		res.cookie('token', refreshToken, {
+			expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+			httpOnly: true,
+			secure: true,
+			// @ts-ignore
+			sameSite: 'None'
+		});
+
+		res.status(200).json({success: true, accessToken});
 	}
 );
 
@@ -288,7 +327,18 @@ export const changePasswordHandler = BigPromise(
 			// save the new password to db
 			await user.save();
 
-			cookieToken(user, res);
+			const accessToken = await signAccessToken(user.id);
+			const refreshToken = await signRefreshToken(user.id);
+
+			res.cookie('token', refreshToken, {
+				expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+				httpOnly: true,
+				secure: true,
+				// @ts-ignore
+				sameSite: 'None'
+			});
+
+			res.status(200).json({success: true, accessToken});
 		}
 	}
 );
@@ -299,7 +349,7 @@ export const changePasswordHandler = BigPromise(
 @access  Private
 */
 export const updateUserDetailsHandler = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+	async (req: IGetUserAuthInfoRequest, res: Response) => {
 		const {firstName, lastName, phoneNumber}: IUser = req.body;
 
 		const newData = {
@@ -482,6 +532,37 @@ export const adminDeleteUserHandler = BigPromise(
 		res.status(200).json({
 			success: true,
 			message: `Successfully deleted the user with id ${id}`
+		});
+	}
+);
+
+/** 
+@desc    Refresh Token
+@route   DELETE /api/v1/admin/user/:id
+@access  Private
+*/
+export const refreshTokenHandler = BigPromise(
+	async (req: Request, res: Response, next: NextFunction) => {
+		const {cookies} = req;
+
+		if (!cookies?.token) {
+			const message = 'Unauthorized';
+			return next(new APIError(message, 'refreshTokenHandler', HttpStatusCode.BAD_REQUEST));
+		}
+
+		const refreshToken = cookies.token;
+
+		// @ts-ignore
+		jwt.verify(refreshToken, config.get<string>('refreshTokenSecret'), async (err, decoded) => {
+			if (err) return res.status(403).json({message: 'Forbidden'});
+
+			const foundUser = await User.findOne({username: decoded.username}).exec();
+
+			if (!foundUser) return res.status(401).json({message: 'Unauthorized'});
+
+			const accessToken = signAccessToken({id: foundUser._id});
+
+			res.json({accessToken});
 		});
 	}
 );

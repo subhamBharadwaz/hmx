@@ -26,14 +26,19 @@ import {
 	adminAllUsersHandler,
 	adminSingleUserHandler,
 	adminUpdateUserDetailsHandler,
-	adminDeleteUserHandler
+	adminDeleteUserHandler,
+	refreshTokenHandler
 } from './user.controller';
 
 const router = Router();
 
 router.route('/register').post(validateResource(registerUserSchema), registerHandler);
 router.route('/login').post(validateResource(loginUserSchema), loginHandler);
-router.route('/logout').get(logoutHandler);
+
+router.route('/refresh').get(refreshTokenHandler);
+
+router.route('/logout').post(logoutHandler);
+
 router.route('/forgotpassword').post(validateResource(forgotPasswordSchema), forgotPasswordHandler);
 router
 	.route('/password/reset/:token')

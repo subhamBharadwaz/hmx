@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 import { IWishlist } from "../../../types/wishlist";
+import { RootState } from "../../index";
 
 interface IWishlistData {
   loading: boolean;
@@ -18,11 +19,15 @@ const initialState = {
 // get all wishlist items
 export const getWishlistItems = createAsyncThunk(
   "wishlist",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/wishlist`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -36,12 +41,16 @@ export const getWishlistItems = createAsyncThunk(
 // create wishlist
 export const createWishlist = createAsyncThunk(
   "wishlist/createWishlist",
-  async (value: { productId: string }, { rejectWithValue }) => {
+  async (value: { productId: string }, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/wishlist`,
         value,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -55,12 +64,16 @@ export const createWishlist = createAsyncThunk(
 // delete wishlist
 export const deleteWishlistItem = createAsyncThunk(
   "wishlist/deleteWishlistItem",
-  async (value: { productId: string }, { rejectWithValue }) => {
+  async (value: { productId: string }, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/wishlist/${value.productId}`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -88,7 +101,7 @@ const wishlistSlice = createSlice({
       state.wishlistData = { ...payload };
     });
     builder.addCase(getWishlistItems.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.wishlistData = null;
       state.error = (payload as { error: string }).error;
     });
@@ -105,7 +118,7 @@ const wishlistSlice = createSlice({
       state.wishlistData = { ...payload };
     });
     builder.addCase(createWishlist.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.wishlistData = state.wishlistData;
       state.error = (payload as { error: string }).error;
     });
@@ -122,7 +135,7 @@ const wishlistSlice = createSlice({
       state.wishlistData = { ...payload };
     });
     builder.addCase(deleteWishlistItem.rejected, (state, { payload }) => {
-      state.loading = true;
+      state.loading = false;
       state.wishlistData = state.wishlistData;
       state.error = (payload as { error: string }).error;
     });

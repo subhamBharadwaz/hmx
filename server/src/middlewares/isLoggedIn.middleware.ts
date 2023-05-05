@@ -1,27 +1,26 @@
-import {Response, NextFunction} from 'express';
-import jwt from 'jsonwebtoken';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import config from 'config';
+import jwt from 'jsonwebtoken';
+import {Response, NextFunction} from 'express';
+import {IGetUserAuthInfoRequest} from '../modules/user/user.types';
 import User from '../modules/user/user.model';
-import {APIError} from '../utils/index';
-import {HttpStatusCode} from '../types/http.model';
-import {BigPromise} from './index';
-import {IGetUserAuthInfoRequest, IJwtPayload} from '../modules/user/user.types';
 
-const isLoggedIn = BigPromise(
-	async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-		const token: string =
-			req.cookies.token || req.header('Authorization')?.replace('Bearer ', '');
-		if (!token) {
-			const message = 'Login first to access this page';
-			return next(new APIError(message, 'isLoggedIn', HttpStatusCode.FORBIDDEN));
-		}
+const isLoggedIn = (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
+	const authHeader = req.headers.authorization || req.headers.Authorization;
 
-		const decoded = jwt.verify(token, config.get<string>('jwtSecret')) as IJwtPayload;
+	if (!(authHeader as string)?.startsWith('Bearer ')) {
+		return res.status(401).json({message: 'Unauthorized'});
+	}
 
-		req.user = await User.findById(decoded.id);
+	const token = (authHeader as string).split(' ')[1];
+
+	jwt.verify(token, config.get<string>('accessTokenSecret'), async (err, decoded) => {
+		if (err) return res.status(403).json({message: 'Login first to access', err});
+		// @ts-ignore
+		req.user = await User.findById({_id: decoded?.id});
 
 		next();
-	}
-);
+	});
+};
 
 export default isLoggedIn;

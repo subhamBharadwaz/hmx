@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
 import { IOrder } from "../../../types/order";
+import { RootState } from "../../index";
 
 interface IOrderData {
   loading: boolean;
@@ -21,11 +22,15 @@ const initialState = {
 
 export const adminGetAllOrders = createAsyncThunk(
   "admin/orders",
-  async (_, { rejectWithValue }) => {
+  async (_, { getState, rejectWithValue }) => {
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -38,12 +43,16 @@ export const adminGetAllOrders = createAsyncThunk(
 
 export const adminGetSingleOrder = createAsyncThunk(
   "admin/orders/one-order",
-  async (data: { id: string | string[] }, { rejectWithValue }) => {
+  async (data: { id: string | string[] }, { getState, rejectWithValue }) => {
     const { id } = data;
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders/${id}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -58,15 +67,19 @@ export const adminUpdateSingleOrder = createAsyncThunk(
   "admin/orders/update",
   async (
     data: { orderStatus: string; id: string | string[] },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
     const { orderStatus, id } = data;
 
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders/${id}`,
         { orderStatus },
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -79,11 +92,15 @@ export const adminUpdateSingleOrder = createAsyncThunk(
 
 export const adminDeleteSingleOrder = createAsyncThunk(
   "admin/orders/delete",
-  async (id: string | string[], { rejectWithValue }) => {
+  async (id: string | string[], { getState, rejectWithValue }) => {
     try {
+      const { token } = (getState() as RootState).auth;
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders/${id}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );

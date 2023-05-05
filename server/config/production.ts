@@ -1,1 +1,22 @@
-export default {};
+export default {
+	env: 'production',
+	port: '',
+	dbUrl: '',
+	jwtSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
+	jwtExpiry: '3d',
+	origin: 'https://hmx-subhambharadwaz.vercel.app',
+	redisUrl: 'redis://localhost:6379',
+	cloudinaryName: '',
+	cloudinaryApiKey: '',
+	cloudinaryApiSecret: '',
+	smtpHost: '',
+	smtpPort: '',
+	smtpUser: '',
+	smtpPass: '',
+	stripeApiKey: '',
+	stripeApiSecret: '',
+	razorpayApiKey: '',
+	razorpayApiSecret: '',
+	userImageDir: 'users',
+	productImageDir: 'products'
+};

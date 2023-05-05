@@ -29,7 +29,6 @@ export interface IUser {
 export interface IUserDocument extends IUser, Document {
 	// eslint-disable-next-line no-unused-vars
 	comparePassword: (userPassword: string) => Promise<boolean>;
-	getJwtToken: () => string;
 	getForgotPasswordToken: () => string;
 }
 

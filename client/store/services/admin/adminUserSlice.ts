@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { IUser, UpdateUser } from "../../../types/user";
 import axios from "axios";
-
+import { RootState } from "../../index";
 import { CookieValueTypes } from "cookies-next";
 
 interface IUsers {
@@ -27,15 +27,21 @@ export const getAllUsers = createAsyncThunk(
   "admin/users",
   async (
     query: { page?: string; role?: string[]; searchQ?: string },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
     const { page, role, searchQ } = query;
+
+    const { token } = (getState() as RootState).auth;
+
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/users?role=${
           role || "All"
         }&search=${searchQ || ""}&page=${page}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -49,13 +55,16 @@ export const getAllUsers = createAsyncThunk(
 // get single user details with id
 export const getSingleUser = createAsyncThunk(
   "admin/user",
-  async (data: { id: string | string[] }, { rejectWithValue }) => {
+  async (data: { id: string | string[] }, { getState, rejectWithValue }) => {
     const { id } = data;
-
+    const { token } = (getState() as RootState).auth;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/user/${id}`,
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
@@ -72,9 +81,10 @@ export const updateUserDetails = createAsyncThunk(
   "admin/user/update",
   async (
     data: { values: UpdateUser; id: string | string[] },
-    { rejectWithValue }
+    { getState, rejectWithValue }
   ) => {
     const { values, id } = data;
+    const { token } = (getState() as RootState).auth;
 
     try {
       const res = await axios.put(
@@ -84,6 +94,7 @@ export const updateUserDetails = createAsyncThunk(
           withCredentials: true,
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -97,12 +108,16 @@ export const updateUserDetails = createAsyncThunk(
 // delete single user with id
 export const deleteUser = createAsyncThunk(
   "admin/user/delete",
-  async (id: string | string[], { rejectWithValue }) => {
+  async (id: string | string[], { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
     try {
       await axios.delete(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/user/${id}`,
 
         {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           withCredentials: true,
         }
       );
