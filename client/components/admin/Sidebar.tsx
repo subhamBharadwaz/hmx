@@ -91,24 +91,9 @@ const LinkItems: Array<LinkItemProps> = [
     path: "/admin/stats",
   },
   {
-    name: "Notification",
-    icon: MdOutlineNotificationAdd,
-    path: "/admin/notifications",
-  },
-  {
-    name: "Logs",
-    icon: MdOutlinePsychology,
-    path: "/admin/logs",
-  },
-  {
-    name: "Settings",
-    icon: MdSettingsApplications,
-    path: "/admin/settings",
-  },
-  {
     name: "Profile",
     icon: BiUserCircle,
-    path: "/admin/profile",
+    path: "/my-account/profile",
   },
 ];
 

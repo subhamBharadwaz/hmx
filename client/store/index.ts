@@ -70,6 +70,7 @@ export const reducer = (
       adminProductSlice: {
         loading: state.adminProductSlice.loading,
         error: action.payload.adminProductSlice.error,
+        total: action.payload.adminProductSlice.total,
         products: {
           ...state.adminProductSlice.products,
           ...action.payload.adminProductSlice.products,
@@ -83,6 +84,9 @@ export const reducer = (
         loading: state.adminOrderSlice.loading,
         message: action.payload.adminOrderSlice.message,
         error: action.payload.adminOrderSlice.error,
+        total: action.payload.adminOrderSlice.total,
+        totalDeliveredOrders:
+          action.payload.adminOrderSlice.totalDeliveredOrders,
         orders: [
           ...state.adminOrderSlice.orders,
           ...action.payload.adminOrderSlice.orders,
@@ -95,6 +99,7 @@ export const reducer = (
       adminSalesSlice: {
         loading: state.adminSalesSlice.loading,
         error: action.payload.adminSalesSlice.error,
+        totalRevenue: action.payload.adminSalesSlice.totalRevenue,
         salesData: [
           ...state.adminSalesSlice.salesData,
           ...action.payload.adminSalesSlice.salesData,

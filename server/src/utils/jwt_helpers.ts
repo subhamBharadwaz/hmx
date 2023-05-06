@@ -14,9 +14,13 @@ const accessTokenSecret = config.get<string>('accessTokenSecret');
 const refreshTokenSecret = config.get<string>('refreshTokenSecret');
 
 export const signAccessToken = (payload: AccessTokenPayload) => {
-	return jwt.sign(payload, accessTokenSecret, {expiresIn: '15m'});
+	return jwt.sign(payload, accessTokenSecret, {
+		expiresIn: config.get<string>('accessTokenExpiry')
+	});
 };
 
 export const signRefreshToken = (payload: RefreshTokenPayload) => {
-	return jwt.sign(payload, refreshTokenSecret, {expiresIn: '7d'});
+	return jwt.sign(payload, refreshTokenSecret, {
+		expiresIn: config.get<string>('refreshTokenExpiry')
+	});
 };

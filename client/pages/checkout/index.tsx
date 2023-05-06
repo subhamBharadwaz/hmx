@@ -26,6 +26,13 @@ import AddAddressForm from "../../components/DeliveryAddress/AddAddressForm";
 import AddressCard from "../../components/DeliveryAddress/AddressCard";
 import { Toast } from "../../components/Toast";
 
+let tokenFromLocalStorage: string;
+
+if (typeof window !== "undefined") {
+  // Perform localStorage action
+  tokenFromLocalStorage = localStorage.getItem("token");
+}
+
 export default function DeliveryAddress() {
   const dispatch = useDispatch<AppDispatch>();
   const [apiError, setApiError] = useState<string | null>(null);
@@ -106,6 +113,7 @@ export default function DeliveryAddress() {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${tokenFromLocalStorage}`,
           },
           withCredentials: true,
         }
@@ -124,7 +132,13 @@ export default function DeliveryAddress() {
           axios
             .post(
               `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/payment/verification`,
-              response
+              response,
+              {
+                headers: {
+                  Authorization: `Bearer ${tokenFromLocalStorage}`,
+                },
+                withCredentials: true,
+              }
             )
             .then((res) => {
               dispatch(createOrder(orderDetails));

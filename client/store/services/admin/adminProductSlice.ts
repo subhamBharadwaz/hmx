@@ -9,6 +9,7 @@ interface IProducts {
   loading: boolean;
   products: { products: IProduct[] };
   product: IProduct;
+  total: number | null;
   error: string | null;
 }
 
@@ -18,6 +19,7 @@ const initialState = {
     products: [],
   },
   product: {},
+  total: null,
   error: null,
 } as IProducts;
 
@@ -55,6 +57,28 @@ export const getAllProducts = createAsyncThunk(
         }
       );
       return await res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+// get total number of products
+export const adminGetTotalNumberOfProducts = createAsyncThunk(
+  "admin/product/total",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { token } = (getState() as RootState).auth;
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/products/total`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data.total;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -218,6 +242,28 @@ const adminProductSlice = createSlice({
       state.product = null;
       state.error = (payload as { error: string }).error;
     });
+
+    // total number of products
+    builder.addCase(adminGetTotalNumberOfProducts.pending, (state) => {
+      state.loading = true;
+      state.total = null;
+      state.error = null;
+    });
+    builder.addCase(
+      adminGetTotalNumberOfProducts.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.total = payload;
+      }
+    );
+    builder.addCase(
+      adminGetTotalNumberOfProducts.rejected,
+      (state, { payload }) => {
+        state.loading = true;
+        state.total = null;
+        state.error = (payload as { error: string }).error;
+      }
+    );
 
     // filtered products
     builder.addCase(getAllFilteredProducts.pending, (state) => {

@@ -101,11 +101,12 @@ export const registerUser = createAsyncThunk(
         values,
         {
           headers: {
-            "Content-Type": "Multipart/Form-Data",
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         }
       );
+      console.log(res.data);
       return await res.data.accessToken;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -115,11 +116,10 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "auth/login",
-  async (values: CreateLoginUserInput, { dispatch, rejectWithValue }) => {
+  async (values: CreateLoginUserInput, { rejectWithValue }) => {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/login`,
-
         values,
         {
           headers: {
@@ -128,7 +128,6 @@ export const loginUser = createAsyncThunk(
           withCredentials: true,
         }
       );
-
       return await res.data.accessToken;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -263,15 +262,16 @@ const authSlice = createSlice({
     builder.addCase(registerUser.pending, (state) => {
       state.loading = true;
       state.isAuthenticated = false;
-      state.user = null;
       state.error = null;
     });
     builder.addCase(registerUser.fulfilled, (state, { payload }) => {
       state.loading = false;
       state.isAuthenticated = true;
       state.error = null;
-      state.token = payload.accessToken;
-      localStorage.setItem("token", payload.accessToken);
+      if (payload) {
+        state.token = payload;
+        localStorage.setItem("token", payload);
+      }
     });
     builder.addCase(registerUser.rejected, (state, { payload }) => {
       state.isAuthenticated = false;

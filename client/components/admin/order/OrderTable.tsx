@@ -37,13 +37,12 @@ const OrdersTable = ({ orders }: IOrdersData) => {
 
   return (
     <>
-      <TableContainer>
+      <TableContainer boxShadow="sm" bg="white" rounded="lg">
         <Table
           variant="simple"
           size="lg"
-          fontSize={18}
           fontWeight="medium"
-          color="black"
+          color="blackAlpha.800"
         >
           <TableCaption>All Areas</TableCaption>
           <Thead>
@@ -63,7 +62,6 @@ const OrdersTable = ({ orders }: IOrdersData) => {
               orders?.map((order) => (
                 <Tr
                   key={order?._id}
-                  color="blackAlpha.700"
                   fontSize="medium"
                   transition="background-color 0.3s ease-in-out,color 0.3s ease-in-out"
                   _hover={{ background: "gray.100", color: "blackAlpha.900" }}

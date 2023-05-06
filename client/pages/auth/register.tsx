@@ -68,15 +68,7 @@ export default function RegisterPage() {
   });
 
   async function onSubmit(values: CreateRegisterUserInput) {
-    const data = new FormData();
-    data.append("firstName", values.firstName);
-    data.append("lastName", values.lastName);
-    data.append("email", values.email);
-    data.append("password", values.password);
-    data.append("phoneNumber", values.phoneNumber);
-
-    // @ts-ignore
-    dispatch(registerUser(data))
+    dispatch(registerUser(values))
       .unwrap()
       .then(() => {})
       .catch((error: { message: string }) => {

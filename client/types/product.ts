@@ -60,4 +60,17 @@ export interface IProduct {
   updatedAt: Date;
 }
 
+export interface ITopSellingProps {
+  quantitySold: number;
+  totalRevenue: number;
+  productId: string;
+  name: string;
+  photos: {
+    id: string;
+    secure_url: string;
+  }[];
+  price: string;
+  category: string;
+}
+
 export type CreateProductInput = TypeOf<typeof addProductSchema>;

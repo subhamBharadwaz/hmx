@@ -10,6 +10,8 @@ interface IOrderData {
   loading: boolean;
   orders: IOrder[];
   order: IOrder;
+  total: number | null;
+  totalDeliveredOrders: number | null;
   error: string | null;
 }
 
@@ -17,6 +19,8 @@ const initialState = {
   loading: false,
   orders: [],
   order: null,
+  total: null,
+  totalDeliveredOrders: null,
   error: null,
 } as IOrderData;
 
@@ -27,6 +31,69 @@ export const adminGetAllOrders = createAsyncThunk(
       const { token } = (getState() as RootState).auth;
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const adminGetTotalNumberOfOrders = createAsyncThunk(
+  "admin/orders/total",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { token } = (getState() as RootState).auth;
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders/total`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data.orders;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const adminGetTotalDeliveredOrders = createAsyncThunk(
+  "admin/orders/total-delivered-orders",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { token } = (getState() as RootState).auth;
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders/total-delivered-orders`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data.orders;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const adminGetAllRecentOrders = createAsyncThunk(
+  "admin/orders/recent",
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { token } = (getState() as RootState).auth;
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/orders/recent`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -130,6 +197,68 @@ const adminOrderSlice = createSlice({
     builder.addCase(adminGetAllOrders.rejected, (state, { payload }) => {
       state.loading = false;
       state.orders = [];
+      state.error = (payload as { error: string }).error;
+    });
+
+    // get total number of orders
+    builder.addCase(adminGetTotalNumberOfOrders.pending, (state) => {
+      state.loading = true;
+      state.total = null;
+      state.error = null;
+    });
+    builder.addCase(
+      adminGetTotalNumberOfOrders.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.total = payload;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      adminGetTotalNumberOfOrders.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.total = null;
+        state.error = (payload as { error: string }).error;
+      }
+    );
+
+    // get total delivered  orders
+    builder.addCase(adminGetTotalDeliveredOrders.pending, (state) => {
+      state.loading = true;
+      state.totalDeliveredOrders = null;
+      state.error = null;
+    });
+    builder.addCase(
+      adminGetTotalDeliveredOrders.fulfilled,
+      (state, { payload }) => {
+        state.loading = false;
+        state.totalDeliveredOrders = payload;
+        state.error = null;
+      }
+    );
+    builder.addCase(
+      adminGetTotalDeliveredOrders.rejected,
+      (state, { payload }) => {
+        state.loading = false;
+        state.totalDeliveredOrders = null;
+        state.error = (payload as { error: string }).error;
+      }
+    );
+
+    builder.addCase(adminGetAllRecentOrders.pending, (state) => {
+      state.loading = true;
+      state.orders = state.orders;
+      state.error = null;
+    });
+    builder.addCase(adminGetAllRecentOrders.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.error = null;
+      state.orders = [...payload.orders];
+    });
+    builder.addCase(adminGetAllRecentOrders.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.orders = state.orders;
       state.error = (payload as { error: string }).error;
     });
 

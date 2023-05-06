@@ -12,9 +12,12 @@ import {
 	getSingleOrderHandler,
 	getLoggedInUserOrdersHandler,
 	adminGetAllOrdersHandler,
+	adminCountTotalOrdersHandler,
 	adminUpdateSingleOrderHandler,
 	adminDeleteSingleOrderHandler,
-	adminGetSingleOrderHandler
+	adminGetSingleOrderHandler,
+	adminGetAllDeliveredOrdersHandler,
+	adminGetRecentOrdersHandler
 } from './order.controller';
 
 const router = Router();
@@ -36,6 +39,15 @@ router.route('/myorder').get(isLoggedIn, getLoggedInUserOrdersHandler); // ex: h
 
 // Admin only routes
 router.route('/admin/orders').get(isLoggedIn, customRole('admin'), adminGetAllOrdersHandler);
+router
+	.route('/admin/orders/total')
+	.get(isLoggedIn, customRole('admin'), adminCountTotalOrdersHandler);
+router
+	.route('/admin/orders/recent')
+	.get(isLoggedIn, customRole('admin'), adminGetRecentOrdersHandler);
+router
+	.route('/admin/orders/total-delivered-orders')
+	.get(isLoggedIn, customRole('admin'), adminGetAllDeliveredOrdersHandler);
 router
 	.route('/admin/orders/:id')
 	.get(isLoggedIn, customRole('admin'), adminGetSingleOrderHandler)

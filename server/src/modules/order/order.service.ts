@@ -43,6 +43,37 @@ export async function findAllOrders() {
 	}
 }
 
+export async function totalOrders() {
+	try {
+		const orders = await Order.countDocuments();
+		return orders;
+	} catch (error: any) {
+		throw new BaseError('Could not perform find total orders operation', error, 'totalOrders');
+	}
+}
+
+export async function findRecentOrders() {
+	try {
+		const recentOrders = await Order.find({}).sort({createdAt: -1}).limit(5);
+		return recentOrders;
+	} catch (error: any) {
+		throw new BaseError('Could not perform find all orders operation', error, 'findAllOrders');
+	}
+}
+
+export async function totalDeliveredOrders() {
+	try {
+		const orders = await Order.countDocuments({orderStatus: 'Delivered'});
+		return orders;
+	} catch (error: any) {
+		throw new BaseError(
+			'Could not perform find total delivered orders operation',
+			error,
+			'totalDeliveredOrders'
+		);
+	}
+}
+
 export async function findOrderById(id: string) {
 	try {
 		return Order.findById(id);

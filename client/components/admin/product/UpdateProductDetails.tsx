@@ -99,7 +99,7 @@ export default function UpdateProductDetails({ product }: Product) {
     resolver: zodResolver(addProductSchema),
     defaultValues: {
       name: product?.name,
-      price: product?.price,
+      price: String(product?.price),
       detail: product?.detail,
       description: product?.description,
       category: product?.category,
@@ -148,10 +148,10 @@ export default function UpdateProductDetails({ product }: Product) {
   }
 
   return (
-    <Box>
+    <Box boxShadow="sm" bg="white" rounded="lg" p={5}>
       {product && (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={5} mt={10}>
+          <Stack spacing={5}>
             <Text as="b" fontSize={20}>
               Product Name
             </Text>
@@ -180,7 +180,7 @@ export default function UpdateProductDetails({ product }: Product) {
 
             <FormControl mt={7} isInvalid={!!errors.price}>
               <Input
-                type="text"
+                type="number"
                 fontSize={18}
                 h={16}
                 rounded={5}
@@ -449,7 +449,13 @@ export default function UpdateProductDetails({ product }: Product) {
             </FormControl>
           </Stack>
 
-          <Button rounded={5} colorScheme="blue" w="full" mt={7} type="submit">
+          <Button
+            rounded={5}
+            colorScheme="messenger"
+            w="full"
+            mt={7}
+            type="submit"
+          >
             Update Product
           </Button>
           {loading && (

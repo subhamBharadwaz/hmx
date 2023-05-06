@@ -22,6 +22,7 @@ import { createAndUpdateBagItems } from "../../../store/services/bag/bagSlice";
 import NextLink from "next/link";
 import NextImage from "next/image";
 import ReactHtmlParser from "react-html-parser";
+import { useRouter } from "next/router";
 
 import SizeRadioCard from "./SizeRadioCard";
 
@@ -52,6 +53,7 @@ const SingleProduct = ({ product }: Product) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const { products } = useSelector((state: RootState) => state.productSlice);
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
   const { loading } = useSelector((state: RootState) => state.bagSlice);
   const { wishlistData } = useSelector(
@@ -91,6 +93,8 @@ const SingleProduct = ({ product }: Product) => {
     dispatch(createAndUpdateBagItems({ productId, size, quantity: 1 }));
     setAddToBagButtonText("GO TO BAG");
   };
+
+  const router = useRouter();
 
   return (
     <Flex
@@ -191,12 +195,22 @@ const SingleProduct = ({ product }: Product) => {
             colorScheme="messenger"
             variant="solid"
             onClick={() =>
-              isSizeEmpty || selectedSize === null
-                ? setIsSizeEmpty(true)
-                : handleAddToBag(product._id, selectedSize)
+              isAuthenticated
+                ? isSizeEmpty || selectedSize === null
+                  ? setIsSizeEmpty(true)
+                  : handleAddToBag(product._id, selectedSize)
+                : null
             }
           >
-            <NextLink href={addToBagButtonText === "GO TO BAG" ? "/bag" : "#"}>
+            <NextLink
+              href={
+                isAuthenticated
+                  ? addToBagButtonText === "GO TO BAG"
+                    ? "/bag"
+                    : "#"
+                  : "/auth/login"
+              }
+            >
               {addToBagButtonText}
             </NextLink>
           </Button>
@@ -207,9 +221,11 @@ const SingleProduct = ({ product }: Product) => {
             colorScheme="messenger"
             variant="outline"
             onClick={() =>
-              isAlreadyAddedToWishlist
-                ? dispatch(deleteWishlistItem({ productId: product._id }))
-                : dispatch(createWishlist({ productId: product._id }))
+              isAuthenticated
+                ? isAlreadyAddedToWishlist
+                  ? dispatch(deleteWishlistItem({ productId: product._id }))
+                  : dispatch(createWishlist({ productId: product._id }))
+                : router.push("/auth/login")
             }
           >
             WISHLIST

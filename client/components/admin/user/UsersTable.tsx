@@ -53,13 +53,12 @@ const UsersTable = ({ users }: Users) => {
 
   return (
     <>
-      <TableContainer>
+      <TableContainer boxShadow="sm" bg="white" rounded="lg">
         <Table
           variant="simple"
           size="lg"
-          fontSize={[16, 16, 18]}
           fontWeight="medium"
-          color="black"
+          color="blackAlpha.800"
         >
           <TableCaption>All Areas</TableCaption>
           <Thead>
@@ -74,7 +73,12 @@ const UsersTable = ({ users }: Users) => {
           <Tbody>
             {users &&
               users.map((user) => (
-                <Tr key={user.email}>
+                <Tr
+                  key={user.email}
+                  fontSize="medium"
+                  transition="background-color 0.3s ease-in-out,color 0.3s ease-in-out"
+                  _hover={{ background: "gray.100", color: "blackAlpha.900" }}
+                >
                   <Td>
                     <HStack>
                       <Avatar

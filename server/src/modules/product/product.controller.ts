@@ -446,6 +446,19 @@ export const adminAddProductHandler = BigPromise(
 );
 
 /** 
+@desc    Get total number of products
+@route   GET /api/v1/product/:id
+@access  Public
+*/
+export const adminGetTotalNumberOfProductsHandler = BigPromise(
+	async (req: Request, res: Response) => {
+		const total = await totalProducts();
+
+		res.status(200).json({success: true, total});
+	}
+);
+
+/** 
 @desc    Admin Update Single Product
 @route   PUT /api/v1/admin/product/:id
 @access  Private
