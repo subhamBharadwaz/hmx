@@ -7,7 +7,7 @@ export default {
 	refreshTokenSecret: 'daDSBSJDBJSBD324542NKDNKSNDKNDdsdsdsdsd#dsdsdsd',
 	refreshTokenExpiry: '7d',
 	// origin: 'https://hmx-subhambharadwaz.vercel.app',
-	origin: 'http://localhost:3000',
+	origin: 'https://hmx-subhambharadwaz.vercel.app/',
 	redisUrl: 'redis://localhost:6379',
 	cloudinaryName: '',
 	cloudinaryApiKey: '',
