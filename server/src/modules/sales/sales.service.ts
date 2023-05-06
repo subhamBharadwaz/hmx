@@ -3,6 +3,45 @@
 import Order from '../order/order.model';
 import {BaseError} from '../../utils';
 
+export async function getTotalSales() {
+	const pipeline = [
+		// $unwind stage to deconstruct the orderItems array so that each item in the array becomes a separate document.
+		{$unwind: '$orderItems'},
+
+		// $project stage to calculate the revenue by multiplying the price and quantity fields inside the orderItems array.
+		{
+			$project: {
+				revenue: {
+					$multiply: ['$orderItems.price', '$orderItems.quantity']
+				}
+			}
+		},
+
+		// $group stage to calculate the total revenue for all documents
+		{
+			$group: {
+				_id: null,
+				totalRevenue: {$sum: '$revenue'}
+			}
+		},
+
+		// $project stage to remove the _id field and rename the totalRevenue field
+		{
+			$project: {
+				_id: 0,
+				totalSales: '$totalRevenue'
+			}
+		}
+	];
+
+	try {
+		const result = await Order.aggregate(pipeline);
+		return result[0];
+	} catch (error: any) {
+		throw new BaseError('Could not perform getTotalSales operation', error, 'getTotalSales');
+	}
+}
+
 export async function getSales(year: string, month: string) {
 	const pipeline = [
 		{

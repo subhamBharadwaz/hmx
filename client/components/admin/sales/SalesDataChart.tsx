@@ -59,12 +59,15 @@ const SalesDataChart = () => {
 
   return (
     <Stack
-      minW="100%"
-      h="60vh"
+      minW="full"
       border="1px"
+      h="md"
       borderColor="blackAlpha.100"
       p={5}
       spacing={5}
+      bg="white"
+      boxShadow="sm"
+      rounded="lg"
     >
       <HStack justifyContent="space-between" alignItems="center">
         <Text fontWeight="semibold" fontSize="lg">

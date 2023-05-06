@@ -1,21 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { CreateProductInput, IProduct } from "../../../types/product";
+import {
+  CreateProductInput,
+  IProduct,
+  ITopSellingProps,
+} from "../../../types/product";
 import axios from "axios";
 
 import { CookieValueTypes } from "cookies-next";
 import { RootState } from "../../index";
-interface ITopSellingProps {
-  quantitySold: number;
-  totalRevenue: number;
-  productId: string;
-  name: string;
-  photos: {
-    id: string;
-    secure_url: string;
-  }[];
-  price: string;
-  category: string;
-}
 
 interface IProducts {
   loading: boolean;

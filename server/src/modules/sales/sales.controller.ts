@@ -6,7 +6,18 @@ import {BigPromise} from '../../middlewares';
 
 import {HttpStatusCode} from '../../types/http.model';
 import {APIError} from '../../utils';
-import {getSales, getSalesByState} from './sales.service';
+import {getSales, getSalesByState, getTotalSales} from './sales.service';
+
+/** 
+@desc    Get Total Sales
+@route   GET /api/v1/sales/:year/:month
+@access  Private
+*/
+export const handleAdminGetTotalSalesHandler = BigPromise(async (req: Request, res: Response) => {
+	const totalSales = await getTotalSales();
+
+	res.status(200).json({success: true, totalRevenue: totalSales.totalSales});
+});
 
 /** 
 @desc    Get Sales Details

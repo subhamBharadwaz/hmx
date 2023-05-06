@@ -52,13 +52,14 @@ const SalesDataBySate = () => {
 
   return (
     <Stack
-      minW="100%"
-      minH="60vh"
+      h="md"
       border="1px"
       borderColor="blackAlpha.100"
       p={5}
       spacing={5}
-      mt={20}
+      bg="white"
+      boxShadow="sm"
+      rounded="lg"
     >
       <HStack justifyContent="space-between" alignItems="center">
         <Text fontWeight="semibold" fontSize="lg">

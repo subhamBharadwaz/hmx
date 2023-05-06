@@ -123,56 +123,63 @@ function Products() {
             <SimpleGrid minChildWidth="200px" spacing={4}>
               {products.products &&
                 products.products.map((product: IProduct) => (
-                  <Box key={product._id} p={2}>
+                  <Box
+                    key={product._id}
+                    boxShadow="sm"
+                    bg="white"
+                    rounded="lg"
+                    overflow="hidden"
+                  >
                     <Stack>
                       <Image
                         alt={product.name}
                         src={product.photos[0].secure_url}
-                        height={500}
+                        height={350}
                         width={400}
                         objectFit="cover"
                       />
 
-                      <Text fontWeight="semibold">{product.name}</Text>
-                      <Text color="blackAlpha.600">{product.category}</Text>
-                      <Text fontWeight="semibold">{`₹ ${product.price}`}</Text>
-                      <HStack justifyContent="space-between">
-                        <NextLink
-                          href="/admin/products/[id]"
-                          as={`/admin/products/${product._id}`}
-                        >
+                      <Stack p={2} spacing={2}>
+                        <Text fontWeight="semibold">{product.name}</Text>
+                        <Text color="blackAlpha.600">{product.category}</Text>
+                        <Text fontWeight="semibold">{`₹ ${product.price}`}</Text>
+                        <HStack justifyContent="space-between">
+                          <NextLink
+                            href="/admin/products/[id]"
+                            as={`/admin/products/${product._id}`}
+                          >
+                            <Button
+                              leftIcon={<AiFillEdit />}
+                              colorScheme="messenger"
+                              size="sm"
+                            >
+                              Edit
+                            </Button>
+                          </NextLink>
                           <Button
-                            leftIcon={<AiFillEdit />}
-                            colorScheme="blue"
+                            leftIcon={<AiFillDelete />}
+                            colorScheme="red"
                             variant="outline"
                             size="sm"
+                            onClick={() =>
+                              dispatch(deleteProduct(product._id))
+                                .unwrap()
+                                .then(() => {
+                                  addToast({
+                                    id: "product-delete-toast",
+                                    title: "Product deleted successfully.",
+                                    status: "success",
+                                  });
+                                })
+                                .catch((error: { message: string }) => {
+                                  setApiError(error.message);
+                                })
+                            }
                           >
-                            Edit
+                            Delete
                           </Button>
-                        </NextLink>
-                        <Button
-                          leftIcon={<AiFillDelete />}
-                          colorScheme="red"
-                          variant="outline"
-                          size="sm"
-                          onClick={() =>
-                            dispatch(deleteProduct(product._id))
-                              .unwrap()
-                              .then(() => {
-                                addToast({
-                                  id: "product-delete-toast",
-                                  title: "Product deleted successfully.",
-                                  status: "success",
-                                });
-                              })
-                              .catch((error: { message: string }) => {
-                                setApiError(error.message);
-                              })
-                          }
-                        >
-                          Delete
-                        </Button>
-                      </HStack>
+                        </HStack>
+                      </Stack>
                     </Stack>
                   </Box>
                 ))}

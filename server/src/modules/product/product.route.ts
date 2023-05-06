@@ -14,6 +14,7 @@ import {
 	getSingleProductReviewsHandler,
 	adminGetAllProductsHandler,
 	adminGetSingleProductsHandler,
+	adminGetTotalNumberOfProductsHandler,
 	adminAddProductHandler,
 	adminUpdateSingleProductHandler,
 	adminDeleteSingleProductHandler,
@@ -34,6 +35,9 @@ router.route('/top-selling').get(handleGetToSellingProducts);
 
 // admin only routes
 router.route('/admin/products').get(isLoggedIn, customRole('admin'), adminGetAllProductsHandler);
+router
+	.route('/admin/products/total')
+	.get(isLoggedIn, customRole('admin'), adminGetTotalNumberOfProductsHandler);
 router
 	.route('/admin/product/add')
 	.post(

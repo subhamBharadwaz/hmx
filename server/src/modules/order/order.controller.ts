@@ -10,7 +10,10 @@ import {
 	findOrderByIdAndPopulate,
 	findLoggedInUserOrders,
 	findAllOrders,
-	findOrderById
+	findOrderById,
+	totalDeliveredOrders,
+	totalOrders,
+	findRecentOrders
 } from './order.service';
 
 /** 
@@ -106,12 +109,51 @@ export const getLoggedInUserOrdersHandler = BigPromise(
 
 /** 
 @desc    Get all orders - Admin only
-@route   GET /api/v1/order/id
+@route   GET /api/v1/orders
 @access  Private
 */
 export const adminGetAllOrdersHandler = BigPromise(
 	async (req: IGetUserAuthInfoRequest, res: Response) => {
 		const orders = await findAllOrders();
+
+		res.status(200).json({success: true, orders});
+	}
+);
+
+/** 
+@desc    Get recent 5 orders - Admin only
+@route   GET /api/v1/orders/recent
+@access  Private
+*/
+export const adminGetRecentOrdersHandler = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response) => {
+		const orders = await findRecentOrders();
+
+		res.status(200).json({success: true, orders});
+	}
+);
+
+/** 
+@desc    Count total orders - Admin only
+@route   GET /api/v1/orders/total
+@access  Private
+*/
+export const adminCountTotalOrdersHandler = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response) => {
+		const orders = await totalOrders();
+
+		res.status(200).json({success: true, orders});
+	}
+);
+
+/** 
+@desc    Get all delivered orders - Admin only
+@route   GET /api/v1/order/total-delivered-orders
+@access  Private
+*/
+export const adminGetAllDeliveredOrdersHandler = BigPromise(
+	async (req: IGetUserAuthInfoRequest, res: Response) => {
+		const orders = await totalDeliveredOrders();
 
 		res.status(200).json({success: true, orders});
 	}

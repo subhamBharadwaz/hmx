@@ -97,7 +97,9 @@ const UpdateUserDetails = ({ user }: User) => {
       {user && (
         <Box
           w="100%"
-          boxShadow="0 4px 12px rgba(0,0,0,0.05)"
+          boxShadow="sm"
+          bg="white"
+          rounded="lg"
           mx="auto"
           position="relative"
           my={10}
@@ -208,7 +210,7 @@ const UpdateUserDetails = ({ user }: User) => {
                   </FormControl>
                 </Stack>
 
-                <Button colorScheme="telegram" type="submit" mt={7}>
+                <Button colorScheme="messenger" type="submit" mt={7}>
                   SAVE CHANGES
                 </Button>
               </form>

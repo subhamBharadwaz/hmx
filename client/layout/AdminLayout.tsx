@@ -27,7 +27,7 @@ const AdminLayout = ({ children }) => {
         w="full"
         height="20"
         display={["none", "none", "block"]}
-        mb={[0, 0, 2]}
+        mb={[0, 0, 0]}
         minH="52px"
         py={5}
         pos="sticky"
@@ -101,7 +101,7 @@ const AdminLayout = ({ children }) => {
           </HStack>
         </Flex>
       </Box>
-      <Box w={["100%", "100%", "85%"]} maxW={1445} mx="auto">
+      <Box w={["100%", "100%", "85%"]} maxW={1445} mx="auto" mb={100}>
         <Sidebar>
           <Box flex={1}>{children}</Box>
         </Sidebar>

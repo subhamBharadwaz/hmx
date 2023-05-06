@@ -76,7 +76,7 @@ const productCategories: IProductCategory[] = [
 
 const Footer = () => {
   return (
-    <Box w="full" minH="30vh" bg="gray.100" mt={300} pt={50} pb={100}>
+    <Box w="full" minH="30vh" bg="gray.100" mt={150} pt={50} pb={100}>
       <Box w={["95%", "95%", "60%"]} mx="auto">
         <Text fontWeight="bold" fontSize="3xl" mb={10}>
           HMX

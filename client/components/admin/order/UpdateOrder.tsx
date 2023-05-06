@@ -93,79 +93,82 @@ const UpdateOrder = ({ order }: IOrderData) => {
         alignItems="flex-start"
       >
         <Box minW={["100%", "100%", "60%"]}>
-          <Box border="1px" borderColor="gray.300" my={4} pos="relative">
-            {order?.orderItems?.map((item, idx) => (
-              <Box
-                key={item._id}
-                className={
-                  idx !== order?.orderItems?.length - 1 ? "cardMb" : ""
-                }
-              >
-                <Flex>
-                  <Box h="285px" w="25%" position="relative">
-                    <NextImage
-                      src={item?.image}
-                      alt={item?.name}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </Box>
+          <Stack boxShadow="sm" bg="white" rounded="lg" p={5}>
+            <Text fontSize="lg" fontWeight="bold">
+              Change Order Status
+            </Text>
+            <Select value={status} onChange={handleOrderStatusChange}>
+              <option value="" disabled={true}>
+                Select an option
+              </option>
+              <option value="Processing">Processing</option>
+              <option value="Shipped">Shipped</option>
+              <option value="Out for delivery">Out for delivery</option>
+              <option value="Delivered">Delivered</option>
+            </Select>
+          </Stack>
+          <Box pos="relative">
+            <Box w="100%">
+              {order?.orderItems?.map((item, idx) => (
+                <Box
+                  key={item._id}
+                  boxShadow="sm"
+                  bg="white"
+                  rounded="lg"
+                  overflow="hidden"
+                  my={5}
+                >
+                  <Flex>
+                    <Box h="240px" w="35%" position="relative">
+                      <NextImage
+                        src={item?.image}
+                        alt={item?.name}
+                        layout="fill"
+                        objectFit="cover"
+                      />
+                    </Box>
 
-                  <Stack ml={5} p={5}>
-                    <Badge
-                      fontSize="sm"
-                      colorScheme={
-                        status === "Delivered"
-                          ? "green"
-                          : status === "Processing"
-                          ? "yellow"
-                          : "cyan"
-                      }
-                    >
-                      {status}
-                    </Badge>
-                    <Text fontSize="md" fontWeight="semibold">
-                      {item?.name}
-                    </Text>
-                    <Text
-                      mt={3}
-                      fontSize="md"
-                      color="gray.400"
-                      fontWeight="semibold"
-                    >
-                      Size: {item?.size}
-                    </Text>
-                    <Text mt={3} fontSize="md" fontWeight="semibold">
-                      Rs. {item?.price}
-                    </Text>
-
-                    <VStack>
-                      <Text fontSize="md" fontWeight="bold">
-                        Change Order Status
+                    <Stack ml={5} p={5}>
+                      <Badge
+                        fontSize="sm"
+                        w="max-content"
+                        colorScheme={
+                          status === "Delivered"
+                            ? "green"
+                            : status === "Processing"
+                            ? "yellow"
+                            : "cyan"
+                        }
+                      >
+                        {status}
+                      </Badge>
+                      <Text fontSize="md" fontWeight="semibold">
+                        {item?.name}
                       </Text>
-                      <Select value={status} onChange={handleOrderStatusChange}>
-                        <option value="" disabled={true}>
-                          Select an option
-                        </option>
-                        <option value="Processing">Processing</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Out for delivery">
-                          Out for delivery
-                        </option>
-                        <option value="Delivered">Delivered</option>
-                      </Select>
-                    </VStack>
-                  </Stack>
-                </Flex>
-              </Box>
-            ))}
+                      <Text
+                        mt={3}
+                        fontSize="md"
+                        color="gray.400"
+                        fontWeight="semibold"
+                      >
+                        Size: {item?.size}
+                      </Text>
+                      <Text mt={3} fontSize="md" fontWeight="semibold">
+                        Rs. {item?.price}
+                      </Text>
+                    </Stack>
+                  </Flex>
+                </Box>
+              ))}
+            </Box>
           </Box>
         </Box>
         <Box minW={["100%", "100%", "35%"]}>
           <Box
             mx="auto"
-            border="1px"
-            borderColor="gray.300"
+            boxShadow="sm"
+            bg="white"
+            rounded="lg"
             my={4}
             p={5}
             pos="relative"
@@ -179,16 +182,9 @@ const UpdateOrder = ({ order }: IOrderData) => {
                   fontSize="sm"
                   fontWeight="bold"
                 >{`${shippingInfo?.firstName} ${shippingInfo?.lastName}`}</Text>
-                <Text
-                  bg="blackAlpha.300"
-                  fontSize="xs"
-                  fontWeight="bold"
-                  rounded={10}
-                  py={1}
-                  px={3}
-                >
+                <Badge variant="solid" colorScheme="green">
                   Home
-                </Text>
+                </Badge>
               </HStack>
               <Text
                 fontSize="xs"
@@ -196,7 +192,7 @@ const UpdateOrder = ({ order }: IOrderData) => {
               >{`${shippingInfo?.houseNo} ${shippingInfo?.streetName},${shippingInfo?.city} ${shippingInfo?.postalCode},${shippingInfo?.state},${shippingInfo?.country}`}</Text>
             </Stack>
           </Box>
-          <Box mx="auto" border="1px" borderColor="gray.300" pos="relative">
+          <Box mx="auto" boxShadow="sm" bg="white" rounded="lg" pos="relative">
             <Stack p={5}>
               <Text fontSize="sm" fontWeight="bold" color="blackAlpha.500">
                 PAYMENT SUMMARY

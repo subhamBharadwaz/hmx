@@ -13,6 +13,7 @@ interface ISales {
     _id: string;
     totalRevenue: number;
   }[];
+  totalRevenue: number;
   error: string | null;
 }
 
@@ -21,7 +22,7 @@ const initialState = {
   salesData: [],
   salesDataByState: [],
   error: null,
-  message: null,
+  totalRevenue: null,
 } as ISales;
 
 // Get Admin sales data
@@ -76,6 +77,28 @@ export const adminGetSalesDataByStates = createAsyncThunk(
   }
 );
 
+// Get Admin total revenue
+export const adminGetTotalRevenue = createAsyncThunk(
+  "admin/sales/total",
+  async (_, { getState, rejectWithValue }) => {
+    const { token } = (getState() as RootState).auth;
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/api/v1/admin/sales/total`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
+      );
+      return await res.data.totalRevenue;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const adminSalesSlice = createSlice({
   name: "adminSalesActions",
   initialState,
@@ -120,6 +143,23 @@ const adminSalesSlice = createSlice({
         state.salesDataByState = [];
       }
     );
+
+    // get total revenue
+    builder.addCase(adminGetTotalRevenue.pending, (state) => {
+      state.loading = true;
+      state.totalRevenue = null;
+      state.error = null;
+    });
+    builder.addCase(adminGetTotalRevenue.fulfilled, (state, { payload }) => {
+      state.loading = false;
+      state.error = null;
+      state.totalRevenue = payload;
+    });
+    builder.addCase(adminGetTotalRevenue.rejected, (state, { payload }) => {
+      state.loading = false;
+      state.totalRevenue = null;
+      state.error = (payload as { error: string }).error;
+    });
   },
 });
 

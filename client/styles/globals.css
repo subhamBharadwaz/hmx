@@ -8,6 +8,10 @@ form {
   min-width: 100%;
 }
 
+body {
+  background-color: #f8fafc !important;
+}
+
 .title {
   font-size: 14px;
   font-weight: bold;

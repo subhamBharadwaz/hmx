@@ -4,7 +4,11 @@ import {Router} from 'express';
 import {isLoggedIn, customRole} from '../../middlewares';
 
 // import controllers
-import {handleAdminGetSalesDataHandler, handleAdminGetSalesByStates} from './sales.controller';
+import {
+	handleAdminGetSalesDataHandler,
+	handleAdminGetSalesByStates,
+	handleAdminGetTotalSalesHandler
+} from './sales.controller';
 
 const router = Router();
 
@@ -14,5 +18,9 @@ router
 router
 	.route('/admin/sales/state')
 	.get(isLoggedIn, customRole('admin'), handleAdminGetSalesByStates);
+
+router
+	.route('/admin/sales/total')
+	.get(isLoggedIn, customRole('admin'), handleAdminGetTotalSalesHandler);
 
 export default router;
