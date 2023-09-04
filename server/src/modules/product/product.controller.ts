@@ -43,7 +43,7 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 	const resultPerPage = 12;
 
 	// * The page and limit variables are retrieved from the request query parameters and default to 1 and 6, respectively
-	const {page = 1} = req.query as {page?: string};
+	const {page = '1'} = req.query as {page?: string};
 	const limit = parseInt(req.query.limit as string, 10) || 12;
 
 	// * Price range
@@ -121,7 +121,7 @@ export const getAllProductsHandler = BigPromise(async (req: Request, res: Respon
 		productCount: await totalProducts(),
 		total,
 		limit,
-		page,
+		currentPage: parseInt(page, 10),
 		filteredProductCount,
 		products,
 		pageCount
@@ -274,18 +274,6 @@ export const getSingleProductReviewsHandler = BigPromise(
 @access  Private
 */
 export const adminGetAllProductsHandler = BigPromise(async (req: Request, res: Response) => {
-	// ? Pagination:
-	// * The resultPerPage variable specifies how many results should be returned per page.
-	const resultPerPage = 10;
-
-	// * The page and limit variables are retrieved from the request query parameters and default to 1 and 6, respectively
-	const {page = 1} = req.query as {page?: string};
-	const {limit = 6} = req.query as {limit?: string};
-
-	// * he skip variable calculates how many results should be skipped based on the current page and limit, so that the correct set of results is returned for the current page.
-	// eslint-disable-next-line radix
-	const skip = (Number(parseInt(page as string)) - 1) * Number(parseInt(limit as string));
-
 	const search = req.query.search || '';
 
 	let category = req.query.category || 'All';
@@ -342,19 +330,15 @@ export const adminGetAllProductsHandler = BigPromise(async (req: Request, res: R
 	 * * The Promise.all() method is used to execute both queries concurrently and return the results as an array.
 	 */
 	const [products, total] = await Promise.all([
-		Product.find(filter).sort(sortBy).skip(skip).limit(Number(limit)).lean(),
+		Product.find(filter).sort(sortBy).lean(),
 		Product.countDocuments({category: {$in: category}, name: {$regex: search, $options: 'i'}})
 	]);
-	const pageCount = Math.ceil(total / resultPerPage);
 
 	res.status(200).json({
 		success: true,
 		productCount: await totalProducts(),
 		total,
-		limit,
-		page,
-		products,
-		pageCount
+		products
 	});
 });
 

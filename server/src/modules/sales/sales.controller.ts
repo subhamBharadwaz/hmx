@@ -26,14 +26,14 @@ export const handleAdminGetTotalSalesHandler = BigPromise(async (req: Request, r
 */
 export const handleAdminGetSalesDataHandler = BigPromise(
 	async (req: Request, res: Response, next: NextFunction) => {
-		const {year, month} = req.params;
+		const {year} = req.params;
 
-		if (!year || !month) {
-			const message = 'Please enter year and month';
+		if (!year) {
+			const message = 'Please enter year';
 			return next(new APIError(message, 'getSalesDataHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
-		const salesData = await getSales(year, month);
+		const salesData = await getSales(year);
 
 		res.status(200).json({success: true, salesData});
 	}

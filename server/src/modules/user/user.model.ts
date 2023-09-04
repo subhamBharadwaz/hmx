@@ -24,7 +24,8 @@ const UserSchema = new Schema<IUserDocument>(
 		},
 		password: {
 			type: String,
-			required: [true, 'Please provide a password']
+			required: [true, 'Please provide a password'],
+			select: false
 		},
 		photo: {
 			id: {
