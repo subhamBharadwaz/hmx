@@ -19,9 +19,9 @@ export async function registerUser(input: IUser) {
 	}
 }
 
-export async function findUser(email: string, select?: string) {
+export async function findUser(email: string) {
 	try {
-		return User.findOne({email}).select(select);
+		return User.findOne({email}).select('+password');
 	} catch (error: any) {
 		throw new BaseError('Could not perform  find user operation', error, 'findUser');
 	}

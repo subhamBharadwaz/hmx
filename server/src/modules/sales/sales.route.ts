@@ -13,14 +13,14 @@ import {
 const router = Router();
 
 router
-	.route('/admin/sales/:year/:month')
-	.get(isLoggedIn, customRole('admin'), handleAdminGetSalesDataHandler);
+	.route('/admin/sales/total')
+	.get(isLoggedIn, customRole('admin'), handleAdminGetTotalSalesHandler);
+
 router
 	.route('/admin/sales/state')
 	.get(isLoggedIn, customRole('admin'), handleAdminGetSalesByStates);
-
 router
-	.route('/admin/sales/total')
-	.get(isLoggedIn, customRole('admin'), handleAdminGetTotalSalesHandler);
+	.route('/admin/sales/:year')
+	.get(isLoggedIn, customRole('admin'), handleAdminGetSalesDataHandler);
 
 export default router;

@@ -67,8 +67,9 @@ export const registerHandler = BigPromise(
 			// @ts-ignore
 			sameSite: 'None'
 		});
-
-		res.status(200).json({success: true, accessToken});
+		const userObject = user.toObject();
+		delete userObject.password;
+		res.status(200).json({success: true, accessToken, user: userObject});
 	}
 );
 
@@ -87,7 +88,7 @@ export const loginHandler = BigPromise(
 			return next(new APIError(message, 'loginHandler', HttpStatusCode.BAD_REQUEST));
 		}
 
-		const user = await findUser(email, '+password');
+		const user = await findUser(email);
 
 		if (!user) {
 			const message = 'Email or password do not match or exist';
@@ -113,8 +114,9 @@ export const loginHandler = BigPromise(
 			// @ts-ignore
 			sameSite: 'None'
 		});
-
-		res.status(200).json({success: true, accessToken});
+		const userObject = user.toObject();
+		delete userObject.password;
+		res.status(200).json({success: true, accessToken, user: userObject});
 	}
 );
 
@@ -415,10 +417,10 @@ export const updateUserDetailsHandler = BigPromise(
 const roleOptions = ['admin', 'user'];
 
 export const adminAllUsersHandler = BigPromise(async (req: Request, res: Response) => {
-	const resultPerPage = 10;
+	// const resultPerPage = 10;
 
-	const {page = 1} = req.query as {page?: string};
-	const parsedPage = parseInt(page as string, 10);
+	// const {page = 1} = req.query as {page?: string};
+	// const parsedPage = parseInt(page as string, 10);
 	let role = req.query.role || 'All';
 	const search = req.query.search || '';
 
@@ -435,15 +437,21 @@ export const adminAllUsersHandler = BigPromise(async (req: Request, res: Respons
 		role: {$in: role}
 	};
 
+	// const [users, total] = await Promise.all([
+	// 	User.find(filter)
+	// 		.skip((parsedPage - 1) * resultPerPage)
+	// 		.limit(resultPerPage)
+	// 		.lean(),
+	// 	User.countDocuments({role: {$in: role}, name: {$regex: search, $options: 'i'}})
+	// ]);
+	// const pageCount = Math.ceil(total / resultPerPage);
+	// res.status(200).json({success: true, users, total, page, pageCount});
+
 	const [users, total] = await Promise.all([
-		User.find(filter)
-			.skip((parsedPage - 1) * resultPerPage)
-			.limit(resultPerPage)
-			.lean(),
+		User.find(filter).lean(),
 		User.countDocuments({role: {$in: role}, name: {$regex: search, $options: 'i'}})
 	]);
-	const pageCount = Math.ceil(total / resultPerPage);
-	res.status(200).json({success: true, users, total, page, pageCount});
+	res.status(200).json({success: true, users, total});
 });
 
 /** 
