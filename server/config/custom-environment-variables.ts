@@ -1,4 +1,5 @@
 export default {
+	origin: 'ORIGIN',
 	port: 'PORT',
 	dbUrl: 'DBURL',
 	cloudinaryName: 'CLOUDINARY_NAME',
