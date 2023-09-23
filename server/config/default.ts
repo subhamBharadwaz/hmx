@@ -3,7 +3,7 @@ export default {
 	port: '',
 	dbUrl: '',
 	accessTokenSecret: 'daDSBSJDBJSBD324542NKDNKSNDKND',
-	accessTokenExpiry: '1d',
+	accessTokenExpiry: '7d',
 	refreshTokenSecret: 'daDSBSJDBJSBD324542NKDNKSNDKNDdsdsdsdsd#dsdsdsd',
 	refreshTokenExpiry: '7d',
 	// origin: 'https://hmx-subhambharadwaz.vercel.app',
